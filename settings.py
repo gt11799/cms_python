@@ -9,24 +9,6 @@ from tornado.options import define,options
 from unchange_settings import *
 
 
-############### LOCAL REDIS SERVER #############
-REDIS_HOST = '192.168.1.150'
-#REDIS_HOST = '127.0.0.1'
-REDIS_PASSWD = "wangwenwenmaster"
-#REDIS_PASSWD = ""
-REDIS_PORT = 6379
-################################################
-
-############### LOCAL MONGO SERVER #############
-MONGODB_HOST = "192.168.1.150"
-#MONGODB_HOST = "127.0.0.1"
-MONGODB_PASSWD = ""
-MONGODB_PORT = 27017
-MONGODB_USERNAME = ""
-MONGODB_USERPASSWD = ""
-################################################
-
-
 ################ UPYUN #########################
 
 IMAGE_BUCKET = "youyihui"
