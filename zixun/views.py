@@ -4,12 +4,10 @@
 from tornado.web import RequestHandler
 from utility.utils import *
 from utility.error_code import *
-from login.models import login_required,staff_member
 from models import *
 from qiniu.models import cow,uploadImage
 from utility.checkfile import isImageFileType
 import uuid
-from shop.models import getPartnerURL
 from random import random
 
 class IndexHandler(BasicTemplateHandler):
@@ -29,7 +27,6 @@ class IndexHandler(BasicTemplateHandler):
         hot_brand = getHotBrands(catagory_id=1000)
         latest_articles = getLatestArticle(catagory_id=1000)
         hot_articles = getHotArticle(catagory_id=1000)
-        partner = getPartnerURL()
         search = self.get_argument("search",'')
 
         index_info,cover_image,shopping_goods = getIndexInfo()
@@ -49,7 +46,7 @@ class AddArticleHandler(BasicTemplateHandler):
 
     '''运营:增加文章'''
 
-    @staff_member()
+    #@staff_member()
     def get(self):
         catagory_all = getAllCatagory()
         tag_all = getAllTags()
@@ -76,7 +73,7 @@ class AddArticleHandler(BasicTemplateHandler):
         article_url,article_id = addArticle(**Arguments)
         self.write({"status": RET_OK,"url":article_url,"id":article_id})
 
-    @staff_member()
+    #@staff_member()
     def post(self):
         return self._post()
 
@@ -84,7 +81,7 @@ class EditArticleHandler(BasicTemplateHandler):
 
     '''运营:修改文章页面'''
 
-    @staff_member()
+    #@staff_member()
     def get(self):
         try:
             article_id = int(self.get_argument("id"))
@@ -123,7 +120,7 @@ class EditArticleHandler(BasicTemplateHandler):
         article_url = changeArticle(**Arguments)
         self.write({"status": RET_OK,"url":article_url})
 
-    @staff_member()
+    #@staff_member()
     def post(self):
         return self._post()
 
@@ -131,7 +128,7 @@ class ArticleListHandler(BasicTemplateHandler):
     '''
     运营:显示文章列表
     '''
-    @staff_member()
+    #@staff_member()
     def get(self):
         
         catagory_name = self.get_argument("catagory_name",'')
@@ -176,7 +173,7 @@ class TagListHandler(BasicTemplateHandler):
     '''
     运营:显示标签列表
     '''
-    @staff_member()
+    #@staff_member()
     def get(self):
         name = self.get_argument("name",'')
         start_time = self.get_argument("start_time",'')
@@ -257,7 +254,7 @@ class CatagoryListHandler(BasicTemplateHandler):
     '''
     运营:显示目录列表，后台管理
     '''
-    @staff_member()
+    #@staff_member()
     def get(self):
         catagory_all = getAllCatagory()
         catagories = getCatagories()
@@ -269,7 +266,7 @@ class AddCatagoryHandler(BasicTemplateHandler):
     '''
     运营:增加目录
     '''
-    @staff_member()
+    #@staff_member()
     def get(self):
         parent_name = self.get_argument("parent_name",'')
         tag_all = getAllTags()
@@ -293,7 +290,7 @@ class AddCatagoryHandler(BasicTemplateHandler):
         addCatagory(**Arguments)
         self.write({"status": RET_OK})
 
-    @staff_member()
+    #@staff_member()
     def post(self):
         return self._post()
 
@@ -301,7 +298,7 @@ class EditCatagoryHandler(BasicTemplateHandler):
     '''
     运营:编辑目录页面
     '''
-    @staff_member()
+    #@staff_member()
     def get(self):
         name = self.get_argument("name")
         if not name:
@@ -339,7 +336,7 @@ class EditCatagoryHandler(BasicTemplateHandler):
         changeCatagory(**Arguments)
         self.write({"status": RET_OK})
 
-    @staff_member()
+    #@staff_member()
     def post(self):
         return self._post()
 
@@ -348,7 +345,7 @@ class EditTagHandler(BasicTemplateHandler):
     '''
     运营:更改标签
     '''
-    @staff_member()
+    #@staff_member()
     def get(self):
         try:
             tag_id = int(self.get_argument("id"))
@@ -372,7 +369,7 @@ class EditTagHandler(BasicTemplateHandler):
         changeTag(**Arguments)
         self.write({"status": RET_OK})
 
-    @staff_member()
+    #@staff_member()
     def post(self):
         return self._post()
 
@@ -394,7 +391,7 @@ class AddTagHandler(BasicTemplateHandler):
         addTag(**Arguments)
         self.write({"status": RET_OK})
 
-    @staff_member()
+    #@staff_member()
     def post(self):
         return self._post()
 
@@ -422,7 +419,7 @@ class DeleteHandler(BasicTemplateHandler):
             raise MyDefineError("参数不对")
         self.write({"status": RET_OK})
 
-    @staff_member()
+    #@staff_member()
     def post(self):
         return self._post()
 
@@ -458,7 +455,7 @@ class AddBrandHandler(BasicTemplateHandler):
         brand_id = addBrand(**Arguments)
         self.write({"status": RET_OK,"id":brand_id})
 
-    @staff_member()
+    #@staff_member()
     def post(self):
         self._post()
 
@@ -466,7 +463,7 @@ class BrandListHandler(BasicTemplateHandler):
     '''
     运营:显示品牌列表
     '''
-    @staff_member()
+    #@staff_member()
     def get(self):
         name = self.get_argument("name",'')
         start_time = self.get_argument("start_time",'')
@@ -489,7 +486,7 @@ class EditBrandHandler(BasicTemplateHandler):
     '''
     运营:编辑品牌
     '''
-    @staff_member()
+    #@staff_member()
     def get(self):
         try:
             tag_id = int(self.get_argument("id"))
@@ -518,7 +515,7 @@ class EditBrandHandler(BasicTemplateHandler):
         changeBrand(**Arguments)
         self.write({"status": RET_OK})
 
-    @staff_member()
+    #@staff_member()
     def post(self):
         self._post()
 
@@ -544,11 +541,11 @@ class GetTagJsonHandler(BasicTemplateHandler):
     运营:根据一级标签，返回二级标签名
     '''
 
-    @staff_member()
+    #@staff_member()
     def get(self):
         self._post()
 
-    @staff_member()
+    #@staff_member()
     def post(self):
         self._post()
 
@@ -565,7 +562,7 @@ class EditIndexHandler(BasicTemplateHandler):
     '''
     运营:修改首页信息
     '''
-    @staff_member()
+    #@staff_member()
     def get(self):
         index_info,cover_image,shopping_goods = getIndexInfo()
         hot_tag = getHotTags(catagory_id=1000)
@@ -577,7 +574,7 @@ class EditIndexHandler(BasicTemplateHandler):
         self.render("zixun/edit_index.html",tag_all=tag_all,brand_all=brand_all,index_info=index_info,cover_image=cover_image,shopping_goods=shopping_goods,hot_tag=hot_tag,
                                     hot_brand=hot_brand)
 
-    @staff_member()
+    #@staff_member()
     def post(self):
         self._post()
 
@@ -602,12 +599,12 @@ class UploadImageHandler(BasicTemplateHandler):
     百度编辑器的API
     '''
 
-    @staff_member()
+    #@staff_member()
     @tornado.gen.coroutine
     def get(self):
         self._post()
 
-    @staff_member()
+    #@staff_member()
     @tornado.gen.coroutine
     def post(self):
         self._post()
@@ -658,7 +655,7 @@ class AddCollocationArticleHandler(BrandListHandler):
     运营:增加搭配的文章
     '''  
 
-    @staff_member()
+    #@staff_member()
     def get(self):
         catagory_all = getCollocationCatagory()
         tag_all = getAllTags()
@@ -682,7 +679,7 @@ class AddCollocationArticleHandler(BrandListHandler):
         article_url,article_id = addCollocationArticle(**Arguments)
         self.write({"status": RET_OK,"url":article_url,"id":article_id})
 
-    @staff_member()
+    #@staff_member()
     def post(self):
         return self._post()
 
@@ -690,7 +687,7 @@ class EditCollocationArticleHandler(BasicTemplateHandler):
     '''
     运营:编辑搭配文章
     '''
-    @staff_member()
+    #@staff_member()
     def get(self):
         try:
             article_id = int(self.get_argument("id"))
@@ -726,7 +723,7 @@ class EditCollocationArticleHandler(BasicTemplateHandler):
         article_url = changeCollocationArticle(**Arguments)
         self.write({"status": RET_OK,"url":article_url})
 
-    @staff_member()
+    #@staff_member()
     def post(self):
         return self._post()
 

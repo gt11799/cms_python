@@ -10,8 +10,6 @@ import tornado.httpserver
 # from settings import *
 import tornado.wsgi
 # 添加一个app中函数必须步骤 ,such as images_app
-import images_app
-from images_app.views import *
 import sys
 import os
 import traceback
@@ -71,8 +69,7 @@ def main(port):
                 logging.error(traceback.format_exc())
                 logging.error("import %s urls fail!!!!!!!!!!" % d)
 
-    from utility.utils import BasicTemplateHandler,getMongoDBConn
-    db = getMongoDBConn().shop
+    from utility.utils import BasicTemplateHandler
 
     class NotFoundHandler(BasicTemplateHandler):
         def get(self):
@@ -95,15 +92,13 @@ def main(port):
                 tag = doc
             else:
                 tag = "未分类"
-            db.permission.update({"url":url},{"$set":{"doc":doc,"tag":tag}},upsert=True)
-            #db.permission.update({"url":url},{"$set":{"doc":doc}},upsert=True)
     
     print "Client:",getClient()
     from settings import settings
     application = tornado.web.Application(urls, **settings)
     global server
-    server = tornado.httpserver.HTTPServer(application,xheaders=True)
-    server.listen(port,address="0.0.0.0")
+    #server = tornado.httpserver.HTTPServer(application,xheaders=True)
+    #server.listen(port,address="0.0.0.0")
 
     # signal.signal(signal.SIGTERM, sig_handler)
     # signal.signal(signal.SIGINT, sig_handler)

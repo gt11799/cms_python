@@ -159,105 +159,6 @@ def getRedisObj(rdb=0):
     r = redis.Redis(connection_pool=pool)
     return r
 
-# CONN = pymongo.MongoClient(MONGODB_HOST, MONGODB_PORT, max_pool_size=100)
-# ASYNCCONN = motor.MotorClient(host=MONGODB_HOST, port=MONGODB_PORT,max_pool_size=100)
-
-ASYNC_MONGO_CONN = motor.MotorClient(host=MONGODB_HOST, port=MONGODB_PORT,max_pool_size=150,socketTimeoutMS=10000)
-MONGO_CONN = pymongo.MongoClient(MONGODB_HOST, MONGODB_PORT, max_pool_size=150)
-
-
-def pymongo_patch():
-    from pymongo.database import Database
-    from bson.binary import OLD_UUID_SUBTYPE
-    from bson.son import SON
-    from pymongo import read_preferences as rp
-    from pymongo import helpers
-    old_find = pymongo.collection.Collection.find
-    old_command = pymongo.database.Database._command
-    def hack_find(self, spec_or_id=None, *args, **kwargs):
-        if self.database.connection.host != QUERY_MONGODB_HOST and NODE_NAME == 'erp':
-            conn = getMongoDBConnTOHost(host=QUERY_MONGODB_HOST,port=QUERY_MONGODB_PORT)
-            return conn[self.database.name][self.name].old_find(spec_or_id,*args,**kwargs)
-        else:
-            return old_find(self,spec_or_id,*args,**kwargs)
-
-    def hack_command(self, command, value=1,
-                 check=True, allowable_errors=None,
-                 uuid_subtype=OLD_UUID_SUBTYPE, compile_re=True, **kwargs):
-        """Internal command helper.
-        """
-
-        if isinstance(command, basestring):
-            command = SON([(command, value)])
-
-        command_name = command.keys()[0].lower()
-        must_use_master = kwargs.pop('_use_master', False)
-        if command_name not in rp.secondary_ok_commands:
-            must_use_master = True
-
-        # Special-case: mapreduce can go to secondaries only if inline
-        if command_name == 'mapreduce':
-            out = command.get('out') or kwargs.get('out')
-            if not isinstance(out, dict) or not out.get('inline'):
-                must_use_master = True
-
-        # Special-case: aggregate with $out cannot go to secondaries.
-        if command_name == 'aggregate':
-            for stage in kwargs.get('pipeline', []):
-                if '$out' in stage:
-                    must_use_master = True
-                    break
-
-        extra_opts = {
-            'as_class': kwargs.pop('as_class', None),
-            'slave_okay': kwargs.pop('slave_okay', self.slave_okay),
-            '_must_use_master': must_use_master,
-            '_uuid_subtype': uuid_subtype
-        }
-
-        extra_opts['read_preference'] = kwargs.pop(
-            'read_preference',
-            self.read_preference)
-        extra_opts['tag_sets'] = kwargs.pop(
-            'tag_sets',
-            self.tag_sets)
-        extra_opts['secondary_acceptable_latency_ms'] = kwargs.pop(
-            'secondary_acceptable_latency_ms',
-            self.secondary_acceptable_latency_ms)
-        extra_opts['compile_re'] = compile_re
-
-        fields = kwargs.get('fields')
-        if fields is not None and not isinstance(fields, dict):
-            kwargs['fields'] = helpers._fields_list_to_dict(fields)
-
-        command.update(kwargs)
-
-        # Warn if must_use_master will override read_preference.
-        if (extra_opts['read_preference'] != rp.ReadPreference.PRIMARY and
-                extra_opts['_must_use_master']):
-            warnings.warn("%s does not support %s read preference "
-                          "and will be routed to the primary instead." %
-                          (command_name,
-                           rp.modes[extra_opts['read_preference']]),
-                          UserWarning)
-        cursor = self["$cmd"].old_find(command, **extra_opts).limit(-1)
-        for doc in cursor:
-            result = doc
-
-        if check:
-            msg = "command %s failed: %%s" % repr(command).replace("%", "%%")
-            helpers._check_command_response(result, self.connection.disconnect,
-                                            msg, allowable_errors)
-
-        return result, cursor.conn_id
-
-
-
-    pymongo.collection.Collection.find = hack_find
-    pymongo.collection.Collection.old_find = old_find
-    pymongo.database.Database._command = hack_command
-
-pymongo_patch()
 
 
 def static_url_patch():
@@ -282,37 +183,7 @@ except:
     pass
 
 
-def getMongoDBConn(safe=False,async=False):
 
-    if async:
-        # print id(ASYNC_MONGO_CONN),'*'*20,"async"
-        return ASYNC_MONGO_CONN
-    else:
-        # print id(MONGO_CONN),'*'*20,"sync"
-        return MONGO_CONN
-
-def getMongoDBConnTOHost(host,port=27017,async=False):
-    if async:
-        key = "ASYNC_CONN_{0}_{1}".format(host,port)
-        conn =  globals().get(key)
-        if not conn:
-            try:
-                conn = motor.MotorClient(host=host, port=port,max_pool_size=100)
-                globals()[key] = conn
-            except:
-                conn = None
-
-    else:
-        key = "CONN_{0}_{1}".format(host,port)
-        conn =  globals().get(key)
-        if not conn:
-            try:
-                conn = pymongo.MongoClient(host=host, port=port,max_pool_size=100)
-                globals()[key] = conn
-            except:
-                conn = None
-    # print id(conn)
-    return conn
 
 
 def getUid(token):
@@ -451,12 +322,8 @@ class DBAccess:
         return rowCount
 
     def execQuery(self, sql ,slave = True):
-        if NODE_NAME == 'erp' and  sql.strip().startswith('select') and slave:
-            db = MySQLdb.connect(
-            user='root', db=self.dbName, passwd=DB_PWD, host=QUERY_DB_HOST, charset='utf8')
-        else:
-            db = MySQLdb.connect(
-            user='root', db=self.dbName, passwd=DB_PWD, host=DB_HOST, charset='utf8')
+        db = MySQLdb.connect(
+        user='root', db=self.dbName, passwd=DB_PWD, host=DB_HOST, charset='utf8')
         cursor = db.cursor()
         cursor.execute(sql)
         db.commit()
@@ -466,12 +333,8 @@ class DBAccess:
         return cds
 
     def execQueryAssoc(self, sql ,slave = True):
-        if NODE_NAME == 'erp' and sql.strip().startswith('select') and slave:
-            db = MySQLdb.connect(
-            user='root', db=self.dbName, passwd=DB_PWD, host=QUERY_DB_HOST, charset='utf8')
-        else:
-            db = MySQLdb.connect(
-            user='root', db=self.dbName, passwd=DB_PWD, host=DB_HOST, charset='utf8')
+        db = MySQLdb.connect(
+        user='root', db=self.dbName, passwd=DB_PWD, host=DB_HOST, charset='utf8')
         cursor = db.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute(sql)
         db.commit()
@@ -1380,28 +1243,6 @@ class BasicTemplateHandler(RequestHandler):
             db.request_warn.save({"url":self.request.uri,"finish_time":finish_time,"date_time":getNowUTCtime()})
 
 
-class BasicLoginHandler(BasicTemplateHandler):
-
-    def login(self, uid, porm):
-        v_uid = self.get_current_user()
-        if v_uid == uid:
-            return
-        if v_uid < MIN_VIRTUAL_USER_ID and v_uid:
-            return
-        if v_uid:
-            from cart.models import MigrateCart,MigrateWish
-            MigrateCart(v_uid,uid)
-            MigrateWish(v_uid,uid)
-            from coupon.models import migrateCoupons
-            migrateCoupons(v_uid,uid)
-            migrateChatMsgs(v_uid,uid)
-            from xiaoher_push.models import migrateHercoins
-            migrateHercoins(v_uid,uid)
-        
-        self.set_secure_cookie("user", str(uid), httponly=True, expires_days=self.expires_days,domain=domain)
-        self.set_secure_cookie("porm", porm, httponly=True, expires_days=self.expires_days,domain=domain)
-        self.set_cookie("is_login","1",httponly = True,expires_days= self.expires_days,domain=domain)
-
 
 class AsyncHandler(BasicTemplateHandler):
 
@@ -1620,29 +1461,6 @@ def getRandStr(n):
     return st
 
 
-def migrateChatMsgs(v_uid, uid):
-    "当匿名用户注册成为正式用户后，把他之前的聊天记录转到正式用户帐号下"
-    if not v_uid:
-        return
-    uid = int(uid)
-    db = getMongoDBConn().shop
-    condition_1 = {"to": v_uid}
-    condition_2 = {"from": v_uid}
-    update_1 = {"$set":{"to":uid}}
-    update_2 = {"$set":{"from":uid}}
-    db.chat_msgs.update(condition_1, update_1, upsert=False,multi=True)
-    db.chat_msgs.update(condition_2, update_2, upsert=False,multi=True)
-    
-    db = DBAccess()
-    db.dbName = "kefu_db"    
-    table = "customer_feedback_for_kefu_log"
-
-    update_cmd= "update %s set customer_id=%s where customer_id=%s" %(table,uid,v_uid)
-    try:
-        db.execUpdate(update_cmd)
-        return True
-    except:
-        return False
 
 if __name__ == '__main__':
     dbName = 'billing_record_db'

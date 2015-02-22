@@ -7,12 +7,10 @@ from models import *
 from tornado.web import RequestHandler
 import datetime
 from utility.error_code import *
-from utility.utils import BasicTemplateHandler,getMongoDBConn,countTime,AsyncHandler,MyDefineError
+from utility.utils import BasicTemplateHandler,countTime,AsyncHandler,MyDefineError
 import time
 from utility.checkfile import isImageFileType
 import utility.utils as UTILS
-from shop_admin.new_activity_models import asyncUpdateGoodsAttrBYQuery
-from login.models import staff_member
 import base64
 import time
 import tornado
@@ -24,11 +22,11 @@ class TestUploadHandler(AsyncHandler):
 
     '''测试图片上传'''
 
-    @staff_member()
+    ##@staff_member()
     def get(self):
         self.render("qiniu/test_upload.html")
 
-    @staff_member()
+    ##@staff_member()
     @gen.coroutine
     def post(self):
         if self.request.files:
@@ -56,7 +54,7 @@ class UploadHandler(BasicTemplateHandler):
 
     ''' 图片上传接口 '''
 
-    @staff_member()
+    ##@staff_member()
     def post(self):
         return self._post()
 
@@ -98,12 +96,12 @@ class DeleteHandler(BasicTemplateHandler):
         self.write({"status":RET_OK})
 
 
-    @staff_member()
+    ##@staff_member()
     def post(self):
         return self._post()
 
 class GoodsImageUpload(BasicTemplateHandler):
-    @staff_member()
+    ##@staff_member()
     def post(self):
         return self._post()
 
@@ -165,7 +163,7 @@ class GoodsImageUpload(BasicTemplateHandler):
 
 
 class TestsaveasHandler(AsyncHandler):
-    @staff_member()
+    #@staff_member()
     @tornado.gen.coroutine
     def get(self):
         filename = "test_test"
@@ -177,12 +175,12 @@ class TestsaveasHandler(AsyncHandler):
 
 class GenUploadToken(BasicTemplateHandler):
 
-    @staff_member()
+    #@staff_member()
     @tornado.gen.coroutine
     def get(self):
         self._post()
 
-    @staff_member()
+    #@staff_member()
     @tornado.gen.coroutine
     def post(self):
         self._post()
