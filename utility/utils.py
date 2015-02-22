@@ -35,7 +35,6 @@ import os
 import inspect
 import tornado.gen
 import motor
-from tools.sqlfilter import SqlFilter
 
 # import MySQLdb
 from MySQLdb.cursors import DictCursor
@@ -863,8 +862,6 @@ class BasicTemplateHandler(RequestHandler):
         #Only filter unicode here.
         if 1 == 2 and isinstance(_argument, type(u"1")):
             #replac "1 == 1" with "switch" here
-            aSqlFilter = SqlFilter(_argument, mode="lenient")
-            arguementFiltered = aSqlFilter.filter()
             if arguementFiltered == "":
                 arguementFiltered = default
 

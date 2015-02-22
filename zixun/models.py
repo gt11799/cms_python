@@ -1660,7 +1660,7 @@ def getNavigateHead():
     '''
     db = DBAccess()
     db.dbName = "zixun"
-    #r = getRedisObj()
+    r = getRedisObj()
 
     cata_info = db.execQueryAssoc("select id,parent_id,name,url from catagory where delete_status=0")
     result = []
@@ -1671,7 +1671,7 @@ def getNavigateHead():
         else:
             result.append([])
     return result
-#navigate = getNavigateHead()
+navigate = getNavigateHead()
 
 
 def getFashionArticle():
@@ -1688,7 +1688,7 @@ def getFashionArticle():
     for article in articles:
         result.append(article.split('&'))
     return result
-#fashion_article = getFashionArticle()
+fashion_article = getFashionArticle()
 
 def getArticlesWithSearch(search,page=-1):
     '''

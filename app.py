@@ -97,8 +97,8 @@ def main(port):
     from settings import settings
     application = tornado.web.Application(urls, **settings)
     global server
-    #server = tornado.httpserver.HTTPServer(application,xheaders=True)
-    #server.listen(port,address="0.0.0.0")
+    server = tornado.httpserver.HTTPServer(application,xheaders=True)
+    server.listen(port,address="0.0.0.0")
 
     # signal.signal(signal.SIGTERM, sig_handler)
     # signal.signal(signal.SIGINT, sig_handler)
