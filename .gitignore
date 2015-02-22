@@ -8,10 +8,9 @@
 *.pid
 *.txt
 *DS_Store
-#settings.py
+settings.py
 rundev.sh
 *.csv
 .idea/*
 tags
 cscope.*
-Sitemap.xml
