@@ -15,13 +15,6 @@ class IndexHandler(BasicTemplateHandler):
     显示首页
     '''
     def get(self):
-        #updateMySQLClickTime()
-        #updateLatestAndHotArticle()
-        #updateHotTagAndBrand()
-        #updateLatestGood()
-        #updateNiceGoods()
-        #updateFashionArticle()
-        #updateCollocationCatagoryIds()
 
         hot_tag = getHotTags(catagory_id=1000)
         hot_brand = getHotBrands(catagory_id=1000)
@@ -40,7 +33,7 @@ class IndexHandler(BasicTemplateHandler):
                     timeFormatConvert=timeFormatConvert,nice_goods=nice_goods,collocation_ids=collocation_ids)
         articles = getIndexArticle()
         return self.render("news/index.html",index_info=index_info,cover_image=cover_image,shopping_goods=shopping_goods,hot_tag=hot_tag,hot_brand=hot_brand,
-                    partner=partner,latest_articles=latest_articles,hot_articles=hot_articles,random=random,navigate=navigate,articles=articles,cutOffSentence=cutOffSentence)
+                    latest_articles=latest_articles,hot_articles=hot_articles,random=random,navigate=navigate,articles=articles,cutOffSentence=cutOffSentence)
 
 class AddArticleHandler(BasicTemplateHandler):
 
