@@ -9,12 +9,6 @@ from tornado.options import define,options
 from unchange_settings import *
 
 
-################ UPYUN #########################
-
-IMAGE_BUCKET = "youyihui"
-USERNAME = "pluray"
-PASSWORD = "4r3e2w1q"
-
 ################ QINIU ##########################
 QINIU_IMAGE_BUCKET = "you1huitest"
 AK = "7THwH1rj3HicB45sl0oqqmmLUk2_b2CG6popljmn"
@@ -36,5 +30,3 @@ MAIL_WARN = False
 DB_HOST = 'localhost'
 DB_PWD = ''
 
-
-QUERY_DB_HOST = "127.0.0.1"
