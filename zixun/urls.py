@@ -37,7 +37,6 @@ urls = [
             (r"/label/([a-zA-Z0-9]+)/?",TagHandler),
             (r"/zixun/([a-zA-Z0-9]+)(/[a-zA-Z]+[0-9]*){0,1}(/[0-9]+){0,1}/?",CatagoryHandler),
 
-            (r"/(baidu_verify_NPX6oVqRlI\.html)/?",tornado.web.StaticFileHandler,dict(path=settings['static_path'])),
 
         ]
 
