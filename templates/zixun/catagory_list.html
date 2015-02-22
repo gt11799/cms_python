@@ -1,0 +1,208 @@
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>小荷资讯管理系统</title>
+	<meta content="" name="keywords">
+	<meta content="" name="description">
+	{% include "min_head.html" %}
+	<script src="/static/admin/js/news.js" type="text/javascript"></script>
+	<style type="text/css">
+	.table_style tbody tr:nth-child(2n){ background: none;}
+	.table_style tbody tr.parent{ background: #f7f7f7;}
+	.table_style tbody tr .btn{margin-right: 10px;}
+	.table_style tbody tr td .meta_description{width:350px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;-o-text-overflow: ellipsis;text-align:center;margin: 0 auto;}
+	.pop_box li{ padding:5px 0; overflow: hidden;}
+	.pop_box li .form_hd{ width:120px; float: left; text-align: right; overflow: hidden;}
+	.pop_box li .form_td{ width: 300px; overflow: hidden;float: left;}
+	.pop_box li .form_td select{width: 150px;}
+	.pop_box{width: 500px;}
+	.pop_box .form_td input{width: 300px;}
+	.pop_box .form_td select{height: 30px;line-height: 30px;}
+	.pop_box .form_td textarea{width: 300px;}
+	.pop_box .form_td #J_tag_area,.pop_box .form_td #J_brand_area{float: left;}
+    .pop_box .form_td .tag_area{border: 1px solid #efefef;float: left;display: none;padding: 10px;float: left;margin: 10px 0 5px 0;}
+    .pop_box .form_td .tag_area input,.pop_box .form_td .brand_area input{width: auto;}
+    .pop_box .form_td .brand_area{padding: 10px;}
+    .pop_box .form_td .brand_area{border: 1px solid #ccc;display: inline-block;}
+    .pop_box .form_td .brand_area ul li{list-style: none;float: left;padding: 0px;margin:0 10px 3px 0;}
+	</style>
+</head>
+<body>
+
+	<div class="wrap add_goods">
+		{% include "header.html" %}
+		<div class="main_wrap">
+			<div class="position clearfix">
+				<div class="left"><a href="javascript:history.go(-1)" class="btn"><span class="icon-arrow-left"></span>返回</a></div>
+				<div class="t yh">类目</div>
+			</div>
+			<div class="layout" style="padding-top:10px">
+
+				<div class="bd">
+					{% include "tab_head.html" %}
+				</div>
+
+				<div class="lr"><a class="btn btn_green J_add_parent" href="/zixun/admin/add_catagory/?" target="_blank">添加</a></div>
+				<table  width="100%" class="table_style">
+					<thead>
+						<tr>
+							<th width="10%">类目名称</th>
+							<th width="15%">url</th>
+							<th width="7%">标题(T)</th>
+							<th width="10%">关键字(K)</th>
+							<th width="20%">描述(D)</th>
+							<th width="15%">热门标签</th>
+							<th width="10%">热门品牌</th>
+							<th style="text-align:left; padding-left:20px;">操作</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for firstlevel in catagory_all.keys() %}
+						<tr class="parent">
+							<td  style="text-align:left; padding-left:20px;" id="J_name"><a href="/zixun/{{catagories[firstlevel]['url']}}" target="_blank">{{ firstlevel }}</a></td>
+							<td>{{ catagories[firstlevel]['url'] }}</td>
+							<td id="J_title">{{ catagories[firstlevel]['meta_title'] }}</td>
+							<td id="J_key">{{ catagories[firstlevel]['meta_keyword'] }}</td>
+							<td id="J_des"><div class="meta_description" title="{{ catagories[firstlevel]['meta_description'] }}">{{ catagories[firstlevel]['meta_description'] }}</div></td>
+							<td id="J_des">{% for t in catagories[firstlevel]['hot_tag'] %}
+								{{t}},
+								{% end %}
+							</td>
+							<td id="J_des">{% for b in catagories[firstlevel]['hot_brand'] %}
+								{{b}},
+								{% end %}
+							</td>
+							<td style="text-align:left; padding-left:20px;"><a href="/zixun/admin/edit_catagory/?name={{firstlevel}}&keyname=1" class="btn btn_green" data-id="{{ catagories[firstlevel]['id']}}"  target="_blank">编辑</a><span class="btn btn_red J_delete" data-id="{{ catagories[firstlevel]['id']}}">删除</span><a href="/zixun/admin/add_catagory/?parent_name={{firstlevel}}" target='_blank'><span class="btn btn_green J_add">添加</span></a></td>
+						</tr>
+						{% for secondlevel in catagory_all[firstlevel] %}
+						<tr class="child">
+							<td  style="text-align:left; padding-left:20px;" id="J_cname" data-val="{{secondlevel}}">-- <a href="/zixun/{{ catagories[firstlevel]['url'] }}/{{ catagories[secondlevel]['url'] }}" target="_blank">{{ secondlevel}} </a></td>
+							<td>{{ catagories[secondlevel]['url'] }} </td>
+							<td id="J_ctitle">{{ catagories[secondlevel]['meta_title'] }} </td>
+							<td id="J_ckey">{{ catagories[secondlevel]['meta_keyword'] }} </td>
+							<td id="J_cdes"><div class="meta_description" title="{{ catagories[secondlevel]['meta_description'] }}">{{ catagories[secondlevel]['meta_description'] }}</div> </td>
+							<td id="J_cdes">{% for t in catagories[secondlevel]['hot_tag'] %}
+								{{t}},
+								{% end %}
+							</td>
+							<td id="J_cdes">{% for b in catagories[secondlevel]['hot_brand'] %}
+								{{b}}
+								{% end %}
+							 </td>
+							<td  style="text-align:left;  padding-left:20px;"><a href="/zixun/admin/edit_catagory/?name={{secondlevel}}&keyname=0" class="btn btn_green" data-cid="{{ catagories[secondlevel]['id']}}"  data-name="{{ firstlevel }}" target="_blank">编辑</a><span class="btn btn_red J_delete_child" data-cid="{{ catagories[secondlevel]['id']}}">删除</span></td>
+						</tr>
+						{% end %}
+					
+						{% end%}
+					</tbody>
+				</table>
+
+			</div>
+		</div>
+	</div>
+	
+	<!--添加div-->
+	<div id="add_warp" style="display:none;">
+		<div class="pop_box">
+			<ul>
+				<li>
+					<span class="form_hd">父类名：</span>
+					<span class="form_td"><input type="text" class="txt" id="J_add_pname" value="" /></span>
+				</li>
+				<li>
+					<span class="form_hd">名称：</span>
+					<span class="form_td"><input type="text" class="txt" id="J_add_name" /></span>
+				</li>
+				<li>
+					<span class="form_hd">热门标签：</span>
+					<span class="form_td">
+						<select id="J_tag_area">
+                            <option value=""></option>
+                            {% for tag in tag_all.keys() %}
+                            <option value="{{tag}}">{{tag}}</option>
+                            {% end %}
+                        </select>
+                        <div class="tag_area">
+                        </div>
+                    </span>
+				</li>
+				<li>
+					<span class="form_hd">热门品牌：</span>
+					<span class="form_td"> 
+                        <div class="brand_area">
+                        	<ul>
+                        	{% for brand in brand_all %}
+                            	<li><input type="checkbox"  name="brand_list" value="{{brand}}">{{brand}}</li>
+                            {% end %}
+                            </ul>
+                        </div>
+                    </span>
+				</li>
+				<li>
+					<span class="form_hd">标题：</span>
+					<span class="form_td"><input type="text" class="txt" id="J_add_title" /></span>
+				</li>
+				<li>
+					<span class="form_hd">关键字：</span>
+					<span class="form_td"><input type="text" class="txt" id="J_add_key" /></span>
+				</li>
+				<li>
+					<span class="form_hd">描述：</span>
+					<span class="form_td"><textarea rows="5" id="J_add_des"></textarea></span>
+				</li>
+			</ul>
+		</div>
+	</div>
+    <script type="text/javascript">
+
+	//初始化修改渠道select的值
+    function select_change(){
+       var v = $("#J_tag_area option:selected").val();
+       if(v != ''){
+           $.post("/zixun/admin/tags/",{
+                    name : v  
+                },function(data){
+                    if(data.status==0){  
+                        if(data.tags !=''){
+                            $(".tag_area").css('display','block')
+                            var _name = data.tags;
+                            for(var i=0;i<_name.length;i++){
+                                var _html = '<input type="checkbox" class="J_list_checked" name="tag_list" value="'+_name[i]+'">'+_name[i]+'&nbsp;&nbsp;';
+                                 $('.tag_area').append(_html)
+                            }
+                        }else{
+                            $(".tag_area").css('display','none')
+                        }
+                    }else{
+                        $(".tag_area").css('display','none')
+                        showMsg(data.msg || '亲，后台报错了！',2);
+                    }
+                });
+       }else{
+       		$(".tag_area").css('display','none')
+       }
+       return false;
+    }
+    select_change();
+
+    //标签选项的功能
+    $("#J_tag_area").on('change',function(){
+       $('.tag_area').html(''); //清空
+       select_change();
+    })
+
+	//删除父类功能
+	$('.J_delete').on('click',function(){
+		deleteItems($(this).attr('data-id'),'catagory');
+		return false;
+	});
+	//删除子类功能
+	$('.J_delete_child').on('click',function(){
+		deleteItems($(this).attr('data-cid'),'catagory');
+		return false;
+	});
+
+    </script>
+
+</body>
+</html>

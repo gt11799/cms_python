@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>{{brand_info['meta_title']}}_小荷特卖</title>
+	<meta name="keywords" content="{{brand_info['meta_keyword']}}" />
+	<meta name="description" content="{{brand_info['meta_description']}}" />
+	<meta name="baidu-site-verification" content="0652033889a727ed7e9f3e9469b9cf86"/>
+	<link rel="stylesheet" href="/static/news/css/base.css?v={{ handler.version }}" />
+	<link rel="stylesheet" href="/static/news/css/style.css?v={{ handler.version }}" />
+	<script src="/static/news/js/jquery-1.8.3.min.js"></script>
+	<script type="text/javascript" src="/static/news/js/common.js?v={{ handler.version }}"></script>
+	<script type="text/javascript" src="/static/news/js/jquery.SuperSlide.2.1.1.js"></script>
+	<script type="text/javascript" src="/static/news/js/kkpager.min.js"></script>
+	{% include "baidu_analyse.html" %}
+</head>
+<body class="index">
+	{% include "header.html" %}
+	<div class="wrap">
+		<h1 style="display:none;">{{brand_info['meta_title']}}</h1>
+		<div class="content brand clearfix">
+			<!-- 内容上部分 -->
+			<div class="content_top clearfix">
+				<div class="historyUrl">
+					<p><a href="/zixun">首页</a><a href="#">>服装品牌</a><a href="#">>{{brand_info['name']}}</a></p>
+				</div>
+				<div class="info">
+					<div class="fl"><img src="{{brand_info['cover_image']}}" width="250" height="250"></div>
+					<div class="info_detail fl">
+						<ul>
+							<dl><b>品牌信息</b></dl>
+							<dt>
+								<span>品牌名：{{brand_info['name']}}</span>&nbsp;&nbsp;&nbsp;&nbsp;
+								<span>公司名称：{{brand_info['company_name']}}&nbsp;&nbsp;&nbsp;&nbsp;</span>
+								{% if brand_info.get('company_address') %}
+								<span>公司地址：{{brand_info['company_address']}}&nbsp;&nbsp;&nbsp;&nbsp;</span>
+								{% end %}
+							</dt>
+							<dl><b>品牌介绍</b></dl>
+							<dt>{{brand_info['description']}}</dt>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div class="content_bottom">
+				<div class="content_left">
+					<!-- 品牌资讯开始 -->
+					<div class="lists recommend brands"> 
+						<h3 style="width:94px;">品牌资讯</h3>
+						<ul class="clearfix">
+							{% for article in articles %}
+							<li class="clearfix">
+								<div class="img fl"><a href="/zixun/{{article['complete_url']}}/{{article['id']}}" target="_blank"><img src="{{article['cover_image']}}" width="208" height="122"></a></div>
+								<div class="desc fl">
+									<a href="/zixun/{{article['complete_url']}}/{{article['id']}}" target="_blank">
+										<h2>{{article['title']}}</h2>
+										<h5><span>{{timeFormatConvert(article['create_time'])}}</span><span class="list_tags">标签：
+											{% for tag in article['tag'] %}
+											{{tag['name']}}
+											{% end %}
+										</span></h5>
+										<p>{{cutOffSentence(article['description'],105)}}</p>
+									</a>
+									<div class="desc_bottom fr"><a href="/zixun/{{article['complete_url']}}/{{article['id']}}" >查看全部</a>&nbsp;&nbsp;&nbsp;&nbsp;
+								</div>
+							</li>
+							{% end %}
+						</ul>
+						<div id="kkpager"></div>
+					</div>
+					<!-- 品牌资讯结束 -->
+				</div>
+				<div class="content_right clearfix">
+					<!-- 热门品牌 -->
+					<div class="smallbox tagList">
+						<div class="hd clearfix">
+							<h2 class="fl">热门品牌</h2><span class="more"><a href=""><span></span></a></span>
+						</div>
+						<div class="hotBrand">
+							<ul class="clearfix">
+								{% for brand in hot_brands %}
+								<li><a href="/pinpai/{{brand[1]}} " target="_blank"><img src="{{brand[2]}}" width="88" height="88"></a></li>
+								{% end %}
+							</ul>
+						</div>
+					</div>
+					<!--热门标签  -->
+					<div class="smallbox tagList" style="margin-top:0;">
+						<div class="hd clearfix">
+							<h2 class="fl">热门标签</h2>
+						</div>
+						<div class="tags">
+							<ul class="clearfix">
+								{% for tag in hot_tags %}
+								{% if random() < 0.3 %}
+								<li><a href="/label/{{tag[1]}}" class="hot" target="_blank">{{tag[0]}}</a></li>
+								{% else %}
+								<li><a href="/label/{{tag[1]}}" target="_blank">{{tag[0]}}</a></li>
+								{% end %}
+								{% end %}
+							</ul>
+						</div>
+					</div>
+					<!-- 最新商品 -->
+					<div class="new_goods">
+						<h3 style="width:94px;">最新商品</h3>
+						<div class="bd">
+							<div class="tempwrap">
+								<ul style="height:336px;">
+									{% for goods in latest_goods %}
+									<li><a href="{{goods[1]}}" target="_blank"><img src="{{goods[2]}}" width="154" height="200"><h2>{{goods[0]}}</h2></a></li>
+									{% end %}
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+<script type="text/javascript">
+//调用分页
+pageRender({
+	pageCount :  {{ pageCount }},
+	recordNum : {{ recordNum }}
+});
+
+</script>
+</html>

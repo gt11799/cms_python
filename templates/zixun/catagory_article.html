@@ -1,0 +1,36 @@
+{% autoescape None %}
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{{ cata_info.get('meta_title') }}</title>
+<meta name="keywords" content={{ cata_info.get('meta_keyword') }} />
+<meta name="description" content={{ cata_info.get('meta_description') }} />
+
+</head>
+<body>
+<h1>{{ cata_info.get('name') }}</h1>
+{% for article in articles %}
+	<h3>标题: <a href="/zixun/{{url}}/{{article['id']}}">{{ article['title'] }}</a></h3>
+	{% for tag in article['tag'] %}
+	<a href="/label/{{tag['url']}}" target="_blank">{{ tag['name'] }}</a>
+	{% end %}
+	{{ article['description'] }}
+	{{ article['cover_image'] }}
+{% end %}
+<hr>
+<h2 >最新文章</h2>
+{% for article in latest_articles %}
+<a href="{{article[1]}}">{{article[0]}}</a><br>
+{% end %}
+<hr>
+<h2>最热标签</h2>
+{% for tag in hot_tags %}
+<a href="/zixun/tag/{{tag[1]}}">{{tag[0]}}</a><br>
+{% end %}
+<h2>最热品牌</h2>
+{% for brand in hot_brands %}
+<a href="/pinpai/{{brand[1]}}" target="_blank">{{brand[0]}}</a><br>
+{% end %}
+</body>
+</html>

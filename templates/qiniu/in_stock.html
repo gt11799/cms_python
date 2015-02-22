@@ -1,0 +1,307 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>商品审核--商家后台</title>
+<meta content="" name="keywords">
+<meta content="" name="description">
+<link href="/static/admin/css/base.css?v={{ handler.version }}" rel="stylesheet" type="text/css" />
+<link href="/static/admin/css/style.css?v={{ handler.version }}" rel="stylesheet" type="text/css" />
+<!--基础js必须引入-->
+<script src="/static/admin/js/jquery.1.8.3.js" type="text/javascript" charset="utf-8"></script>
+<!--基础js必须引入end-->
+
+<script type="text/javascript" charset="utf-8" src="/static/admin/js/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" charset="utf-8" src="/static/admin/js/artDialog/jquery.artDialog.js?skin=chrome"></script>
+<script type="text/javascript" charset="utf-8" src="/static/admin/js/kkpager.min.js"></script>
+<script src="/static/admin/js/common.js?v={{ handler.version }}" type="text/javascript" charset="utf-8"></script>
+
+
+<style type="text/css">
+.activityList th,.activityList tr td{ padding:5px; }
+.activityList{ margin-bottom: 100px;}
+
+
+.udline{ text-decoration: underline;}
+.verifyItem{ font-size:14px;}
+.verifyItem .tit{ display: inline-block; width: 80px; vertical-align: middle; text-align: right;}
+.verifyItem .txta{ width:800px;}
+
+.verifyItem_box{width:200px; border:1px solid #ddd; /*display:inline-block; */ padding:15px; margin-left:80px; background: #fefcd7; border-radius: 5px; overflow: hidden; font-size: 14px; }
+.verifyItem_box label{ position: relative; top: 5px;}
+.verifyItem_box .s_btn{background:#FF6600; border:1px solid #FF6600; display:inline-block; padding:4px 10px; color:#fff; border-radius:5px; float:right;}
+.verifyItem_box .verifyItem{ padding:6px 0;}
+
+.add_stock_car{ position: fixed; padding:15px 24px; background: #fff; border: 1px solid #ccc; border-radius: 5px; right:30px; bottom: 15px; z-index: 10; box-shadow: 0 0 6px #888;}
+.action_area{ border-radius: 8px; position: fixed; bottom:10px; border: 1px solid #ccc; box-shadow: 0 0 4px #999; background: #f8f8f8; padding:20px 40px 20px 0;left:300px; }
+
+
+</style>
+</head>
+<body>
+<div class="wrap add_goods">
+  {% include "shop_admin/header.html" %}
+  <div class="main_wrap">
+
+	<div class="position clearfix">
+	  <div class="left"><a href="javascript:history.go(-1)" class="btn"><span class="icon-arrow-left"></span>返回</a></div>
+	  <div class="t yh">入库</div>
+	</div>
+	<div class="layout" style="padding-top:10px">
+
+	  {% include "shop_admin/tab_head.html" %}
+    
+	  <div class="bd">
+
+        <div class="orderStatusMenu" style="text-align:left;">
+		  	<input class="txt txt_brand_name" placeholder="输入品牌关键字" style="width:200px;">  &nbsp;
+			<a href="#" class="btn btn_green" id="btnSearch">搜索</a>
+		</div>
+        <table width="100%" class="table activityList">
+           <tr class="tbHead">
+				<th style="width:4%"><input type="checkbox"></th>
+				<th style="width:8%">订单编号</th>
+				<th style="width:12%;">品牌名称</th>
+				<th>商品名称</th>
+				<th style="width:12%">商品图片</th>
+				<th style="width:6%">尺码</th>
+				<th style="width:6%">数量（件）</th>
+				<th style="width:12%">下单日期</th>
+                <th style="width:12%">采购备注</th>
+				<th style="width:10%">采购状态</th>
+		    </tr>
+        	<tr>
+        		<td><input type="checkbox"></td>
+        		<td>140308132</td>
+        		
+        		<td>阁兰苏珊 Ground Susan 高端真丝连衣裙、女</td>
+        		<td>春夏时尚连衣裙</td>
+        		<td><img width="60" height="60" src="http://you1huitest.qiniudn.com/image/86f97a12-e7a3-11e3-a413-78929c8c1c5c?imageView/1/w/60/h/60"></td>
+        		<td>S</td>
+        		<td>20</td>
+        		<td>2014-06-18 16:48:49</td>
+        		<td></td>
+        		<td>采购中</td>
+        	</tr>
+        	<tr>
+        		<td><input type="checkbox"></td>
+        		<td>140308132</td>
+        		
+        		<td>阁兰苏珊 Ground Susan 高端真丝连衣裙、女</td>
+        		<td>春夏时尚连衣裙</td>
+        		<td><img width="60" height="60" src="http://you1huitest.qiniudn.com/image/86f97a12-e7a3-11e3-a413-78929c8c1c5c?imageView/1/w/60/h/60"></td>
+        		<td>S</td>
+        		<td>20</td>
+        		<td>2014-06-18 16:48:49</td>
+        		<td></td>
+        		<td>采购中</td>
+        	</tr>
+        	<tr>
+        		<td><input type="checkbox"></td>
+        		<td>140308132</td>
+        		
+        		<td>阁兰苏珊 Ground Susan 高端真丝连衣裙、女</td>
+        		<td>春夏时尚连衣裙</td>
+        		<td><img width="60" height="60" src="http://you1huitest.qiniudn.com/image/86f97a12-e7a3-11e3-a413-78929c8c1c5c?imageView/1/w/60/h/60"></td>
+        		<td>S</td>
+        		<td>20</td>
+        		<td>2014-06-18 16:48:49</td>
+        		<td></td>
+        		<td>采购中</td>
+        	</tr>
+
+        </table>
+
+ 		<div class="add_stock_car">
+        	<p class="verifyItem">
+        		<input class="txt" style="width:120px;" placeholder="输入A-Z字母"/>
+	          <a href="#none" class="btn btn_green" id="btn_instock">批量入库</a>
+	        </p>
+        </div> 
+
+<!--         <div class="action_area">
+			<div style="margin-bottom:10px;" class="verifyItem_box"><a href="#none" id="print_info" class="s_btn">确定</a> <label>批量入库</label></div>
+			<div style="margin-bottom:10px;" class="verifyItem_box"><a href="#none" id="set_message" class="s_btn">确定</a>
+				<label>
+					<select>
+						<option value="packing">采购完成</option>
+						<option value="refunding">退款中</option>
+						<option value="admin_cancelled">订单已经取消</option>
+					</select>
+				</label>
+			</div> 
+
+		</div> -->
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<script type="text/javascript">
+
+
+//单选、全选
+(function(){
+
+  //初始化checkbox	
+  $(':checkbox').attr('checked',false);
+
+  //已选择列表操作
+  var listDom = $('.activityList');
+
+  //单选
+  listDom.on("change","tbody>tr input[type='checkbox']", function () {
+
+	var _this = $(this);
+
+	if(_this.is(':checked')){
+
+	  _this.parents('tr').addClass('isChecked');
+	}else{
+	  _this.parents('tr').removeClass('isChecked');
+	}
+  });
+
+
+  //全选按钮
+  var selectAll =  listDom.find('tr.tbHead').find(':checkbox'); 
+
+
+  //全选/反选
+  selectAll.change(function(){
+	var cbs = listDom.find('tbody tr').not('.tbHead');
+	var _this = $(this);
+
+	if(_this.is(':checked')){
+	  cbs.each(function(k){
+		var _that = $(this);
+		var _input = _that.find('input[type="checkbox"]');
+		if(_input.length){
+		  _input.attr('checked','checked');
+		  _that.addClass('isChecked');
+		}
+	  });
+	}else{
+	  cbs.each(function(k){
+		var _that = $(this);
+		var _input = _that.find('input[type="checkbox"]');
+		if(_input.length){
+		  _input.attr('checked',false);
+		  _that.removeClass('isChecked');
+		}
+	  });
+	}
+  });
+
+   //阻止冒泡
+	listDom.find('a,input,textarea').on('click',function(e){
+			e.stopPropagation();
+	});
+
+	listDom.find('tr').not('.tbHead').on('click',function(){
+		var cb = $(this).find(':checkbox');
+		if(cb.is(':checked')){
+			cb.attr('checked',false);
+			$(this).removeClass('isChecked');
+		}else{
+			cb.attr('checked','checked');
+			$(this).addClass('isChecked');
+		}
+		return false;
+	});
+
+
+})();
+
+
+//列出品牌select框
+$.ajax({
+    url: '/admin/get_all_brands/',
+    type : "get",
+    success: function(data){
+      app.loading.close();
+      if(data.status==0){
+        $.each(data['brands'],function(k,v){
+            var option = $('<option value="' + v['brand_id'] + '">' +v['name'] + '</option>');
+             if(String(v['brand_id'])==getQueryString('brand_id')){
+                option.attr("selected",true);
+              }
+             $('#selectBrand').append(option);
+        });
+       
+      }else{
+        showMsg(data.msg,3);
+      }
+    }
+});
+
+//品牌下拉列表
+$('#selectBrand').change(function(){
+    window.location.href = '/admin/warehousing/?brand_id=' + $(this).val() + '&date=' + $('.sTime').val();
+    return false;
+});
+
+
+
+
+$('#btn_instock').on('click',function(){
+	instock();
+	return false;
+});
+
+//审核
+function instock(){
+	var cols = $('.activityList .isChecked').not('.tbHead'),
+	  o_ids = [],
+	  p_ids = [],
+	  status = $('#verifySelect option:selected').val();
+
+	if($('#sendMsg').is(':checked')){
+	  send_msg = 1;
+	}
+
+	if(status==='0'){
+		showMsg('请选择采购状态',3);
+	  	return false;
+	}
+
+	$.each(cols,function(){
+	  o_ids.push($(this).find('input[type="checkbox"]').val());
+	  p_ids.push($(this).find('input[name="purchase_id"]').val());
+	});
+	
+	if(o_ids.length==0){
+	  showMsg('至少选择一条记录！',3);
+	  return false;
+	}
+
+	app.loading.open("正在提交...");
+
+	$.ajax({
+		url: '/admin/update_purchase_status/?_xsrf='+ getCookie('_xsrf'),
+		type : "post",
+		data : {
+		  order_goods_ids : o_ids.join(','),
+		  purchase_ids : p_ids.join(','),
+		  status : status
+		},
+		success: function(data){
+		  app.loading.close();
+		  if(data.status==0){
+			showMsg("操作成功",1);
+			window.location.reload();
+		  }else{
+			showMsg(data.msg,3);
+		  }
+		}
+	});
+}
+
+
+
+</script>
+
+</body>
+</html>

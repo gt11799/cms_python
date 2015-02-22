@@ -1,0 +1,208 @@
+{% autoescape None %}
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>{{article['meta_title']}}_小荷特卖</title>
+	<meta name="keywords" content="{{article['meta_keyword']}}" />
+	<meta name="description" content="{{article['meta_description']}}" />
+	<meta name="baidu-site-verification" content="0652033889a727ed7e9f3e9469b9cf86"/>
+	<link rel="stylesheet" href="/static/news/css/base.css?v={{ handler.version }}" />
+	<link rel="stylesheet" href="/static/news/css/style.css?v={{ handler.version }}" />
+	<script src="/static/news/js/jquery-1.8.3.min.js"></script>
+	<script type="text/javascript" src="/static/news/js/common.js?v={{ handler.version }}"></script>
+	<script type="text/javascript" src="/static/news/js/jquery.SuperSlide.2.1.1.js"></script>
+	<script type="text/javascript" src="/static/news/js/kkpager.min.js"></script>
+	{% include "baidu_analyse.html" %}
+</head>
+<body class="index">
+	{% include "header.html" %}
+	<div class="wrap">
+		<div class="content clearfix">
+			<div class="content_left detail">
+				<div class="historyUrl">
+					<p><a href="/zixun/">首页</a>>
+						{% for c in cata_level %}
+						<a href="/zixun/{{c['url']}}">{{c['name']}}</a>>
+						{% end %}
+						正文</p>
+				</div>
+				<!-- 文章内容 -->
+				<div class="article_main">
+					<h1 class="title">{{article['title']}}</h1>
+					<p class="mini">
+						{{article['description']}}
+					</p>
+					<P>发布时间 : {{timeFormatConvert(article['create_time'])}}<span style="margin-left:40x;"><a href="#">点击：({{article['click_time']}})</a></span>
+						<div class="share">
+							<div class="shareItem" >
+								<div class="bshare-custom" style="margin:5px 0 0 15px;display:inline-block;"><a title="分享到QQ空间" class="bshare-qzone"></a><a title="分享到新浪微博" class="bshare-sinaminiblog"></a><a title="分享到人人网" class="bshare-renren"></a><a title="分享到腾讯微博" class="bshare-qqmb"></a><a title="分享到网易微博" class="bshare-neteasemb"></a><a title="更多平台" class="bshare-more bshare-more-icon more-style-addthis"></a><span class="BSHARE_COUNT bshare-share-count">0</span></div><script type="text/javascript" charset="utf-8" src="http://static.bshare.cn/b/buttonLite.js#style=-1&amp;uuid=&amp;pophcol=1&amp;lang=zh"></script><script type="text/javascript" charset="utf-8" src="http://static.bshare.cn/b/bshareC0.js"></script>
+							</div>
+						</div>
+					</P>
+					<span class="tag"><strong><b>TAGS :</b> </strong>
+						{% for t in article['tag'] %}
+						<a href="/label/{{t['url']}}" target="_blank">{{t['name']}}</a>&nbsp;&nbsp;
+						{% end %}
+					</span>
+					<!-- 文章正文 -->
+					<div class="art_content">
+						{{article['content']}}
+						<p style="margin:25px 0;"></p>
+						<div id="kkpager"></div>
+					</div>
+					<!-- 猜你喜欢 -->
+					<div class="likes">
+						<h3 style="width:94px;">猜你喜欢</h3>
+						<div class="hd"></div>
+						<div class="bd">
+							<div class="tempwrap">
+								<div class="urlWrap">
+									<ul style="height:212px;">
+										{% for a in fashion_article[:] %}
+										<li><a href="/zixun/{{a[1]}}" target="_blank"><img src="{{a[0]}}" width="173" height="212"></a></li>
+										{% end %}
+									</ul>
+								</div>
+							</div>
+						</div>
+						<a class="prev"></a>
+						<a class="next"></a>
+					</div>
+					<!-- 推荐文章开始 -->
+					<div class="lists recommend"> 
+						<h3 style="width:94px;">推荐文章</h3>
+						<ul class="clearfix">
+							{% for a in random_articles[:5] %}
+							<li class="clearfix">
+								<div class="img fl"><a href="/zixun/{{ a['complete_url'] }}/{{ a['id'] }}" target="_blank"><img src="{{ a['cover_image'] }}" width="208" height="122"></a></div>
+								<div class="desc fl">
+									<a href="/zixun/{{ a['complete_url'] }}/{{ a['id'] }}" target="_blank">
+										<h2>{{ a['title'] }}</h2>
+										<h5><span>{{ timeFormatConvert(a['create_time']) }}</span><span class="list_tags">标签：
+											{% for tag in a['tag'] %}
+											{{ tag['name'] }}
+											{% end %} </span></h5>
+										<p>{{ a['description'] }}</p>
+									</a>
+									<div class="desc_bottom fr"><a href="/zixun/{{ a['complete_url'] }}/{{ a['id'] }}">查看全部</a>&nbsp;&nbsp;&nbsp;&nbsp;</div>
+								</div>
+							</li>
+							{% end %}
+						</ul>
+						
+					</div>
+					<!-- 推荐文章结束 -->
+				</div>
+			</div>
+			<!-- 右侧栏 -->
+			<div class="content_right">
+				<!-- 时尚新鲜货 -->
+				<div class="smallbox fresh">
+					<div class="hd">
+						<h3 style="width:115px">时尚新鲜货</h3>
+					</div>
+					<div class="bd">
+						<ul>
+							{% for a in fashion_article[:3] %}
+							<li><a href="/zixun/{{a[1]}}" target="_blank"><img src="{{a[0]}}" width="330" height="406"></a></li>
+							{% end %}
+						</ul>
+					</div>
+					<a class="spite prev"></a>
+					<a class="spite next"></a>
+				</div>
+				<!-- 热门品牌 -->
+				<div class="smallbox tagList">
+					<div class="hd clearfix">
+						<h2 class="fl">热门品牌</h2><span class="more"><a href=""><span></span></a></span>
+					</div>
+					<div class="hotBrand">
+						<ul class="clearfix">
+							{% for brand in hot_brands %}
+							<li><a href="/pinpai/{{brand[1]}}" target="_blank"><img src="{{brand[2]}}"width="88" height="88"></a></li>
+							{% end %}
+						</ul>
+					</div>
+				</div>
+				<!--热门标签  -->
+				<div class="smallbox tagList" style="margin-top:0;">
+					<div class="hd clearfix">
+						<h2 class="fl">热门标签</h2>
+					</div>
+					<div class="tags">
+						<ul class="clearfix">
+							{% for tag in hot_tags %}
+							{% if random() < 0.3 %}
+							<li><a href="/label/{{tag[1]}}" class="hot" target="_blank">{{tag[0]}}</a></li>
+							{% else %}
+							<li><a href="/label/{{tag[1]}}" target="_blank">{{tag[0]}}</a></li>
+							{% end %}
+							{% end %}
+						</ul>
+					</div>
+				</div>
+				<!-- 最新文章 -->
+				<div class="smallbox clearfix">
+					<div class="hd clearfix">
+						<span class="more"><a href=""><span></span></a></span><h3 style="width:94px">最新文章</h3>
+					</div>
+					<div class="bd clearfix">
+					{% for a in latest_articles %}
+						<div class="list">
+							<div class="img"><a href="/zixun/{{url}}/{{a[1]}}" target="_blank"><img src="{{a[3]}}" width="100" height="58"></a></div>
+							<div class="desc">
+								<a href="/zixun/{{url}}/{{a[1]}}" target="_blank"><h2><b>{{a[0]}}</b></h2>
+									<p>{{a[2]}}</p>
+								</a>
+							</div>
+						</div>
+						{% end %}
+					</div>
+				</div>
+				<!-- 热门文章 -->
+				<div class="smallbox hotArticle">
+					<div class="hd clearfix">
+						<span class="more"><a href=""><span></span></a></span><h3>热门文章</h3>
+					</div>
+					<div class="bd">
+						<ul>
+							{% for a in hot_articles %}
+							<li><a href="/zixun/{{url}}/{{a[1]}}" target="_blank">
+								<dl>
+									<dt>{{a[0]}}</dt>
+								</dl>
+							</a></li>
+							{% end %}
+						</ul>
+					</div>
+				</div>
+				<!-- 最新商品 -->
+				<div class="new_goods">
+					<h3 style="width:94px;">最新商品</h3>
+					<div class="bd">
+						<div class="tempwrap">
+							<ul style="height:336px;">
+								{% for goods in latest_goods %}
+								<li><a href="{{goods[1]}}" target="_blank"><img src="{{goods[2]}}" width="154" height="200"><h2>{{goods[0]}}</h2></a></li>
+								{% end %}
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+
+</body>
+<script type="text/javascript">
+jQuery(".likes").slide({mainCell:".bd ul",vis:3,autoPage:true,effect:"left",autoPlay:true,delayTime:300});
+jQuery(".fresh").slide({mainCell:".bd ul",autoPlay:true,autoPage:true});
+
+//调用分页
+pageRender({
+	pageCount :  {{ pageCount }}
+});
+</script>
+</html>

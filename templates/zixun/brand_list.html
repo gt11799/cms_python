@@ -1,0 +1,455 @@
+{% autoescape None %}
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>小荷资讯管理系统</title>
+	<meta content="" name="keywords">
+	<meta content="" name="description">
+	{% include "min_head.html" %}
+	<link href="/static/admin/css/webuploader.css?v={{ handler.version }}" rel="stylesheet" type="text/css" />
+    <script src="/static/admin/js/webuploader.min.js?v={{ handler.version }}" type="text/javascript"></script>
+    <script type="text/javascript" src="/static/admin/js/Validform_v5.3.2_min.js"></script>
+    <script src="/static/admin/js/news.js" type="text/javascript" charset="utf-8"></script>
+	<style type="text/css">
+	.table .txt,.table .txta{ width: 774px;}
+    .table .txta{ height: 150px;}
+	.file-item .info{display: none;}
+    .webuploader-element-invisible {
+        position: absolute !important;
+        clip: rect(1px 1px 1px 1px); /* IE6, IE7 */
+        clip: rect(1px,1px,1px,1px);
+    }
+    #uploader-demo .thumbnail{ width:250px; height:auto; float: none; overflow: hidden; }
+    .uploader-list .thumbnail img{ width: 100%;}
+    .webuploader-container{float: left;}
+
+	
+	.table_style tbody tr:nth-child(2n){ background: none;}
+	.table_style tbody tr.parent{ background: #f7f7f7;}
+	.pop_box li{ padding:5px 0; overflow: hidden;}
+	.pop_box li .form_hd{ width:120px; float: left; text-align: right; overflow: hidden;}
+	.pop_box li .form_td{ width: 300px; overflow: hidden;}
+	.pop_box li .form_td select{width: 150px;}
+	#add_brand .pop_box{width: 500px;}
+	#add_brand .pop_box .form_td input{width: 300px;}
+	#add_brand .pop_box .form_td textarea{width: 300px;}
+	.red{color:red;}
+	.pop_box{width: 500px;}
+	.pop_box .form_td input{width: 300px;}
+	.pop_box .form_td select{height: 30px;line-height: 30px;}
+	.pop_box .form_td textarea{width: 300px;}
+	.pop_box .form_td #uploader-demo,.pop_box .form_td #edit_uploader-demo,.pop_box .form_td #uploader-demo2{float: left;}
+	.pop_box .form_td #edit_uploader-demo{position: relative;}
+	.pop_box .form_td .brand_box{top: 40px;right: 20px;}
+	.pop_box .form_td .brand_edit_del{background: none repeat scroll 0 0 rgba(0, 0, 0, 0.6); padding: 2px 5px; color: #fff;}
+	.pop_box .form_td_r{float: left;}
+	.table_style tbody tr td .description,.table_style tbody tr td .meta_description{width:280px;overflow:hidden;white-space: nowrap;-o-text-overflow: ellipsis; text-overflow: ellipsis;text-align:center;margin: 0 auto;}
+	.table_style tbody tr td .meta_description{width: 150px;}
+	</style>
+</head>
+<body>
+	<div class="wrap add_goods">
+			{% include "header.html" %}
+			<div class="main_wrap">
+				<div class="position clearfix">
+					<div class="left"><a href="javascript:history.go(-1)" class="btn"><span class="icon-arrow-left"></span>返回</a></div>
+					<div class="t yh">类目</div>
+				</div>
+				<div class="layout" style="padding-top:10px">
+
+					<div class="bd">
+						{% include "tab_head.html" %}
+					</div>
+					<div class="search_wrap">
+						<input id='J_name' class="txt" placeholder="输入名称"/>
+						<input id="J_description" 	class="txt" placeholder="输入描述">
+						<input id="J_company_name" 	class="txt" placeholder="输入公司名称">
+						<input id="J_brand_classify" 	class="txt" placeholder="输入品牌分类">
+						<input id="J_company_address" 	class="txt" placeholder="输入公司地址">
+						<input id="J_meta_title" 	class="txt" placeholder="输入网页标题">
+						<input id="J_meta_keyword" 	class="txt" placeholder="输入网页关键字">
+						<input id="J_meta_description" 	class="txt" placeholder="输入网页描述">
+						<input id="J_meta_author" 	class="txt" placeholder="输入作者">
+						&nbsp;&nbsp;&nbsp;&nbsp;
+						<a href="#" class="btn btn_green" id="btnSearch">搜索</a>
+						<div class="right">
+							<a href="#" class="btn btn_green" id="J_sort" style="margin:0 0 0 30px;">点击次数排序</a>
+							<a href="#" class="btn btn_red" id="J_add_brand" style="margin:0 0 0 30px;">新增品牌</a>
+
+						</div>
+					</div>
+					<table width="100%" class="table_style">
+						<thead>
+							<tr>
+								<th width="3%">ID</th>
+								<th width="3%">名称</th>
+								<th width="6%">URL</th>
+								<th>描述</th>
+								<th width="6%">品牌分类</th>
+								<th width="5%">封面图片</th>
+								<th width="6%">公司名称</th>
+								<th width="6%">公司网址</th>
+								<th width="6%">公司地址</th>
+								<th width="6%">创建时间</th>
+								<th width="6%">更新时间</th>
+								<th width="3%">作者</th>
+								<th width="6%">网页标题</th>
+								<th width="6%">网页关键字</th>
+								<th width="8%">网页描述</th>
+								<th width="3%">点击次数</th>
+								<th width="6%">操作</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for r in result %}
+							<tr class="J_list">
+								<td class="J_bname">{{r['id']}}</td>
+								<td><a href="/pinpai/{{r['url']}}/" target="_blank">{{r['name']}}</a></td>
+								<td class="J_burl">{{r['url']}}</td>
+								<td class="J_bdes"><div class="description" title="{{r['description']}}">{{r['description']}}</div></td>
+								<td class="J_brand_c">{{r['brand_classify']}}</td>
+								<td><img src="{{r['cover_image']}}" class="J_bimg" style="width:50px;height:50px;"></td>
+								<td class="J_bcompany_name">{{r['company_name']}}</td>
+								<td class="J_bcompany_web">{{r['company_website']}}</td>
+								<td class="J_bcompany_address">{{r['company_address']}}</td>
+								<td>{{r['create_time']}}</td>
+								<td>{{r['update_time']}}</td>
+								<td>{{r['author']}}</td>
+								<td class="J_bmeta_title">{{r['meta_title']}}</td>
+								<td class="J_bmeta_key">{{r['meta_keyword']}}</td>
+								<td class="J_bmeta_des"><div class="meta_description" titile="{{r['meta_description']}}">{{r['meta_description']}}</div></td>
+								<td>{{r['click_time']}}</td>
+								<td>
+									<a href="/zixun/admin/edit_brand/?id={{r['id']}}" data-id="{{r['id']}}" class="btn btn_green J_edit" target="_blank"><span>编辑</span></a>
+									<a href="#" data-id="{{r['id']}}" class="btn btn_red J_delete"><span>删除</span></a>
+								</td>
+							</tr>
+							{% end %}
+						</tbody>
+					</table>
+					<div id="kkpager"></div>
+
+				</div>
+			</div>
+	</div>
+	<div id="add_brand" style="display:none;">
+		<div class="pop_box">
+			<ul>
+				<li>
+					<span class="form_hd">名称：</span>
+					<span class="form_td"><input type="text" class="txt" id="J_add_brand_name" />
+					</span>
+				</li>
+				<li>
+					<span class="form_hd">描述：</span>
+					<span class="form_td"><textarea rows="5"  id="J_add_brand_des"></textarea></span>
+				</li>
+				<li>
+					<span class="form_hd">公司名称：</span>
+					<span class="form_td"><input type="text" class="txt" id="J_add_company_name" />
+					</span>
+				</li>
+				<li>
+					<span class="form_hd">封面图片：</span>
+					<span class="form_td">
+						<div id="uploader-demo">
+                        <div id="filePicker">选择图片</div>
+                        <div class="clear"></div>
+                        <input id="J_cover_image"  value="" type="hidden" autocomplete="off"/>
+                        <div id="fileList" class="uploader-list"></div>
+                        </div>
+					</span>
+				</li>
+				<li>
+					<span class="form_hd">公司网址：</span>
+					<span class="form_td"><input type="text" class="txt" id="J_add_company_website" /></span>
+				</li>
+				<li>
+					<span class="form_hd">品牌分类：</span>
+					<span class="form_td"><input type="text" class="txt" id="J_add_company_classify" /></span>
+				</li>
+				<li>
+					<span class="form_hd">公司地址：</span>
+					<span class="form_td"><input type="text" class="txt" id="J_add_company_address" /></span>
+				</li>
+				<li>
+					<span class="form_hd">网页标题：</span>
+					<span class="form_td"><input type="text" class="txt" id="J_add_title" /></span>
+				</li>
+				<li>
+					<span class="form_hd">关键字：</span>
+					<span class="form_td"><input type="text" class="txt" id="J_add_key" /></span>
+				</li>
+				<li>
+					<span class="form_hd">网页描述：</span>
+					<span class="form_td"><textarea rows="5"  id="J_add_web_des"></textarea></span>
+				</li>
+			</ul>
+		</div>
+	</div>
+
+</body>
+
+<script type="text/javascript">
+
+$('#J_name').val(getQueryString('name'));
+$('#J_description').val(getQueryString('description'));
+$('#J_company_name').val(getQueryString('company_name'));
+$('#J_brand_classify').val(getQueryString('brand_classify'));
+$('#J_company_address').val(getQueryString('company_address'));
+$('#J_meta_title').val(getQueryString('meta_title'));
+$('#J_meta_keyword').val(getQueryString('meta_keyword'));
+$('#J_meta_description').val(getQueryString('meta_description'));
+$('#J_meta_author').val(getQueryString('author'));
+
+//搜索功能公共方法
+function getSearchUrl(){
+	var name = $('#J_name').val(),
+		description = $('#J_description').val(),
+		company_name = $('#J_company_name').val(),
+		brand_classify = $('#J_brand_classify').val(),
+		company_address = $('#J_company_address').val(),
+		meta_title = $('#J_meta_title').val(),
+		meta_keyword = $('#J_meta_keyword').val(),
+		meta_description = $('#J_meta_description').val(),
+		author = $('#J_meta_author').val();
+
+		var search_url = urlJoin({
+			url : '/zixun/admin/brand_list/' ,
+			key : ['name','description','company_name','brand_classify','company_address','meta_title','meta_keyword','meta_description','author'],
+			val : [name,description,company_name,brand_classify,company_address,meta_title,meta_keyword,meta_description,author],
+		});
+		return search_url;
+}
+//搜索功能
+$('#btnSearch').on('click',function() {
+	var search_ulr=getSearchUrl();
+	window.location.href =search_ulr;
+})
+//排序功能
+$('#J_sort').on('click',function(){
+	var url = getSearchUrl();
+	if(url.indexOf('?')!==-1){
+		window.location.href = url + '&sort=click';
+	}else{
+		window.location.href = url + '?sort=click';;
+	}
+	return false;
+})
+//新增品牌功能
+$("#J_add_brand").on('click',function(){
+	$('.webuploader-element-invisible').parent().css({'width':'80px','height':'25px'});
+	var cont = $('#add_brand');
+	cont.find('input,textarea').val('');  //初始化清空
+	popAjax({
+ 		title : '新增品牌',
+ 		content : cont[0],
+ 		url :　'/zixun/admin/add_brand/',
+ 		reload : true,
+ 		type : "post",
+ 		getData　: function(){
+            var cover_image = $('#J_cover_image').val().split(',');
+		    if(cover_image){
+		        cover_image = cover_image[cover_image.length-1]
+		    }else{
+		        cover_image = '';
+		    }
+ 			return {
+ 				name:cont.find('#J_add_brand_name').val(),
+ 				description : cont.find('#J_add_brand_des').val(),
+ 				company_name : cont.find('#J_add_company_name').val(),
+ 				cover_image : cover_image,
+ 				company_website : cont.find('#J_add_company_website').val(),
+ 				brand_classify : cont.find('#J_add_company_classify').val(),
+ 				company_address : cont.find('#J_add_company_address').val(),
+ 				meta_title : cont.find('#J_add_title').val(),
+				meta_keyword : cont.find('#J_add_key').val(),
+				meta_description : cont.find('#J_add_web_des').val()
+ 			}
+ 		}
+ 	});
+ 	return false;
+})
+
+
+//删除功能
+$('.J_delete').on('click',function(){
+	var _this = $(this),
+		id = _this.attr('data-id');
+	deleteItems(id,'brand');
+	return false;
+});
+
+//调用分页
+pageRender({
+	fieldDef : 'target=all',
+	pageCount :  {{ pageCount }},
+	recordNum : {{ recordNum }}
+});
+
+</script>
+
+<script type="text/javascript">
+    
+//调用上传控件
+initUpload($('#fileList'),$('#filePicker'));
+
+$(".uploader-list").on("click",".J_add_del_img",function(){
+    var elem = $(this).parents(".file-item ");
+    url = elem.data("url");
+    if(confirm("确定要删除本图片吗？")){
+        delIMG (elem,url);
+    }
+});
+
+      
+//删除图片
+function delIMG (elem,url){
+    var elem =elem,
+    url = url;
+
+    $.post("/qiniu/delete/",{
+        _xsrf:getCookie("_xsrf"),
+        url:url
+    },function(data){
+        if(data.status==0){
+            elem.remove();
+            showMsg("删除成功");
+            setIMGval();
+        }else if(data.status==2){
+            showMsg("删除成功")
+            elem.remove();
+            setIMGval();
+        }else{
+            showMsg("删除失败");
+        }
+    });
+}
+
+//生成图片input值
+function setIMGval(){
+    var elem = $(".uploader-list");
+
+    elem.each(function(){
+        var thisValDom = $(this).prev(),
+        thisIMG = $(this).find(".file-item"),
+        thisVal = [];
+
+        thisIMG.each(function(i){
+            var url = thisIMG.eq(i).data("url");
+            thisVal.push(url);
+        })
+        thisValDom.val(thisVal.toString());
+    });
+}
+
+
+function initUpload(dom,btnDom){
+    var $ = jQuery,
+    $list = dom,
+    thumbnailWidth = 300,
+    thumbnailHeight = 300,
+    uploader;
+
+    var BASE_URL = '/static/admin/';
+
+    // 初始化Web Uploader
+    var uploader = WebUploader.create({
+
+            // 选完文件后，是否自动上传。
+            auto: true,
+
+            // swf文件路径
+            swf: BASE_URL + '/js/Uploader.swf',
+
+            // 文件接收服务端。
+            server: '/qiniu/upload/?_xsrf='+getCookie("_xsrf"),
+            //server: '',
+
+            // 选择文件的按钮。可选。
+            // 内部根据当前运行是创建，可能是input元素，也可能是flash.
+            pick: btnDom,
+
+            // 只允许选择图片文件。
+            accept: {
+                title: 'Images',
+                extensions: 'gif,jpg,jpeg,bmp,png',
+                mimeTypes: 'image/*'
+            },
+            fileNumLimit:20,
+            fileSizeLimit: 5 * 1024 * 1024    // 限制图片大小5M以内
+        });
+
+    // 当有文件添加进来的时候
+    uploader.on( 'fileQueued', function( file ) {
+        var $li = $(
+            '<div id="' + file.id + '" class="file-item thumbnail edit">' +
+            '<img>' +
+            '<div class="info">' + file.name + '</div><p class="edit_box"><span class="J_add_del_img">删除</span></p>' +
+            '</div>'
+            ),
+        $img = $li.find('img');
+
+
+            // $list为容器jQuery实例
+            $list.append( $li );
+
+            // 创建缩略图
+            // 如果为非图片文件，可以不用调用此方法。
+            // thumbnailWidth x thumbnailHeight 为 100 x 100
+            uploader.makeThumb( file, function( error, src ) {
+                if ( error ) {
+                    $img.replaceWith('<span>不能预览</span>');
+                    return;
+                }
+
+                $img.attr( 'src', src );
+            }, thumbnailWidth, thumbnailHeight );
+        });
+
+    // 文件上传过程中创建进度条实时显示。
+    uploader.on( 'uploadProgress', function( file, percentage ) {
+        var $li = $( '#'+file.id ),
+        $percent = $li.find('.progress span');
+
+            // 避免重复创建
+            if ( !$percent.length ) {
+                $percent = $('<p class="progress"><span></span></p>')
+                .appendTo( $li )
+                .find('span');
+            }
+
+            $percent.css( 'width', percentage * 100 + '%' );
+        });
+
+    // 文件上传成功，给item添加成功class, 用样式标记上传成功。
+    uploader.on( 'uploadSuccess', function( file,data ) {
+        var url = data.url;
+        $( '#'+file.id ).addClass('upload-state-done').attr("data-url",url);
+        setIMGval();
+    });
+
+    // 文件上传失败，显示上传出错。
+    uploader.on( 'uploadError', function( file ) {
+        var $li = $( '#'+file.id ),
+        $error = $li.find('div.error');
+
+            // 避免重复创建
+            if ( !$error.length ) {
+                $error = $('<div class="error"></div>').appendTo( $li );
+            }
+
+            $error.text('上传失败');
+        });
+
+    // 完成上传完了，成功或者失败，先删除进度条。
+    uploader.on( 'uploadComplete', function( file ) {
+        $( '#'+file.id ).find('.progress').remove();
+    });
+
+    return uploader;
+}      
+</script>
+
+</html>

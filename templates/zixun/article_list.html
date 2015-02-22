@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>小荷资讯管理系统</title>
+	<meta content="" name="keywords">
+	<meta content="" name="description">
+	{% include "min_head.html" %}
+	<script src="/static/admin/js/news.js" type="text/javascript"></script>
+	<style type="text/css">
+	.table_style tbody tr td .description{ width:380px;overflow:hidden;white-space: nowrap;-o-text-overflow: ellipsis; text-overflow: ellipsis;text-align:center;margin: 0 auto;}
+	</style>
+</head>
+<body>
+	<div class="wrap add_goods">
+		{% include "header.html" %}
+		<div class="main_wrap">
+			<div class="position clearfix">
+				<div class="left"><a href="javascript:history.go(-1)" class="btn"><span class="icon-arrow-left"></span>返回</a></div>
+				<div class="t yh">文章列表</div>
+			</div>
+			<div class="layout" style="padding-top:10px">
+
+				<div class="bd">
+					{% include "tab_head.html" %}
+				</div>
+
+				<div class="lr" style="padding-bottom:10px;"><a href="/zixun/admin/add_dapei/" class="btn btn_green" target="_blank">+ 添加搭配文章</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="/zixun/admin/add_article/" class="btn btn_green" target="_blank">+ 添加文章</a></div>
+				<div class="search_wrap">
+					<select id="J_list" style="width:120px;">
+							<option value="">选择分类</option>
+						    {% for firstlevel in catagory_all.keys() %}
+    							<option value={{ firstlevel }}>{{ firstlevel }} </option>
+    								{% for secondlevel in catagory_all[firstlevel] %}
+    								<option value={{ secondlevel }}>-- {{ secondlevel}} </option>
+    								{% end %}
+						{% end%}
+					</select>
+					<input id="J_start_time" class="txt" placeholder="输入开始时间" 
+					 onclick="WdatePicker({
+						dateFmt:'yyyy-MM-dd'
+					})" style="width:120px;">-
+					<input id="J_end_time" class="txt" placeholder="输入结束时间" 
+					 onclick="WdatePicker({
+						dateFmt:'yyyy-MM-dd'
+					})" style="width:120px;">
+					<input id='J_title' class="txt" placeholder="输入标题" />
+					<input id="J_description" 	class="txt" placeholder="输入描述" style="width:120px;">
+					<input id="J_author" 	class="txt" placeholder="输入作者" style="width:120px;">
+					<input id="J_meta_title" 	class="txt" placeholder="输入网页标题" style="width:120px;">
+					<input id="J_meta_keyword" 	class="txt" placeholder="输入网页关键字">
+					<input id="J_meta_description" 	class="txt" placeholder="输入网页描述">
+					<select id="J_display">
+						<option value="">是否显示</option>
+						<option value="1">是</option>
+						<option value="0">否</option>
+					</select>
+					&nbsp;&nbsp;&nbsp;&nbsp;
+					<a href="#" class="btn btn_green" id="btnSearch">搜索</a>
+					<div class="right">
+						<a href="#" class="btn btn_green" id="J_sort">点击次数排序</a>
+					</div>
+					
+
+				</div>
+				<table width="100%" class="table_style">
+					<thead>
+						<tr>
+							<th width="3%">id</th>
+							<th width="6%">目录</th>
+							<th width="6%">标题</th>
+							<th width="5%">品牌</th>
+							<th>描述</th>
+							<th width="6%">封面图片</th>
+							<th width="6%">作者</th>
+							<th width="7%">创建时间</th>
+							<th width="7%">更新时间</th>
+							<th width="6%">网页标题</th>
+							<th width="6%">网页关键字</th>
+							<th width="9%">网页描述</th>
+							<th width="3%">是否显示</th>
+							<th width="3%">访问次数</th>
+							<th width="6%">操作</th>
+
+						</tr>
+					</thead>
+					<tbody>
+						{% for r in result %}
+						<tr>
+							<td>{{r['id']}}</td>
+							<td>{{r['catagory_name']}}</td>
+							<td><a href="/zixun/{{r['complete_url']}}/{{r['id']}}" target="_blank">{{r['title']}}</a></td>
+							<td>{{r['brand_name']}}</td>
+							<td><div class="description" title="{{r['description']}}">{{r['description']}}</div></td>
+							<td><img src={{r['cover_image']}} style="width:50px;height:50px;"></td>
+							<td>{{r['author']}}</td>
+							<td>{{r['create_time']}}</td>
+							<td>{{r['update_time']}}</td>
+							<td>{{r['meta_title'] or ''}}</td>
+							<td>{{r['meta_keyword'] or ''}}</td>
+							<td><div class="meta_des" title="{{r['meta_description'] or ''}}">{{r['meta_description'] or ''}}</div></td>
+							<td>{{getDisplayStatus(r['if_display'])}}</td>
+							<td>{{r['click_time']}}</td>
+							<td>
+								{% if str(r['catagory_id']) in collocation_ids %}
+								<a href="/zixun/admin/edit_dapei/?id={{r['id']}}" class="btn btn_green" target="_blank">编辑</a>
+								{% else %}
+								<a href="/zixun/admin/edit_article/?id={{r['id']}}" class="btn btn_green" target="_blank">编辑</a>
+								{% end %}
+								<a href="#" data-id="{{r['id']}}" class="btn btn_red J_delete">删除</a>
+							</td>
+						</tr>
+						{% end %}
+					</tbody>
+				</table>
+				<div id="kkpager"></div>
+			</div>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+
+	$('#J_list').val(getQueryString('catagory_name'));
+	$('#J_start_time').val(getQueryString('start_time'));
+	$('#J_end_time').val(getQueryString('end_time'));
+	$('#J_title').val(getQueryString('title'));
+	$('#J_description').val(getQueryString('description'));
+	$('#J_author').val(getQueryString('author'));
+	$('#J_meta_title').val(getQueryString('meta_title'));
+	$('#J_meta_keyword').val(getQueryString('meta_keyword'));
+	$('#J_meta_description').val(getQueryString('meta_description'));
+	$('#J_display').val(getQueryString('if_display'));
+
+	//删除
+	$('.J_delete').on('click',function(){
+		deleteItems($(this).attr('data-id'),'article');
+		return false;
+	});
+
+	//搜索功能
+	function getSearchUrl(){
+		var catagory_name = $('#J_list').val(),
+		    start_time = $('#J_start_time').val(),
+		    end_time = $('#J_end_time').val(),
+		    title = $('#J_title').val(),
+		    description = $('#J_description').val(),
+		    author = $('#J_author').val(),
+		    meta_title = $('#J_meta_title').val(),
+		    meta_keyword = $('#J_meta_keyword').val(),
+		    meta_description = $('#J_meta_description').val(),
+		    if_display = $('#J_display').val();
+
+		    var search_url = urlJoin({
+				url : '/zixun/admin/article_list/' ,
+				key : ['catagory_name','start_time','end_time','title','description','author','meta_title','meta_keyword','meta_description','if_display'],
+				val : [catagory_name,start_time,end_time,title,description,author,meta_title,meta_keyword,meta_description,if_display],
+			});
+			return search_url;
+	}
+	//搜索功能
+	$('#btnSearch').on('click',function() {
+		var search_ulr=getSearchUrl();
+		window.location.href =search_ulr;
+	})
+
+	//排序功能
+	$('#J_sort').on('click',function(){
+		var url = getSearchUrl();
+		if(url.indexOf('?')!==-1){
+			window.location.href = url + '&sort=click';
+		}else{
+			window.location.href = url + '?sort=click';;
+		}
+		return false;
+	})
+
+
+	//调用分页
+	pageRender({
+		fieldDef : 'target=all',
+		pageCount :  {{ pageCount }},
+		recordNum : {{ recordNum }}
+	});
+	</script>
+
+
+</body>
+</html>

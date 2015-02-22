@@ -1,0 +1,511 @@
+{% autoescape None %}
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>小荷资讯管理系统</title>
+	<meta content="" name="keywords">
+	<meta content="" name="description">
+	{% include "min_head.html" %}
+	<link href="/static/admin/css/webuploader.css?v={{ handler.version }}" rel="stylesheet" type="text/css" />
+    <script src="/static/admin/js/webuploader.min.js?v={{ handler.version }}" type="text/javascript"></script>
+    <script type="text/javascript" src="/static/admin/js/Validform_v5.3.2_min.js"></script>
+	<style type="text/css">
+	.content{width: 980px;margin: 0 auto;}
+	.web_area .web_list{margin: 10px 0;}
+	.web_area .web_list label{ width: 105px;font-size: 16px; font-weight: bold;display: inline-block;cursor: auto;}
+	.web_area .web_list .txt{width: 350px;}
+	.web_area .web_list .tarea{width: 360px;}
+	.hot_area{display: inline-block;margin-top: 5px;}
+	.hot_l{float: left; width: 105px;font-size: 16px; font-weight: bold;}
+	.tag_area{width: 820px;float: left;}
+	.hot_area ul,.hot_brand ul{border: 1px solid #acd1fd;float: left;padding: 10px;}
+	.hot_area ul li{list-style: outside none none;border: 1px solid #acd1fd;margin-bottom: 10px;padding: 10px;}
+	.hot_brand ul li{list-style: none;float: left;margin-right: 50px;}
+	.hot_area ul li dl dt{margin-bottom: 10px;font-size: 14px;}
+	.hot_area ul li dl dd{margin:0 5px 5px 0;display: inline-block;}
+	.hot_area .c_txt,.hot_brand .c_txt{margin-right: 3px;}
+	.hot_brand{margin: 20px 0;}
+	/*不显示上传图片的名称*/
+    .file-item .info{display: none;}
+    .webuploader-element-invisible {
+    position: absolute !important;
+    clip: rect(1px 1px 1px 1px); /* IE6, IE7 */
+    clip: rect(1px,1px,1px,1px);
+	}
+	.uploader-list{width: 600px; overflow: hidden;}
+	.uploader-list li{width:200px; height:200px;box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);overflow: hidden;position: relative;text-align: center;overflow: hidden;}
+	.file-item{margin: 1px 8px 16px 1px; padding: 0}
+	#uploader-demo,#uploader-demo2{float: left;width: 875px;}
+	#uploader-demo .thumbnail,#uploader-demo2 .thumbnail{width:200px; height:250px;}
+	#uploader-demo #fileList  li,#uploader-demo2 #fileList2  li{list-style: none;float: left; height:250px;}
+	#uploader-demo #fileList .upload-state-done,#uploader-demo2 #fileList2 .upload-state-done{float: left;}
+	.uploader-list{width: 100%;}
+	.upload-state-done:after{bottom: 50px;}
+
+	.picture_upload #fileList .txt_img,.shop_upload #fileList2 .txt_img{float: left; border: 1px solid #d0d0d0; width: 192px;height: 30px; line-height: 30px;margin-top: 10px;}
+
+	.wrap .btnok{text-align: center;}
+	</style>
+</head>
+<body>
+	<div class="wrap add_goods">
+			{% include "header.html" %}
+			<div class="main_wrap">
+				<div class="position clearfix">
+					<div class="left"><a href="javascript:history.go(-1)" class="btn"><span class="icon-arrow-left"></span>返回</a></div>
+					<div class="t yh">编辑首页</div>
+				</div>
+				<div class="layout" style="padding-top:10px">
+
+					<div class="bd">
+						{% include "tab_head.html" %}
+					</div>
+					<div class="content">
+						<div class="web_area">
+							<div class="web_list">
+								<label>网页标题：</label>
+								<input type="text" class="txt" id="J_meta_title" value="{{index_info['meta_title']}}">
+							</div>
+							<div class="web_list">
+								<label>网页关键字：</label>
+								<input type="text" class="txt" id="J_meta_keyword" value="{{index_info['meta_keyword']}}">
+							</div>
+							<div class="web_list">	
+								<label>网页描述：</label>
+								<textarea rows="5" class="tarea" id="J_meta_description">{{index_info['meta_description']}}</textarea>
+							</div>
+							
+						</div>
+						<div class="clear"></div>
+
+						<div class="hot_area">
+							<div class="hot_l">热门标签：</div>
+							<div class='tag_area'>
+								<ul>
+									{% for tag in tag_all.items() %}
+									<li>
+										<dl>
+											<dt name="tag_one">{{tag[0]}}</dt>
+											{% for t in tag[1]%}
+												{% if t in hot_tag %}
+												<dd><input type="checkbox" class="c_txt" name="tag_second" value="{{t}}" checked="checked">{{t}}</dd>
+												{% else %}
+												<dd><input type="checkbox" class="c_txt" name="tag_second" value="{{t}}">{{t}}</dd>
+												{% end %}
+											{% end %}
+										</dl>
+									</li>
+									{% end %}
+								</ul>
+							</div>
+						</div>
+
+						<div class="hot_brand clearfix">
+							<div class="hot_l">热门品牌：</div>
+							<div class="tag_area">
+								<ul>
+									{% for b in brand_all %}
+										{% if b in hot_brand %}
+										<li><input type="checkbox" class="c_txt" name="brand_name" value="{{b}}" checked="checked">{{b}}</li>
+										{% else %}
+										<li><input type="checkbox" class="c_txt" name="brand_name" value="{{b}}">{{b}}</li>
+										{% end %}
+									{% end %}
+								</ul>
+							</div>
+
+						</div>
+
+						<div class="picture_upload">
+							<div class="hot_l">大图上传：</div>
+							<div id="uploader-demo">
+								    <!--用来存放item-->
+								    <div id="filePicker">选择图片</div>
+								    <span class="tips Validform_checktip"></span>
+								    <div class="clear"></div>
+								    <ul id="fileList" class="uploader-list clearfix">
+								    	{% for image in cover_image %}
+								    	<li class="file-item thumbnail edit" data-url='{{image[0]}}'>
+								    		<img src='{{image[0]}}' style="width:200px;height:200px;">
+								    		<p class="edit_box"><span class="J_del_img">删除</span></p>
+								    		<input type="text" class="txt_img txt" name="cover_img" value='{{image[1]}}'>
+								    	</li>
+								    	{% end %}
+								    	<input type="hidden" class="txt" name="imgUP" id="J_cover_img">
+								    </ul>
+							</div>
+						</div>
+
+						<div class="clear"></div>
+
+						<div class="shop_upload">
+							<div class="hot_l">商城商品：</div>
+							<!--dom结构部分-->
+								<div id="uploader-demo2">
+								    <!--用来存放item-->
+								    <div id="filePicker2">选择图片</div>
+								    <span class="tips Validform_checktip"></span>
+								    <div class="clear"></div>
+								    <ul id="fileList2" class="uploader-list clearfix">
+								    	{% for shop in shopping_goods %}
+								    	<li class="file-item thumbnail edit" data-url='{{shop[0]}}'>
+								    		<img src='{{shop[0]}}' width="200" height="200">
+								    		<p class="edit_box"><span class="J_del_img">删除</span></p>
+								    		<input type="text" class="txt_img txt" name="shop_goods"  value='{{shop[1]}}'>
+								    	</li>
+								    	{% end %}
+								    	<input type="hidden" class="txt" name="imgUP"  id="J_shopping_goods"/>
+								    </ul>
+								</div>
+						</div>
+
+						<div class="clear"></div>
+
+						<div class="btnok"><a href="#" class="btn btn_green" id="J_OK">确定</a></div>
+					</div>
+
+				</div>
+			</div>
+	</div>
+	<script type="text/javascript">
+
+    //确定提交
+    $('#J_OK').on('click',function(){
+    	var meta_title = $('#J_meta_title').val(),
+	        meta_keyword = $('#J_meta_keyword').val(),
+	        meta_description = $('#J_meta_description').val();
+
+    	var J_checked = $("input[name=tag_second]:checked");
+	    var tag = [];
+	        for(var i=0; i< J_checked.length; i++){
+	            tag.push(J_checked.eq(i).attr('value'));
+	        }
+  
+	    var J_brand = $("input[name=brand_name]:checked");
+	    var brand = [];
+	        for(var i=0; i< J_brand.length; i++){
+	            brand.push(J_brand.eq(i).attr('value'));
+	        }
+
+	    //大图上传
+	    var cover_img = $('#J_cover_img').val().split(',');
+	    var cover_url = $('input[name=cover_img]');
+	    var cover_all=[];
+
+	    for(var i=0;i<cover_url.length;i++){
+	    	if(cover_url[i].value == ''){
+	    		showMsg('大图上传的URL不能为空！',3)
+	    		return false;
+	    	}
+            cover_all.push(cover_img[i]+'&'+cover_url[i].value);
+	    }
+
+        //商品商城
+	    var shopping_goods = $('#J_shopping_goods').val().split(',');
+	    var shopping_url = $('input[name=shop_goods]');
+	    var shopping_all = [];
+	    for(var i=0;i<shopping_url.length;i++){
+	    	if(shopping_url[i].value == ''){
+	    		showMsg('商城商品的URL不能为空！',3)
+	    		return false;
+	    	}
+            shopping_all.push(shopping_goods[i]+'&'+shopping_url[i].value);
+	    }
+
+	    app.loading.open("正在提交...");
+		$.post("/zixun/admin/edit_index/?_xsrf="+getCookie("_xsrf"),{
+			hot_tag:tag.join(','),
+			hot_brand:brand.join(','),
+			cover_image : cover_all.join(','),
+			shopping_goods : shopping_all.join(','),
+			meta_title : $("#J_meta_title").val(),
+			meta_keyword : $("#J_meta_keyword").val(),
+			meta_description : $("#J_meta_description").val()
+				
+			},function(data){
+				if(data.status==0){
+					app.loading.close();
+					showMsg("提交成功",1);	
+				}else{
+					app.loading.close();
+					showMsg(data.msg,2);
+				}
+		});
+		return false;
+    })
+
+
+	</script>
+	<script type="text/javascript">
+	$(".uploader-list").on("click",".J_del_img",function(){
+		var elem = $(this).parents(".file-item ");
+			url = elem.data("url");
+			//console.log(url)
+			if(confirm("确定要删除本图片吗？")){
+				delIMG (elem,url);
+			}
+	})
+
+	//删除图片
+	function delIMG (elem,url){
+		var elem =elem,
+			url = url;
+
+		$.post("/qiniu/delete/",{
+				_xsrf:getCookie("_xsrf"),
+				url:url
+			},function(data){
+				if(data.status==0){
+					elem.remove();
+					showMsg("删除成功");
+					setIMGval();
+				}else if(data.status==2){
+					showMsg("删除成功")
+					elem.remove();
+					setIMGval();
+				}else{
+					showMsg("删除失败");
+				}
+		})
+	}
+
+	//生成图片input值
+	function setIMGval(){
+		var elem = $(".uploader-list");
+
+		elem.each(function(){
+			var thisValDom = $(this).find("input[name=imgUP]"),
+				thisIMG = $(this).find(".file-item"),
+				thisVal = [];
+
+			thisIMG.each(function(i){
+				var url = thisIMG.eq(i).data("url");
+				thisVal.push(url);
+			})
+			thisValDom.val(thisVal.toString());
+
+		})
+
+	}
+
+	setIMGval();
+
+	$(function(){
+		var BASE_URL = '/static/admin/';
+		(function(){
+
+			 var $ = jQuery,
+			    $list = $('#fileList'),
+			    thumbnailWidth = 200,
+			    thumbnailHeight = 200,
+			    uploader;
+
+			// 初始化Web Uploader
+			var uploader = WebUploader.create({
+
+			    // 选完文件后，是否自动上传。
+			    auto: true,
+
+			    // swf文件路径
+			    swf: BASE_URL + '/js/Uploader.swf',
+
+			    // 文件接收服务端。
+			    server: '/qiniu/upload/?_xsrf='+getCookie("_xsrf"),
+			    //server: '',
+
+			    // 选择文件的按钮。可选。
+			    // 内部根据当前运行是创建，可能是input元素，也可能是flash.
+			    pick: '#filePicker',
+
+			    // 只允许选择图片文件。
+			    accept: {
+			        title: 'Images',
+			        extensions: 'gif,jpg,jpeg,bmp,png',
+			        mimeTypes: 'image/*'
+			    },
+			    fileNumLimit: 1,
+	        	fileSizeLimit: 5 * 1024 * 1024    // 限制图片大小5M以内
+			});
+
+			// 当有文件添加进来的时候
+			uploader.on( 'fileQueued', function( file ) {
+			    var $li = $(
+			            '<div id="' + file.id + '" class="file-item thumbnail edit">' +
+			                '<img>' +
+			                '<div class="info">' + file.name + '</div><p class="edit_box"><span class="J_del_img">删除</span></p>' +
+			                '<input type="text" class="txt_img txt" name="cover_img" value="">'+
+			            '</div>'
+			            ),
+			        $img = $li.find('img');
+
+
+			    // $list为容器jQuery实例
+			    $list.append( $li );
+
+			    // 创建缩略图
+			    // 如果为非图片文件，可以不用调用此方法。
+			    // thumbnailWidth x thumbnailHeight 为 100 x 100
+			    uploader.makeThumb( file, function( error, src ) {
+			        if ( error ) {
+			            $img.replaceWith('<span>不能预览</span>');
+			            return;
+			        }
+
+			        $img.attr( 'src', src );
+			    }, thumbnailWidth, thumbnailHeight );
+			});
+
+			// 文件上传过程中创建进度条实时显示。
+			uploader.on( 'uploadProgress', function( file, percentage ) {
+			    var $li = $( '#'+file.id ),
+			        $percent = $li.find('.progress span');
+
+			    // 避免重复创建
+			    if ( !$percent.length ) {
+			        $percent = $('<p class="progress"><span></span></p>')
+		                .appendTo( $li )
+		                .find('span');
+			    }
+
+			    $percent.css( 'width', percentage * 100 + '%' );
+			});
+
+			// 文件上传成功，给item添加成功class, 用样式标记上传成功。
+			uploader.on( 'uploadSuccess', function( file,data ) {
+			    var url = data.url;
+			    $( '#'+file.id ).addClass('upload-state-done').attr("data-url",url);
+			    setIMGval();
+			});
+
+			// 文件上传失败，显示上传出错。
+			uploader.on( 'uploadError', function( file ) {
+			    var $li = $( '#'+file.id ),
+			        $error = $li.find('div.error');
+
+			    // 避免重复创建
+			    if ( !$error.length ) {
+			        $error = $('<div class="error"></div>').appendTo( $li );
+			    }
+
+			    $error.text('上传失败');
+			});
+
+			// 完成上传完了，成功或者失败，先删除进度条。
+			uploader.on( 'uploadComplete', function( file ) {
+			    $( '#'+file.id ).find('.progress').remove();
+			});
+		})();
+		(function(){
+
+		 var $ = jQuery,
+		    $list = $('#fileList2'),
+		    thumbnailWidth = 200,
+		    thumbnailHeight = 200,
+		    uploader;
+
+		// 初始化Web Uploader
+		var uploader = WebUploader.create({
+
+		    // 选完文件后，是否自动上传。
+		    auto: true,
+
+		    // 是否允许放大，如果想要生成小图的时候不失真，此选项应该设置为false.
+    		allowMagnify: true,
+
+		    // swf文件路径
+		    swf: BASE_URL + '/js/Uploader.swf',
+
+		    // 文件接收服务端。
+		    server: '/qiniu/upload/?_xsrf='+getCookie("_xsrf"),
+		    //server: '',
+
+		    // 选择文件的按钮。可选。
+		    // 内部根据当前运行是创建，可能是input元素，也可能是flash.
+		    pick: '#filePicker2',
+
+		    // 只允许选择图片文件。
+		    accept: {
+		        title: 'Images',
+		        extensions: 'gif,jpg,jpeg,bmp,png',
+		        mimeTypes: 'image/*'
+		    },
+		    fileNumLimit: 10,
+        	fileSizeLimit: 5 * 1024 * 1024    // 限制图片大小5M以内
+		});
+
+		// 当有文件添加进来的时候
+		uploader.on( 'fileQueued', function( file ) {
+		    var $li = $(
+		            '<div id="' + file.id + '" class="file-item thumbnail edit">' +
+		                '<img>' +
+		                '<div class="info">' + file.name + '</div><p class="edit_box"><span class="J_del_img">删除</span></p>' +
+		                 '<input type="text" class="txt_img txt" name="shop_goods" value="">'+
+		            '</div>'
+		            ),
+		        $img = $li.find('img');
+
+
+		    // $list为容器jQuery实例
+		    $list.append( $li );
+
+		    // 创建缩略图
+		    // 如果为非图片文件，可以不用调用此方法。
+		    // thumbnailWidth x thumbnailHeight 为 100 x 100
+		    uploader.makeThumb( file, function( error, src ) {
+		        if ( error ) {
+		            $img.replaceWith('<span>不能预览</span>');
+		            return;
+		        }
+
+		        $img.attr( 'src', src );
+		    }, thumbnailWidth, thumbnailHeight );
+		});
+
+		// 文件上传过程中创建进度条实时显示。
+		uploader.on( 'uploadProgress', function( file, percentage ) {
+		    var $li = $( '#'+file.id ),
+		        $percent = $li.find('.progress span');
+
+		    // 避免重复创建
+		    if ( !$percent.length ) {
+		        $percent = $('<p class="progress"><span></span></p>')
+	                .appendTo( $li )
+	                .find('span');
+		    }
+
+		    $percent.css( 'width', percentage * 100 + '%' );
+		});
+
+		// 文件上传成功，给item添加成功class, 用样式标记上传成功。
+		uploader.on( 'uploadSuccess', function( file,data ) {
+			var url = data.url;
+		    $( '#'+file.id ).addClass('upload-state-done').attr("data-url",url);
+		    setIMGval();
+		});
+
+		// 文件上传失败，显示上传出错。
+		uploader.on( 'uploadError', function( file ) {
+		    var $li = $( '#'+file.id ),
+		        $error = $li.find('div.error');
+
+		    // 避免重复创建
+		    if ( !$error.length ) {
+		        $error = $('<div class="error"></div>').appendTo( $li );
+		    }
+
+		    $error.text('上传失败');
+		});
+
+		// 完成上传完了，成功或者失败，先删除进度条。
+		uploader.on( 'uploadComplete', function( file ) {
+		    $( '#'+file.id ).find('.progress').remove();
+		});
+	})()
+
+	})
+
+	</script>
+</body>
+
+</html>

@@ -1,0 +1,329 @@
+{% autoescape None %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>小荷资讯管理系统</title>
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+    {% include "min_head.html" %}
+    <link href="/static/admin/css/webuploader.css?v={{ handler.version }}" rel="stylesheet" type="text/css" />
+    <script src="/static/admin/js/webuploader.min.js?v={{ handler.version }}" type="text/javascript"></script>
+    <script type="text/javascript" src="/static/admin/js/Validform_v5.3.2_min.js"></script>
+     <style type="text/css">
+    .table .txt,.table .txta{ width: 774px;}
+    .table .txta{ height: 150px;}
+
+    .file-item .info{display: none;}
+    .webuploader-element-invisible {
+        position: absolute !important;
+        clip: rect(1px 1px 1px 1px); /* IE6, IE7 */
+        clip: rect(1px,1px,1px,1px);
+    }
+    #uploader-demo .thumbnail{ width:250px; height:auto; float: none; overflow: hidden; }
+    .uploader-list .thumbnail img{ width: 100%;}
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <div class="main_wrap w970">
+            <div class="position clearfix">
+                <div class="left"><a href='/zixun/admin/brand_list/' class="btn"><span class="icon-arrow-left"></span>返回</a></div>
+                <div class="t yh">编辑品牌</div>
+            </div>
+            <div class="layout" style="padding-top:10px">
+                <div class="bd">
+                    <form class="add_form">
+                    	 <table width="100%" class="table yh">
+							<tr>
+								<td class="lr" style="width:15%">id：</td>
+								<td style="width:85%"><input type="text" class="txt" id="J_id" disabled="disabled"  value="{{brand_info['id']}}" /></td>
+							</tr>
+							<tr>
+								<td class="lr" style="width:15%">名称：</td>
+								<td style="width:85%"><input type="text" class="txt" id="J_name"   value="{{brand_info['name']}}" /></td>
+								
+							</tr>
+							<tr>
+								<td class="lr" style="width:15%">URL：</td>
+								<td style="width:85%"><input type="text" class="txt" id="J_url" disabled="disabled"  value="{{brand_info['url']}}" /></td>
+								
+							</tr>
+							<tr>
+								<td class="lr" style="width:15%">描述：</td>
+								<td style="width:85%"><textarea rows="5" class="txta"  id="J_description"  />{{brand_info['description']}}</textarea></td>
+								
+							</tr>
+							<tr>
+								<td class="lr" style="width:15%">品牌分类：</td>
+								<td style="width:85%"><input type="text" class="txt" id="J_brand_classify"  value="{{brand_info['brand_classify']}}" /></td>
+								
+							</tr>
+							 <tr>
+                                <td class="lr" style="width:15%"><span class="red">*</span>封面图片：</td>
+                                <td style="width:85%">
+                                    <div id="uploader-demo">
+									    <div id="filePicker">选择图片</div>
+									    <span class="tips Validform_checktip"></span>
+									    <div class="clear"></div>
+									    <div id="fileList" class="uploader-list clearfix">
+									    	<div class="file-item thumbnail edit" data-url="{{brand_info['cover_image']}}">
+									    		<img src="{{brand_info['cover_image']}}" width="300" height="300" id='J_edit_img'>
+									    		<p class="edit_box"><span class="J_del_img">删除</span></p>
+									    	</div>
+									    	
+									    	<input type="hidden" class="txt" id="J_c_banner"/>
+									    </div>
+									</div>
+                                </td>
+                            </tr>
+                            <tr>
+								<td class="lr" style="width:15%">公司名称：</td>
+								<td style="width:85%"><input type="text" class="txt" id="J_company_name" value="{{brand_info['company_name']}}" /></td>
+								
+							</tr>
+							<tr>
+								<td class="lr" style="width:15%">公司网址：</td>
+								<td style="width:85%"><input type="text" class="txt" id="J_company_website"  value="{{brand_info['company_website']}}" /></td>
+								
+							</tr>
+							<tr>
+								<td class="lr" style="width:15%">公司地址：</td>
+								<td style="width:85%"><input type="text" class="txt" id="J_company_address"  value="{{brand_info['company_address']}}" /></td>
+								
+							</tr>
+							<tr>
+								<td class="lr" style="width:15%">网页标题：</td>
+								<td style="width:85%"><input type="text" class="txt" id="J_meta_title"  value="{{brand_info['meta_title']}}" /></td>
+								
+							</tr>
+							<tr>
+								<td class="lr" style="width:15%">网页关键字：</td>
+								<td style="width:85%"><input type="text" class="txt" id="J_meta_key"  value="{{brand_info['meta_keyword']}}" /></td>
+								
+							</tr>
+							<tr>
+								<td class="lr" style="width:15%">网页描述：</td>
+								<td style="width:85%"><textarea rows="5" class="txta" id="J_meta_description"   />{{brand_info['meta_description']}}</textarea></td>
+								
+							</tr>
+							<tr>
+                                <td colspan="2" class="lc">
+                                    <input type="submit" class="btn btn_green" value="保存" />
+                                </td>
+                            </tr>
+						 </table>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+	$.Tipmsg.r=null;
+	$(".add_form").Validform({
+		tiptype:function(msg){
+			showMsg(msg,3)
+		},
+		tipSweep:false,
+		showAllError:false,
+		beforeSubmit:function(){
+			var cover_image = $('#J_c_banner').val().split(',');
+ 		    if(cover_image){
+ 		        cover_image = cover_image[cover_image.length-1]
+		    }else{
+			    cover_image = '';
+	    	}
+
+			app.loading.open("正在提交...");
+			$.post("/zixun/admin/edit_brand/?_xsrf="+getCookie("_xsrf"),{
+					id:$("#J_id").val(),
+					name:$("#J_name").val(),
+					description:$("#J_description").val(),
+					company_name : $("#J_company_name").val(),
+					cover_image : cover_image,
+					company_website : $("#J_company_website").val(),
+					brand_classify : $("#J_brand_classify").val(),
+					company_address : $("#J_company_address").val(),
+					meta_title : $("#J_meta_title").val(),
+					meta_keyword : $("#J_meta_key").val(),
+					meta_description : $("#J_meta_description").val()
+				
+				},function(data){
+					if(data.status==0){
+						app.loading.close();
+						showMsg("提交成功",1);
+						setTimeout(function(){
+							window.location.href="/zixun/admin/brand_list/";
+						},2000)
+					}else{
+						app.loading.close();
+						showMsg(data.msg,2);
+					}
+			});
+			return false;
+		}
+
+	})
+</script>
+ 	<script type="text/javascript">
+	$(".uploader-list").on("click",".J_del_img",function(){
+		var elem = $(this).parents(".file-item ");
+			url = elem.data("url");
+			//console.log(url)
+			if(confirm("确定要删除本图片吗？")){
+				delIMG (elem,url);
+			}
+	})
+
+	//删除图片
+	function delIMG (elem,url){
+		var elem =elem,
+			url = url;
+
+		$.post("/qiniu/delete/",{
+				_xsrf:getCookie("_xsrf"),
+				url:url
+			},function(data){
+				if(data.status==0){
+					elem.remove();
+					showMsg("删除成功");
+					setIMGval();
+				}else if(data.status==2){
+					showMsg("删除成功")
+					elem.remove();
+					setIMGval();
+				}else{
+					showMsg("删除失败");
+				}
+		})
+	}
+
+	//生成图片input值
+	function setIMGval(){
+		var elem = $(".uploader-list");
+
+		elem.each(function(){
+			var thisValDom = $(this).find("input"),
+				thisIMG = $(this).find(".file-item"),
+				thisVal = [];
+
+			thisIMG.each(function(i){
+				var url = thisIMG.eq(i).data("url");
+				thisVal.push(url);
+			})
+			thisValDom.val(thisVal.toString());
+		})
+
+	}
+
+	setIMGval();
+
+	$(function(){
+		var BASE_URL = '/static/admin/';
+		(function(){
+
+			 var $ = jQuery,
+			    $list = $('#fileList'),
+			    thumbnailWidth = 300,
+			    thumbnailHeight = 300,
+			    uploader;
+
+			// 初始化Web Uploader
+			var uploader = WebUploader.create({
+
+			    // 选完文件后，是否自动上传。
+			    auto: true,
+
+			    // swf文件路径
+			    swf: BASE_URL + '/js/Uploader.swf',
+
+			    // 文件接收服务端。
+			    server: '/qiniu/upload/?_xsrf='+getCookie("_xsrf"),
+			    //server: '',
+
+			    // 选择文件的按钮。可选。
+			    // 内部根据当前运行是创建，可能是input元素，也可能是flash.
+			    pick: '#filePicker',
+
+			    // 只允许选择图片文件。
+			    accept: {
+			        title: 'Images',
+			        extensions: 'gif,jpg,jpeg,bmp,png',
+			        mimeTypes: 'image/*'
+			    },
+			    fileNumLimit: 1,
+	        	fileSizeLimit: 5 * 1024 * 1024    // 限制图片大小5M以内
+			});
+
+			// 当有文件添加进来的时候
+			uploader.on( 'fileQueued', function( file ) {
+			    var $li = $(
+			            '<div id="' + file.id + '" class="file-item thumbnail edit">' +
+			                '<img>' +
+			                '<div class="info">' + file.name + '</div><p class="edit_box"><span class="J_del_img">删除</span></p>' +
+			            '</div>'
+			            ),
+			        $img = $li.find('img');
+
+
+			    // $list为容器jQuery实例
+			    $list.append( $li );
+
+			    // 创建缩略图
+			    // 如果为非图片文件，可以不用调用此方法。
+			    // thumbnailWidth x thumbnailHeight 为 100 x 100
+			    uploader.makeThumb( file, function( error, src ) {
+			        if ( error ) {
+			            $img.replaceWith('<span>不能预览</span>');
+			            return;
+			        }
+
+			        $img.attr( 'src', src );
+			    }, thumbnailWidth, thumbnailHeight );
+			});
+
+			// 文件上传过程中创建进度条实时显示。
+			uploader.on( 'uploadProgress', function( file, percentage ) {
+			    var $li = $( '#'+file.id ),
+			        $percent = $li.find('.progress span');
+
+			    // 避免重复创建
+			    if ( !$percent.length ) {
+			        $percent = $('<p class="progress"><span></span></p>')
+		                .appendTo( $li )
+		                .find('span');
+			    }
+
+			    $percent.css( 'width', percentage * 100 + '%' );
+			});
+
+			// 文件上传成功，给item添加成功class, 用样式标记上传成功。
+			uploader.on( 'uploadSuccess', function( file,data ) {
+			    var url = data.url;
+			    $( '#'+file.id ).addClass('upload-state-done').attr("data-url",url);
+			    setIMGval();
+			});
+
+			// 文件上传失败，显示上传出错。
+			uploader.on( 'uploadError', function( file ) {
+			    var $li = $( '#'+file.id ),
+			        $error = $li.find('div.error');
+
+			    // 避免重复创建
+			    if ( !$error.length ) {
+			        $error = $('<div class="error"></div>').appendTo( $li );
+			    }
+
+			    $error.text('上传失败');
+			});
+
+			// 完成上传完了，成功或者失败，先删除进度条。
+			uploader.on( 'uploadComplete', function( file ) {
+			    $( '#'+file.id ).find('.progress').remove();
+			});
+		})();
+	})
+
+</script>
+</body>
+</html>

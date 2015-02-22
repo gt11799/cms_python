@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>{{index_info['meta_title']}}_小荷特卖</title>
+	<meta name="keywords" content={{index_info['meta_keyword']}} />
+	<meta name="description" content={{index_info['meta_description']}} />
+	<meta name="baidu-site-verification" content="0652033889a727ed7e9f3e9469b9cf86"/>
+	<link rel="stylesheet" href="/static/news/css/base.css?v={{ handler.version }}" />
+	<link rel="stylesheet" href="/static/news/css/style.css?v={{ handler.version }}" />
+	<script src="/static/news/js/jquery-1.8.3.min.js"></script>
+	<script type="text/javascript" src="/static/news/js/common.js?v={{ handler.version }}"></script>
+	<script type="text/javascript" src="/static/news/js/jquery.SuperSlide.2.1.1.js"></script>
+	{% include "baidu_analyse.html" %}
+</head>
+<body class="index">
+	{% include "header.html" %}
+	<h1 style="display:none;">{{index_info['meta_title']}}</h1>
+	<div class="wrap">
+		<div class="content clearfix">
+			<!-- 左边栏 -->
+			<div class="content_left">
+				<!-- 轮播大图 -->
+				<div class="banner">
+					<div class="hd">
+						<ul>{% for image in cover_image %}
+							<li></li>
+							{% end %}
+						</ul>
+					</div>
+					<div class="bd">
+						<ul>{% for image in cover_image %}
+							<li><a href="{{image[1]}}" target="_blank"><img src="{{image[0]}}" width="810" height="450"></a></li>
+							{% end %}
+						</ul>
+					</div>
+					<a class="spite prev"></a>
+					<a class="spite next"></a>
+				</div>
+				<!-- 服装品牌 -->
+				<div class="box brand">
+					<div class="hd clearfix">
+						<h3>服装品牌</h3><span class="more"><a href="/zixun/fzpp/" target="_blank"><span class="icon"></span>更多</a></span>
+					</div>
+					<div class="bd">
+						<ul class="bd-top clearfix">
+							{% for r in articles[0][:2] %}
+							<li class="boxli">
+								<a href="/zixun/fzpp/{{r[1]}}" target="_blank"><img src="{{r[3]}}" width="338" height="198"><h3>{{r[0]}}</h3></a>
+							</li>
+							{% end %}
+						</ul>
+						<div class="line"></div>
+						<ul class="bd-bottom clearfix">
+							{% for r in articles[0][2:6]%}
+							<li  class="boxli" >
+								<div class="img fl"><a href="/zixun/fzpp/{{r[1]}}" target="_blank"><img src="{{r[3]}}" width="132" height="78"></a></div>
+								<div class="desc fl">
+									<a href="/zixun/fzpp/{{r[1]}}" target="_blank"><h2><b>{{r[0]}}</b></h2><p>{{r[2]}}</p></a>
+								</div>
+							</li>
+							{% end %}
+						</ul>
+					</div>
+				</div>
+				<!-- 服装设计 -->
+				<div class="box">
+					<div class="hd clearfix">
+						<h3>服装设计</h3><span class="more"><a href="/zixun/fzsj/" target="_blank"><span class="icon"></span>更多</a></span>
+					</div>
+					<div class="bd">
+						<ul class="bd-top clearfix">
+							{% for r in articles[1][:2]%}
+							<li class="boxli">
+								<a href="/zixun/fzsj/{{r[1]}}" target="_blank"><img src="{{r[3]}}" width="338" height="198"><h3>{{r[0]}}</h3></a>
+							</li>
+							{% end %}
+						</ul>
+						<div class="line"></div>
+						<ul class="bd-bottom clearfix">
+							{% for r in articles[1][2:6] %}
+							<li  class="boxli" >
+								<div class="img fl"><a href="/zixun/fzsj/{{r[1]}}" target="_blank"><img src="{{r[3]}}" width="132" height="78"></a></div>
+								<div class="desc fl">
+									<a href="/zixun/fzsj/{{r[1]}}" target="_blank"><h2><b>{{r[0]}}</b></h2><p>{{r[2]}}</p></a>
+								</div>
+							</li>
+							{% end %}
+						</ul>
+					</div>
+				</div>
+				<!-- 服装搭配 -->
+				<div class="collos">
+					<div class="hd clearfix">
+						<h3>服装搭配</h3><span class="more"><a href="/zixun/fzdp/" target="_blank"><span class="icon"></span>更多</a></span>
+					</div>
+					<div class="bd clearfix">
+						<div class="collos-banner">
+							<div class="hd">
+								<ul>
+									
+								</ul>
+							</div>
+							<div class="bd1">
+								<ul>
+									{% for r in articles[2][:-1]%}
+									<li  class="boxli">
+										<a href="/zixun/fzdp/{{r[1]}}" target="_blank"><img src="{{r[3]}}" width="388" height="478"><h3>{{r[0]}}</h3></a>
+									</li>
+									{% end %}
+								</ul>
+							</div>
+							<a class="spite prev"></a>
+							<a class="spite next"></a>
+						</div>
+						
+						<div class="collos-right">
+							<ul>
+								{% for r in articles[2][2:6] %}
+								<li><a href="/zixun/fzdp/{{r[1]}}" target="_blank"><img src="{{r[3]}}" width="133" height="188"><p>{{r[0]}}</p></a></li>
+								{% end %}
+							</ul>
+						</div>
+					</div>
+				</div>
+				<!-- 服装配饰 -->
+				<div class="box">
+					<div class="hd clearfix">
+						<h3>服装配饰</h3><span class="more"><a href="/zixun/fzps/" target="_blank"><span class="icon"></span>更多</a></span>
+					</div>
+					<div class="bd">
+						<ul class="bd-top clearfix">
+							{% for r in articles[3][:2] %}
+							<li class="boxli">
+								<a href="/zixun/fzps/{{r[1]}}" target="_blank"><img src="{{r[3]}}" width="338" height="198"><h3>{{r[0]}}</h3></a>
+							</li>
+							{% end %}
+						</ul>
+					</div>
+				</div>
+				<!-- 女士服装 -->
+				<div class="box woman">
+					<div class="hd clearfix">
+						<h3>女士服装</h3><span class="more"><a href="/zixun/nsfz/" target="_blank"><span class="icon"></span>更多</a></span>
+					</div>
+					<ul class="bd clearfix">
+						{% for r in articles[4][:2]%}
+						<li class="clearfix">
+							<div class="img fl"><a href="/zixun/nsfz/{{r[1]}}" target="_blank"><img src="{{r[3]}}" width="208" height="122"></a></div>
+							<div class="desc fl">
+								<a href="/zixun/nsfz/{{r[1]}}" target="_blank"><h2><b>{{r[0]}}</b></h2>
+									<p>{{r[2]}}</p>
+								</a>
+							</div>
+						</li>
+						{% end %}
+					</ul>
+				</div>
+				<!-- 儿童服装 -->
+				<div class="box woman children">
+					<div class="hd clearfix">
+						<h3>儿童服装</h3><span class="more"><a href="/zixun/etfz/" target="_blank"><span class="icon"></span>更多</a></span>
+					</div>
+					<ul class="bd clearfix">
+						{% for r in articles[5][:2] %}
+						<li class="clearfix">
+							<div class="img fl"><a href="/zixun/etfz/{{r[1]}}" target="_blank"><img src="{{r[3]}}" width="208" height="122"></a></div>
+							<div class="desc fl">
+								<a href="/zixun/etfz/{{r[1]}}" target="_blank"><h2><b>{{r[0]}}</b></h2>
+									<p>{{r[2]}}</p>
+								</a>
+							</div>
+						</li>
+						{% end %}
+					</ul>
+				</div>
+				<!-- 儿童玩具 -->
+				<div class="box">
+					<div class="hd clearfix">
+						<h3>儿童玩具</h3><span class="more"><a href="/zixun/etfz/" target="_blank"><span class="icon"></span>更多</a></span>
+					</div>
+					<div class="bd">
+						<ul class="bd-top clearfix">
+							{% for r in articles[6][:2]%}
+							<li class="boxli">
+								<a href="/zixun/etwj/{{r[1]}}" target="_blank"><img src="{{r[3]}}" width="338" height="198"><h3>{{r[0]}}</h3></a>
+							</li>
+							{% end %}
+						</ul>
+					</div>
+				</div>
+			</div>
+			<!-- 右边栏 -->
+			<div class="content_right">
+				<!-- 资讯 -->
+				<div class="smallbox clearfix">
+					<div class="hd clearfix">
+						<span class="more"><a href=""><span></span></a></span><h3>资讯</h3>
+					</div>
+					<div class="bd clearfix">
+						{% for article in latest_articles %}
+						<div class="list">
+							<div class="img"><a href="/zixun/{{article[1]}}" target="_blank"><img src="{{article[3]}}" width="100" height="58"></a></div>
+							<div class="desc">
+								<a href="/zixun/{{article[1]}}" target="_blank"><h2><b>{{article[0]}}</b></h2>
+									<p>{{article[2]}}</p>
+								</a>
+							</div>
+						</div>
+						{% end %}
+					</div>
+				</div>
+				<!-- 热门标签 -->
+				<div class="smallbox tagList">
+					<div class="hd clearfix">
+						<h2 class="fl">热门标签</h2>
+					</div>
+					<div class="tags">
+						<ul class="clearfix">{% for tag in hot_tag %}
+							{% if random()<0.3 %}
+							<li><a href="/label/{{tag[1]}}" target="_blank" class="hot">{{tag[0]}}</a></li>
+							{% else %}
+							<li><a href="/label/{{tag[1]}}" target="_blank">{{tag[0]}}</a></li>
+							{% end %}
+							{% end %}
+						</ul>
+					</div>
+				</div>
+				<!-- 图片展示 -->
+				<div class="smallbox showPic">
+					<div class="bd">
+						<ul>{% for good in shopping_goods %}
+							<li><a href="{{good[1]}}" target="_blank"><img src="{{good[0]}}" width="325" height="358"></a></li>
+							{% end %}
+						</ul>
+					</div>
+					<div class="hd">
+						<ul>{% for good in shopping_goods %}
+							<li><a href="{{good[1]}}" target="_blank"><img src="{{good[0]}}" width="96" height="97"></a></li>
+							{% end %}
+						</ul>
+					</div>
+				</div>
+				<!-- 热门品牌 -->
+				<div class="smallbox tagList">
+					<div class="hd clearfix">
+						<h2 class="fl">热门品牌</h2><span class="more"><a href=""><span></span></a></span>
+					</div>
+					<div class="hotBrand">
+						<ul class="clearfix">{% for brand in hot_brand %}
+							<li><a href="/pinpai/{{brand[1]}}" target="_blank"><img src="{{brand[2]}}" width="88" height="88"></a></li>
+							{% end %}
+						</ul>
+					</div>
+				</div>
+				<!-- 热门文章 -->
+				<div class="smallbox hotArticle clearfix">
+					<div class="hd clearfix">
+						<span class="more"><a href=""><span></span></a></span><h3>热门文章</h3>
+					</div>
+					<div class="bd">
+						<ul>
+							{% for article in hot_articles %}
+							<li><a href="/zixun/{{article[1]}}" target="_blank">
+								<dl>
+									<dt>{{article[0]}}</dt>
+									<dd>{{article[2]}}</dd>
+								</dl>
+							</a></li>
+							{% end %}
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	{% include "footer.html" %}
+</body>
+<script type="text/javascript">
+jQuery(".banner").slide({titCell:".hd ul",mainCell:".bd ul",autoPlay:true,autoPage:"<li><a></a></li>"});
+jQuery(".collos-banner").slide({titCell:".hd ul",mainCell:".bd1 ul",autoPlay:true,autoPage:"<li><a></a></li>"});
+jQuery(".smallbox.showPic").slide({mainCell:".bd ul",effect:"left",autoPlay:false,delayTime:300});
+</script>
+</html>

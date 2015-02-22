@@ -1,0 +1,68 @@
+<div class="header">
+	<div class="content clearfix">
+		<div class="logo">
+			<a href="/zixun/" class="logo" title="小荷特卖">小荷特卖</a>
+		</div>
+		<div class="shop_cart">
+			<a href='/' class="header_shop" title="进入小荷特卖商城" target="_blank"></a>
+			<a href="/cart/v2/" class="header_cart" title="购物车" target="_blank"></a>
+		</div>
+	</div>
+	<div class="header_main">
+		<div class="header_nav">
+			<ul class="clearfix">
+				<li class="{% if handler.request.uri == '/zixun/' %}on{% end %}"><a href="/zixun/">首页</a></li>
+				<li class="{% if handler.request.uri == '/zixun/fzpp/' %}on{% end %}"><a href="/zixun/fzpp/">服装品牌</a>
+					<span>{% for children in navigate[0]%}
+						<a href="/zixun/fzpp/{{children['url']}}" target="_blank">{{children['name']}}</a> |
+						{% end %}
+					</span>
+				</li>
+				<li class="{% if handler.request.uri == '/zixun/fzsj/' %}on{% end %}"><a href="/zixun/fzsj/">服装设计</a>
+					<span>{% for children in navigate[1]%}
+						<a href="/zixun/fzsj/{{children['url']}}" target="_blank">{{children['name']}}</a> |
+						{% end %}
+					</span>
+				</li>
+				<li class="{% if handler.request.uri == '/zixun/fzdp/' %}on{% end %}"><a href="/zixun/fzdp/">服装搭配</a>
+					<span>{% for children in navigate[2]%}
+						<a href="/zixun/fzdp/{{children['url']}}" target="_blank">{{children['name']}}</a> |
+						{% end %}
+					</span>
+				</li>
+				<li class="{% if handler.request.uri == '/zixun/fzps/' %}on{% end %}"><a href="/zixun/fzps/">服装配饰</a>
+					<span>{% for children in navigate[3]%}
+						<a href="/zixun/fzps/{{children['url']}}" target="_blank">{{children['name']}}</a> |
+						{% end %}
+					</span>
+				</li>
+				<li class="{% if handler.request.uri == '/zixun/nsfz/' %}on{% end %}"><a href="/zixun/nsfz/">女士服装</a>
+					<span>{% for children in navigate[4]%}
+						<a href="/zixun/nsfz/{{children['url']}}" target="_blank">{{children['name']}}</a> |
+						{% end %}
+					</span>
+				</li>
+				<li class="{% if handler.request.uri == '/zixun/etfz/' %}on{% end %}"><a href="/zixun/etfz/">儿童服装</a>
+					<span>{% for children in navigate[5]%}
+						<a href="/zixun/etfz/{{children['url']}}" target="_blank">{{children['name']}}</a> |
+						{% end %}
+					</span>
+				</li>
+				<li class="{% if handler.request.uri == '/zixun/etwj/' %}on{% end %}"><a href="/zixun/etwj/">儿童玩具</a>
+					<span>{% for children in navigate[6]%}
+						<a href="/zixun/etwj/{{children['url']}}" target="_blank">{{children['name']}}</a> |
+						{% end %}
+					</span>
+				</li>
+				<li class="search">
+					<form action="/zixun/" method="get" target="_blank">
+						<input name="search" type="text" class="txt J_search_value" placeholder="输入关键词搜索" autocomplete="off">
+						<input type="submit" class="s_btn" value="">
+					</form>
+				</li>
+			</ul>
+		</div>
+	</div>
+	<div class="nav_listbottom"></div>
+
+</div>

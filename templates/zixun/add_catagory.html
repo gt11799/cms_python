@@ -1,0 +1,395 @@
+{% autoescape None %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>小荷资讯管理系统</title>
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+    {% include "min_head.html" %}
+    <link href="/static/admin/css/webuploader.css?v={{ handler.version }}" rel="stylesheet" type="text/css" />
+    <script src="/static/admin/js/webuploader.min.js?v={{ handler.version }}" type="text/javascript"></script>
+    <script type="text/javascript" src="/static/admin/js/Validform_v5.3.2_min.js"></script>
+    <style type="text/css">
+    .table .txt,.table .txta{ width: 774px;}
+    .table .txta{ height: 150px;}
+    .table select{width: 150px;}
+    .table ul li{list-style: none;float:left;padding: 0px; margin:0 10px 3px 0;}
+    .table #J_tag_area{float: left;}
+    .table .tag_area{width: 500px;border: 1px solid #efefef;float: left;padding: 10px;margin-left: 5px;display: none;}
+    .table textarea{width: 774px;}
+    /*不显示上传图片的名称*/
+    .file-item .info{display: none;}
+    .webuploader-element-invisible {
+    position: absolute !important;
+    clip: rect(1px 1px 1px 1px); /* IE6, IE7 */
+    clip: rect(1px,1px,1px,1px);
+	}
+	.uploader-list{width: 600px; overflow: hidden;}
+	.uploader-list li{width:200px; height:200px;box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);overflow: hidden;position: relative;text-align: center;overflow: hidden;}
+	.file-item{margin: 1px 8px 16px 1px; padding: 0}
+	/*#uploader-demo{float: left;width: 875px;}*/
+	#uploader-demo .thumbnail{width:200px; height:250px;}
+	#uploader-demo #fileList  li{list-style: none;float: left; height:250px;}
+	#uploader-demo #fileList .upload-state-done{float: left;}
+	.uploader-list{width: 100%;}
+	.upload-state-done:after{bottom: 50px;}
+	.table .txt_img{float: left; border: 1px solid #d0d0d0; width: 192px;height: 30px; line-height: 30px;margin-top: 10px;}
+	.J_submit{width: 40px;}
+    </style>
+</head>
+<body>
+	
+	<div class="wrap">
+        <div class="main_wrap w970">
+            <div class="position clearfix">
+                <div class="left"><a href='/zixun/admin/catagory_list/' class="btn"><span class="icon-arrow-left"></span>返回</a></div>
+                <div class="t yh">添加栏目</div>
+            </div>
+            <div class="layout" style="padding-top:10px">
+                <div class="bd">
+                	 <form class="add_form">
+                    	<table width="100%" class="table yh">
+							<tr>
+								<td class="lr" style="width:15%">父类名：</td>
+								<td style="width:85%"><input type="text" class="txt" id="J_add_pname" value="{{parent_name}}" /></td>
+							</tr>
+							<tr>
+								<td class="lr" style="width:15%">名称：</td>
+								<td style="width:85%"><input type="text" class="txt" id="J_add_name" /></td>
+							</tr>
+							<tr>
+								<td class="lr" style="width:15%">热门标签：</td>
+								<td style="width:85%">
+									<select id="J_tag_area">
+			                            <option value=""></option>
+			                            {% for tag in tag_all.keys() %}
+			                            <option value="{{tag}}">{{tag}}</option>
+			                            {% end %}
+			                        </select>
+			                        <div class="tag_area">
+			                        </div>
+								</td>
+							</tr>
+							<tr>
+								<td class="lr" style="width:15%">热门品牌：</td>
+								<td style="width:85%">
+									 <div class="brand_area">
+			                        	<ul>
+			                        	{% for brand in brand_all %}
+			                            	<li><input type="checkbox"  name="brand_list" value="{{brand}}">{{brand}}</li>
+			                            {% end %}
+			                            </ul>
+			                        </div>
+								</td>
+							</tr>
+							<tr>
+								<td class="lr" style="width:15%">大图上传：</td>
+								<td style="width:85%">
+									<div id="uploader-demo">
+                                        <div id="filePicker">选择图片</div>
+                                        <div class="clear"></div>
+                                        <input id="J_cover_image"  value="" type="hidden" autocomplete="off"/>
+                                        <div id="fileList" class="uploader-list"></div>
+                                    </div>
+								</td>
+							</tr>
+							<tr>
+								<td class="lr" style="width:15%">标题：</td>
+								<td style="width:85%"><input type="text" class="txt" id="J_add_title" /></td>
+							</tr>
+							<tr>
+								<td class="lr" style="width:15%">关键字：</td>
+								<td style="width:85%"><input type="text" class="txt" id="J_add_key" /></td>
+							</tr>
+							<tr>
+								<td class="lr" style="width:15%">描述：</td>
+								<td style="width:85%"><textarea rows="5" id="J_add_des"></textarea></td>
+							</tr>
+							<tr>
+                                <td colspan="2" class="lc">
+                                   <input type="submit" class="btn btn_green" value="保存" />
+                                </td>
+                            </tr>
+						</table>
+					</form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+    
+    //判断父类名的input是否可写状态
+    var url = window.location.search;
+    if(url.indexOf('?')==-1){
+    	$("#J_add_pname").attr('disabled','disabled');
+    }else{
+    	$("#J_add_pname").removeAttr('disabled');
+    }
+
+    //初始化修改渠道select的值
+    function select_change(){
+       var v = $("#J_tag_area option:selected").val();
+       if(v != ''){
+           $.post("/zixun/admin/tags/",{
+                    name : v  
+                },function(data){
+                    if(data.status==0){  
+                        if(data.tags !=''){
+                            $(".tag_area").css('display','block')
+                            var _name = data.tags;
+                            for(var i=0;i<_name.length;i++){
+                                var _html = '<input type="checkbox" class="J_list_checked" name="tag_list" value="'+_name[i]+'">'+_name[i]+'&nbsp;&nbsp;';
+                                 $('.tag_area').append(_html)
+                            }
+                        }else{
+                            $(".tag_area").css('display','none')
+                        }
+                    }else{
+                        $(".tag_area").css('display','none')
+                        showMsg(data.msg || '亲，后台报错了！',2);
+                    }
+                });
+       }else{
+       		$(".tag_area").css('display','none')
+       }
+       return false;
+    }
+    select_change();
+
+    //标签选项的功能
+    $("#J_tag_area").on('change',function(){
+       $('.tag_area').html(''); //清空
+       select_change();
+    })
+
+    $.Tipmsg.r=null;
+		$(".add_form").Validform({
+			tiptype:function(msg){
+				showMsg(msg,3)
+			},
+			tipSweep:false,
+			showAllError:false,
+			beforeSubmit:function(){
+				var parent_name = $('#J_add_pname').val(),
+                    name = $("#J_add_name").val(),
+                    title = $("#J_add_title").val(),
+                    key = $("#J_add_key").val(),
+                    description = $("#J_add_des").val();
+
+                var J_checked = $("input[name=tag_list]:checked");
+	            var tag = [];
+	            for(var i=0; i< J_checked.length; i++){
+	                tag.push(J_checked.eq(i).attr('value'));
+	            }
+
+	            var J_brand_checked = $("input[name=brand_list]:checked");
+	            var brand = [];
+	            for(var i=0; i< J_brand_checked.length; i++){
+	                brand.push(J_brand_checked.eq(i).attr('value'));
+	            }
+	            //大图上传
+			    var cover_img = $('#J_cover_image').val().split(',');
+			    var cover_url = $('input[name=cover_img]');
+			    var cover_all=[];
+
+			    for(var i=0;i<cover_url.length;i++){
+			    	if(cover_url[i].value == ''){
+			    		showMsg('大图上传的URL不能为空！',3)
+			    		return false;
+			    	}
+		            cover_all.push(cover_img[i]+'&'+cover_url[i].value);
+			    }
+	
+				app.loading.open("正在提交...");
+				$.post("/zixun/admin/add_catagory/?_xsrf="+getCookie("_xsrf"),{
+						name : name,
+						hot_tag : tag.join(','),
+						hot_brand : brand.join(','),
+						cover_image : cover_all.join(','),
+						parent_name : parent_name,
+						meta_title : title,
+						meta_keyword : key,
+						meta_description : description
+					
+					},function(data){
+						if(data.status==0){
+							app.loading.close();
+							showMsg("提交成功",1);
+							setTimeout(function(){
+								window.location.href="/zixun/admin/catagory_list/";
+							},2000)
+						}else{
+							app.loading.close();
+							showMsg(data.msg,2);
+						}
+				});
+				return false;
+			}
+
+		})
+
+    </script>
+    <script type="text/javascript">
+    
+	//调用上传控件
+	initUpload($('#fileList'),$('#filePicker'));
+
+	$(".uploader-list").on("click",".J_del_img",function(){
+	    var elem = $(this).parents(".file-item ");
+	    url = elem.data("url");
+	    if(confirm("确定要删除本图片吗？")){
+	        delIMG (elem,url);
+	    }
+	});
+	           
+	//删除图片
+	function delIMG (elem,url){
+	    var elem =elem,
+	    url = url;
+
+	    $.post("/qiniu/delete/",{
+	        _xsrf:getCookie("_xsrf"),
+	        url:url
+	    },function(data){
+	        if(data.status==0){
+	            elem.remove();
+	            showMsg("删除成功");
+	            setIMGval();
+	        }else if(data.status==2){
+	            showMsg("删除成功")
+	            elem.remove();
+	            setIMGval();
+	        }else{
+	            showMsg("删除失败");
+	        }
+	    });
+	}
+
+	//生成图片input值
+	function setIMGval(){
+	    var elem = $(".uploader-list");
+
+	    elem.each(function(){
+	        var thisValDom = $(this).prev(),
+	        thisIMG = $(this).find(".file-item"),
+	        thisVal = [];
+
+	        thisIMG.each(function(i){
+	            var url = thisIMG.eq(i).data("url");
+	            thisVal.push(url);
+	        })
+	        thisValDom.val(thisVal.toString());
+	    });
+	}
+
+
+	function initUpload(dom,btnDom){
+	    var $ = jQuery,
+	    $list = dom,
+	    thumbnailWidth = 500,
+	    thumbnailHeight = 500,
+	    uploader;
+
+	    var BASE_URL = '/static/admin/';
+
+	    // 初始化Web Uploader
+	    var uploader = WebUploader.create({
+
+	            // 选完文件后，是否自动上传。
+	            auto: true,
+
+	            // swf文件路径
+	            swf: BASE_URL + '/js/Uploader.swf',
+
+	            // 文件接收服务端。
+	            server: '/qiniu/upload/?_xsrf='+getCookie("_xsrf"),
+	            //server: '',
+
+	            // 选择文件的按钮。可选。
+	            // 内部根据当前运行是创建，可能是input元素，也可能是flash.
+	            pick: btnDom,
+
+	            // 只允许选择图片文件。
+	            accept: {
+	                title: 'Images',
+	                extensions: 'gif,jpg,jpeg,bmp,png',
+	                mimeTypes: 'image/*'
+	            },
+	            fileNumLimit:20,
+	            fileSizeLimit: 5 * 1024 * 1024    // 限制图片大小5M以内
+	        });
+
+	    // 当有文件添加进来的时候
+	    uploader.on( 'fileQueued', function( file ) {
+	        var $li = $(
+	            '<div id="' + file.id + '" class="file-item thumbnail edit">' +
+	            '<img>' +
+	            '<div class="info">' + file.name + '</div><p class="edit_box"><span class="J_del_img">删除</span></p>' +
+	            '<input type="text" class="txt_img txt" name="cover_img" value="">'+
+	            '</div>'
+	            ),
+	        $img = $li.find('img');
+
+
+	            // $list为容器jQuery实例
+	            $list.append( $li );
+
+	            // 创建缩略图
+	            // 如果为非图片文件，可以不用调用此方法。
+	            // thumbnailWidth x thumbnailHeight 为 100 x 100
+	            uploader.makeThumb( file, function( error, src ) {
+	                if ( error ) {
+	                    $img.replaceWith('<span>不能预览</span>');
+	                    return;
+	                }
+
+	                $img.attr( 'src', src );
+	            }, thumbnailWidth, thumbnailHeight );
+	        });
+
+	    // 文件上传过程中创建进度条实时显示。
+	    uploader.on( 'uploadProgress', function( file, percentage ) {
+	        var $li = $( '#'+file.id ),
+	        $percent = $li.find('.progress span');
+
+	            // 避免重复创建
+	            if ( !$percent.length ) {
+	                $percent = $('<p class="progress"><span></span></p>')
+	                .appendTo( $li )
+	                .find('span');
+	            }
+
+	            $percent.css( 'width', percentage * 100 + '%' );
+	        });
+
+	    // 文件上传成功，给item添加成功class, 用样式标记上传成功。
+	    uploader.on( 'uploadSuccess', function( file,data ) {
+	        var url = data.url;
+	        $( '#'+file.id ).addClass('upload-state-done').attr("data-url",url);
+	        setIMGval();
+	    });
+
+	    // 文件上传失败，显示上传出错。
+	    uploader.on( 'uploadError', function( file ) {
+	        var $li = $( '#'+file.id ),
+	        $error = $li.find('div.error');
+
+	            // 避免重复创建
+	            if ( !$error.length ) {
+	                $error = $('<div class="error"></div>').appendTo( $li );
+	            }
+
+	            $error.text('上传失败');
+	        });
+
+	    // 完成上传完了，成功或者失败，先删除进度条。
+	    uploader.on( 'uploadComplete', function( file ) {
+	        $( '#'+file.id ).find('.progress').remove();
+	    });
+
+	    return uploader;
+	}      
+	</script>
+</body>
+</html>

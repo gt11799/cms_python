@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{{ brand_info['meta_title'] }}</title>
+<meta name="keywords" content={{ brand_info['meta_keyword'] }} />
+<meta name="description" content={{ brand_info['meta_description'] }} />
+
+</head>
+<body>
+<h1>{{ brand_info['name'] }}</h1>
+{% for article in articles %}
+	<h3><a href="/pinpai/{{brand_info['url']}}/{{article['id']}}" target="_blank">标题: {{ article['title'] }}</a></h3>
+	{% for tag in article['tag'] %}
+	<a href="/zixun/tag/{{tag['url']}}" target="_blank">{{ tag['name'] }}</a>
+	{% end %}<br>
+	访问次数{{ article['click_time'] }}<br>
+	{{ article['description'] }}<br>
+	<img src="{{ article['cover_image'] }}">
+{% end %}
+</body>
+</html>

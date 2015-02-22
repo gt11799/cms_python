@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>小荷资讯管理系统</title>
+	<meta content="" name="keywords">
+	<meta content="" name="description">
+	<script src="/static/admin/js/news.js" type="text/javascript" charset="utf-8"></script>
+	{% include "min_head.html" %}
+	<style type="text/css">
+	.wrap .search_wrap .select_tag{width: 150px;height: 30px;line-height: 30px;}
+	.table_style tbody tr td .meta_des{width:350px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;-o-text-overflow: ellipsis;text-align:center;margin: 0 auto;}
+	.table_style tbody tr:nth-child(2n){ background: none;}
+	.table_style tbody tr.parent{ background: #f7f7f7;}
+	.pop_box li{ padding:5px 0; overflow: hidden;}
+	.pop_box li .form_hd{ width:120px; float: left; text-align: right; overflow: hidden;}
+	.pop_box li .form_td{ width: 300px; overflow: hidden;}
+	.pop_box li .form_td select{width: 150px;}
+	#edit_warp .pop_box{width: 500px;}
+	#edit_warp .pop_box .form_td input{width: 300px;}
+	#edit_warp .pop_box .form_td textarea{width: 300px;}
+	.red{color:red;}
+	.pop_box{width: 500px;}
+	.pop_box .form_td input{width: 300px;}
+	.pop_box .form_td select{height: 30px;line-height: 30px;}
+	.pop_box .form_td textarea{width: 300px;}
+
+	</style>
+</head>
+<body>
+<div class="wrap add_goods">
+		{% include "header.html" %}
+		<div class="main_wrap">
+			<div class="position clearfix">
+				<div class="left"><a href="javascript:history.go(-1)" class="btn"><span class="icon-arrow-left"></span>返回</a></div>
+				<div class="t yh">类目</div>
+			</div>
+			<div class="layout" style="padding-top:10px">
+
+				<div class="bd">
+					{% include "tab_head.html" %}
+				</div>
+				<div class="search_wrap">
+					<input id='J_name' class="txt" placeholder="输入名称"/>
+					<select id="J_select_tag" class="select_tag">
+						<option value=""></option>
+						{% for tag in tag_all.keys() %}
+						<option value="{{tag}}">{{tag}}</option>
+						{% end %}
+					</select>
+					<input id="J_start_time" class="txt" placeholder="输入开始时间" 
+					 onclick="WdatePicker({
+						dateFmt:'yyyy-MM-dd'
+					})"> -
+					<input id="J_end_time" class="txt" placeholder="输入结束时间" 
+					 onclick="WdatePicker({
+						dateFmt:'yyyy-MM-dd'
+					})">
+					<input id="J_meta_title" 	class="txt" placeholder="输入网页标题">
+					<input id="J_meta_keyword" 	class="txt" placeholder="输入网页关键字">
+					<input id="J_meta_description" 	class="txt" placeholder="输入网页描述">
+
+					&nbsp;&nbsp;&nbsp;&nbsp;
+					<a href="#" class="btn btn_green" id="btnSearch">搜索</a>
+				<div class="right">
+					<a href="#" class="btn btn_green" id="J_sort" style="margin:0 0 0 30px;">点击次数排序</a>
+					<a href="#" class="btn btn_red" id="J_add_tag" style="margin:0 0 0 30px;">新增标签</a>
+
+				</div>
+					
+				</div>
+				<table width="100%" class="table_style">
+					<thead>
+						<tr>
+							<th width="3%">id</th>
+							<th width="10%">名称</th>
+							<th width="5%">url</th>
+							<th width="5%">一级标签</th>
+							<th width="10%">网页标题</th>
+							<th width="13%">网页关键字</th>
+							<th width="30%">网页描述</th>
+							<th width="11%">更新时间</th>
+							<th width="4%">访问次数</th>
+							<th width="6%">操作</th>
+
+						</tr>
+					</thead>
+					<tbody>
+						{% for r in result %}
+						<tr>
+							<td>{{r['id']}}</td>
+							<td class="tag_name"><a href="/label/{{r['url']}}" target="_blank">{{r['name']}}</a></td>
+							<td class="url">{{r['url'] or ''}}</td>
+							<td class="parent_name">{{r['parent_name'] or ''}}</td>
+							<td class="meta_title">{{r['meta_title'] or ''}}</td>
+							<td  class="meta_keyword">{{r['meta_keyword'] or ''}}</td>
+							<td><div class="meta_des" title="{{r['meta_description'] or ''}}">{{r['meta_description'] or ''}}</div></td>
+							<td class="update_time">{{r['update_time']}}</td>
+							<td class="click_time">{{r['click_time']}}</td>
+							<td>
+								<a href="#" data-id="{{r['id']}}" class="btn btn_green J_edit" data-name="{{r['parent_name'] or ''}}"><span>编辑</span></a>
+								<a href="#" data-id="{{r['id']}}" class="btn btn_red J_delete"><span>删除</span></a>
+							</td>
+						</tr>
+						{% end %}
+					</tbody>
+				</table>
+				<div id="kkpager"></div>
+			</div>
+		</div>
+</div>
+
+<div id="edit_warp" style="display:none;">
+	<div class="pop_box">
+		<ul>
+			<li>
+				<span class="form_hd">名称：</span>
+				<span class="form_td"><input type="text" class="txt" id="J_edit_name" />
+				</span>
+			</li>
+			<li>
+				<span class="form_hd">父类名称：</span>
+				<span class="form_td">
+					<select id="J_parent_name">
+						<option value=""></option>
+						{% for tag in first_level.values()%}
+						<option value="{{tag}}">{{tag}}</option>
+						{% end %}
+					</select>
+				</span>
+			</li>
+			<li>
+				<span class="form_hd">标题：</span>
+				<span class="form_td"><input type="text" class="txt" id="J_edit_title" value="" /></span>
+			</li>
+
+			<li>
+				<span class="form_hd">网页关键词：</span>
+				<span class="form_td"><input type="text" class="txt" id="J_edit_metaKey" /></span>
+			</li>
+			<li>
+				<span class="form_hd">网页描述：</span>
+				<span class="form_td"><textarea rows="5"  id="J_edit_metaDes"></textarea></span>
+			</li>
+		</ul>
+	</div>
+</div>
+
+<div id="add_tag" style="display:none;">
+		<div class="pop_box">
+			<ul>
+				<li>
+					<span class="form_hd">名称：</span>
+					<span class="form_td"><input type="text" class="txt" id="J_tag_name" />
+					</span>
+				</li>
+				<li>
+					<span class="form_hd">父类名称：</span>
+					<span class="form_td">
+						<select id="J_tag_pname">
+							<option value=""></option>
+							{% for tag in first_level.values()%}
+							<option value="{{tag}}">{{tag}}</option>
+							{% end %}
+						</select>
+					</span>
+				</li>
+
+				<li>
+					<span class="form_hd">标题：</span>
+					<span class="form_td"><input type="text" class="txt" id="J_tag_title" /></span>
+				</li>
+				<li>
+					<span class="form_hd">关键字：</span>
+					<span class="form_td"><input type="text" class="txt" id="J_tag_key" /></span>
+				</li>
+				<li>
+					<span class="form_hd">描述：</span>
+					<span class="form_td"><textarea rows="5"  id="J_tag_des"></textarea></span>
+				</li>
+
+			</ul>
+		</div>
+	</div>
+
+
+
+</body>
+
+<script type="text/javascript">
+
+$('#J_name').val(getQueryString('name'));
+$('#J_start_time').val(getQueryString('start_time'));
+$('#J_end_time').val(getQueryString('end_time'));
+$('#J_meta_title').val(getQueryString('meta_title'));
+$('#J_meta_keyword').val(getQueryString('meta_keyword'));
+$('#J_meta_description').val(getQueryString('meta_description'));
+$('#J_select_tag').val(getQueryString('parent_tag'));
+//搜索功能
+function getSearchUrl(){
+	var name = $('#J_name').val(),
+		parent_tag = $('#J_select_tag').val(),
+		start_time = $('#J_start_time').val(),
+		end_time = $('#J_end_time').val(),
+		meta_title = $('#J_meta_title').val(),
+		meta_keyword = $('#J_meta_keyword').val(),
+		meta_description = $('#J_meta_description').val();
+
+		var search_url = urlJoin({
+			url : '/zixun/admin/tag_list/' ,
+			key : ['name','parent_tag','start_time','end_time','meta_title','meta_keyword','meta_description'],
+			val : [name,parent_tag,start_time,end_time,meta_title,meta_keyword,meta_description],
+		});
+		return search_url;
+	}
+	//搜索功能
+	$('#btnSearch').on('click',function() {
+		var search_ulr=getSearchUrl();
+		window.location.href =search_ulr;
+	})
+
+	//排序功能
+	$('#J_sort').on('click',function(){
+		var url = getSearchUrl();
+		if(url.indexOf('?')!==-1){
+			window.location.href = url + '&sort=click';
+		}else{
+			window.location.href = url + '?sort=click';
+		}
+		return false;
+	})
+
+
+//弹出编辑框 
+ $('.J_edit').on('click',function(){
+ 	var cont = $('#edit_warp');
+ 	var _this = $(this),
+ 		that = _this.parents('tr'),
+ 		id = _this.attr('data-id');
+     	$('#J_edit_name').val(that.find(".tag_name").text());
+        $('#J_edit_title').val(that.find(".meta_title").text());
+        $('#J_edit_metaKey').val(that.find(".meta_keyword").text());
+        $('#J_edit_recommend').val(that.find(".recommend").text());
+        $('#J_edit_metaDes').val(that.find(".meta_des").text());
+    //select的下拉选中项，如果没有默认选中全部
+	var text = _this.attr('data-name');
+	var count=$("#J_parent_name")[0].options.length;
+	for(var i=0;i<count;i++){
+		if($("#J_parent_name")[0].options[i].text == text)  
+		{
+			$("#J_parent_name")[0].options[i].selected = true;          
+			break;  
+		}else{
+			$("#J_parent_name")[0].selectedIndex = 0;
+		}
+	}
+
+ 	popAjax({
+ 		title : '编辑标签',
+ 		content : cont[0],
+ 		url :　'/zixun/admin/edit_tag/?id=' + id,
+ 		reload : true,
+ 		getData　: function(){
+ 			return {
+ 				id :id,
+ 				name : cont.find('#J_edit_name').val(),
+ 				parent_name : cont.find('#J_parent_name').val(),
+ 				meta_title :　cont.find('#J_edit_title').val(),
+ 				meta_keyword : cont.find('#J_edit_metaKey').val(),
+ 				meta_description : cont.find('#J_edit_metaDes').val()
+ 			}
+ 		}
+ 	});
+ 	return false;
+ })
+
+//弹出新增标签 
+
+ $('#J_add_tag').on('click',function(){
+ 	$("#add_tag input,#add_tag textarea,#J_tag_pname").val(''); //初始化清空
+ 	var cont = $('#add_tag');	
+ 	popAjax({
+ 		title : '新增标签',
+ 		content : cont[0],
+ 		url :　'/zixun/admin/add_tag/',
+ 		reload : true,
+ 		getData　: function(){
+ 			return {
+ 				name:cont.find('#J_tag_name').val(),
+ 				parent_name : cont.find('#J_tag_pname').val(),
+ 				meta_title : cont.find('#J_tag_title').val(),
+				meta_keyword : cont.find('#J_tag_key').val(),
+				meta_description : cont.find('#J_tag_des').val()
+ 			}
+ 		}
+ 	});
+ 	return false;
+ })
+ 
+
+
+//删除功能
+$('.J_delete').on('click',function(){
+	var _this = $(this),
+		id = _this.attr('data-id');
+	deleteItems(id,'tag');
+	return false;
+});
+//调用分页
+pageRender({
+	fieldDef : 'target=all',
+	pageCount :  {{ pageCount }},
+	recordNum : {{ recordNum }}
+});
+
+
+</script>
+
+</html>

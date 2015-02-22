@@ -1,0 +1,24 @@
+{% autoescape None %}
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{{ article['meta_title'] }}</title>
+<meta name="keywords" content={{ article['meta_keyword'] }} />
+<meta name="description" content={{ article['meta_description'] }} />
+
+</head>
+<body>
+<h1>{{ article['title'] }}</h1>
+<p>{% for tag in article['tag'] %}
+	<a href="/label/{{tag['url']}}">{{tag['name']}}</a>
+{% end %}
+<p><img src={{article['cover_image']}}></p>
+</p>
+<p>{{ article['update_time'] }}</p>
+<p>{{ article['click_time'] }}</p>
+<p>{{ article['description'] }}</p>
+{{ article['content'] }}
+
+</body>
+</html>

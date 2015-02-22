@@ -1,0 +1,66 @@
+/*圣诞主题*/
+/*body{background: #323348}*/
+/*.index #content .left_side ul{margin-left: 0}
+.index #slider{margin-bottom: 0!important}*/
+/*.wrap_overlay{background: url(../images/jieri/snow.png) repeat-x;}*/
+/*.index .jieri_bar{width: 980px; height: 164px; margin: 0 auto; background: url(../images/jieri/bar.png?v20150122);}
+#footer{color: #fff}
+#footer a{color: #fff}
+.linklist .content a,.linklist .content{color: #fff!important}
+#pageWrap #content{background: #323348;}
+i.snow{display: block; width:62px; height: 24px; background: url(../images/jieri/snow2.png); position: absolute; left: 0 ; top: 0; z-index: 999}
+.left_side .snow{top: -14px}
+.side_panel .snow{width: 62px; top: -16px}
+.index .float_md_l, .index .float_md_r{top: -200px}*/
+
+/*.index #content{background: #dac8eb !important}*/
+
+body{background: #f8ebe6}
+#content #madam.hd{background:url(../images/jieri/lady.png) no-repeat 220px 0 #dec6ed; }
+#content #child.hd,#content #hot_sell.hd{background:url(../images/jieri/children.png) no-repeat 212px 0 #dec6ed; }
+#content .hd_link .more{color: #000; text-decoration: underline;}
+.index_banner{margin: 25px 0}
+
+/*情人节*/
+.index_banner{margin: 0}
+.index_v2 .i_list li a{border: 1px solid #f8ebe6}
+/*.wrap_overlay{background:url(../images/jieri/qingrenjie/bg.jpg) no-repeat center top #f8ebe6; border-top:1px solid #160002 }*/
+/*.shadow{box-shadow: none}*/
+/*.mustsee h2{background: url(../images/jieri/qingrenjie/mustsee_tittle.png) no-repeat center center; height: 31px}*/
+.float_md_l, .float_md_r{margin-top: -220px;}
+.fuli_banner{margin: 0}
+.wish_show{background: #f8ebe6}
+
+
+/*浅色版边栏*/
+.sidebar_white .sidebar,.sidebar_white .sidebar .sidebar_nav,.sidebar_white .sidebar ul.top_ul{background: #fff}
+.sidebar_white .sidebar li.bar.hover .bar_top_a,.sidebar li.bar.current .bar_top_a{color: #fff}
+.sidebar_white .sidebar li.bar.bar_cart a{border-color: #c1c1c1}
+.sidebar_white .sidebar li.bar .bar_top_a{color: #666}
+.sidebar_white .sidebar .sidebar_content{border-right: 1px solid #ddd}
+.sidebar_white .sidebar li.bar .tips{border-color: #f1f1f1; box-shadow: 0 0 1px #f1f1f1}
+.sidebar_white .sidebar .icon_wish{background-position: -178px -291px}
+.sidebar_white .sidebar .icon_user{background-position: -178px 2px}
+.sidebar_white .sidebar .icon_order{background-position: -178px -31px}
+.sidebar_white .sidebar .icon_coupon{background-position: -178px -64px}
+.sidebar_white .sidebar .icon_cart{background-position: -178px -95px}
+.sidebar_white .sidebar .icon_app{background-position: -178px -128px}
+.sidebar_white .sidebar .icon_contact{background-position: -178px -161px}
+.sidebar_white .sidebar .icon_top{background-position: -178px -198px}
+.sidebar_white .sidebar .icon_shua{color: #673191}
+.sidebar_white .sidebar .icon_qian{background-position: -178px -261px}
+
+
+/*刷美衣页面*/
+.happy_shop{background: #fff}
+.happy_shop .header{background: #fff; border-bottom: 1px solid #e1e3ea}
+.happy_shop .header .content a,.happy_shop .header .content .nav ul li a{color: #555}
+.happy_shop .header .content .nav ul li.search{background: #f1f1f1; padding: 3px; height: 28px; border-radius:3px; margin-top: -4px}
+.happy_shop .header .content .logo a{background: url(../images/logo2.png) no-repeat 0 18px;}
+.happy_shop .header .content .user_info .earn{color: #76449b}
+.happy_shop .header .content .user_info .icon{display: none}
+.happy_shop .header .content .user .phone_info{display: none!important}
+.happy_shop .header .content .user #phone_icon{display: none}
+.happy_shop .header .content .user .divide{color: #999}
+.happy_shop .header .nav ul li .icon{background: url(../images/open_icon2.png) no-repeat center center;}
+

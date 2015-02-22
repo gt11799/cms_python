@@ -1,0 +1,32 @@
+<div class="footer">
+	<!-- <div class="left_side">
+		<div><a href="http://www.xiaoher.com/" class="slidePic" target="_blank">小荷特卖</a></div>
+	</div> -->
+	<div class="right_side">
+		<div><a href="javascript:;" class="backtop J_backtop">回到顶部</a></div>
+	</div>
+	<div class="footer_top"></div>
+	<div class="footer_content">
+		<div class="footer_l">
+			<img src="../../../static/news/images/erwei.png">
+			<div>扫一扫立刻下载小荷手机客户端</div>
+		</div>
+		<div class="footer_r">
+			<label class="link_top">友情链接</label>
+			<ul>
+				{% for r in partner %}
+				<li><a href="{{r['url']}}" target="_blank">{{r['name']}}</a></li>
+				{% end %}
+			</ul>
+			<ul class="link_middle">
+				<li><a href="/" target="_blank">小荷特卖</a>|</li>
+				<li><a href="/about/" target="_blank">关于我们</a>|</li>
+				<li><a href="/shangwu/" target="_blank">商务合作</a> </li>
+			</ul>
+			<div class="footer_bottom">
+				<div class="footer_line"></div>
+				<div class="footer_info">Copyight@2014小荷特卖 All Rights Reserved 小荷特卖版权所有 深圳市蓝色互动电子商务有限公司</div>
+			</div>
+		</div>
+	</div>
+</div>

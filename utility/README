@@ -1,0 +1,14 @@
+size 
+
+db.size.ensureIndex({"company_id":1,"name":1},{"unique":True})
+db.brands.ensureIndex({"company_id":1,"name":1},{"unique":True})
+db.brands.ensureIndex({"start_time":1})
+db.cloth_type.ensureIndex({"type":1},{"unique":True})
+db.company.ensureIndex({"username":1},{"unique":True})
+db.activity.ensureIndex({"name":1,"company_id":1},{"unique":True})
+db.activity.ensureIndex({"brand_id":1,"end_time":1})
+#db.goods.ensureIndex({"brand_id":1,"company_id":1,"brand_name":1})
+
+db.activity_goods.ensureIndex({"goods_id":1})
+db.activity_goods.ensureIndex({"size_name":1})
+db.goods.ensureIndex({"size_name":1})

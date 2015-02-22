@@ -1,0 +1,88 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<div id="header">
+  <div class="logo"><a href="#none"><img src="../images/logo.png" alt="" /></a></div>
+  <div class="navigation">
+    <ul  class="clearfix">
+      <li class="parent"> <a href="http://www.zulily.com/shop-by-category">Shop by category<i></i></a>
+        <div class="sub" style="display:none;">
+          <ul>
+            <li><a class="no-icon" href="http://www.zulily.com/girls/?ref=header">girls</a></li>
+            <li><a class="no-icon" href="http://www.zulily.com/boys/?ref=header">boys</a></li>
+            <li><a class="no-icon" href="http://www.zulily.com/women/?ref=header">women</a></li>
+            <li><a class="no-icon" href="http://www.zulily.com/shoes/?ref=header">shoes</a></li>
+            <li><a class="no-icon" href="http://www.zulily.com/baby-maternity/?ref=header">baby &amp; maternity</a></li>
+            <li><a class="no-icon" href="http://www.zulily.com/toys-playtime/?ref=header">toys &amp; playtime</a></li>
+            <li><a class="no-icon" href="http://www.zulily.com/home/?ref=header">home</a></li>
+            <li class="last"><a class="no-icon " href="http://www.zulily.com/readyship/?ref=header">ready to ship</a></li>
+          </ul>
+        </div>
+      </li>
+      <li class="parent"> <a href="http://www.zulily.com/shop-by-size" >Shop by size<i></i></a>
+        <div class="sub clearfix" style="width:460px; display:none;">
+          <div class="clumn">
+            <h3>Girls</h3>
+            <ul class="reset">
+              <li><a href="http://www.zulily.com/shop-by-size/girls/infant-0-24-months/?">infant (0-24m)</a></li>
+              <li><a href="http://www.zulily.com/shop-by-size/girls/toddler-2-4-years/?">toddler (2T-4T)</a></li>
+              <li><a href="http://www.zulily.com/shop-by-size/girls/kids-4-6-years/?">kids (4-6)</a></li>
+              <li><a href="http://www.zulily.com/shop-by-size/girls/big-kids-7-16-years/?">big kids (7-16)</a></li>
+              <li><a href="http://www.zulily.com/shop-by-size/girls/shoes/?">shoes</a></li>
+              <li><a href="http://www.zulily.com/shop-by-size/girls/others/?">toys &amp; more</a></li>
+            </ul>
+          </div>
+          <div class="clumn">
+            <h3>Boys</h3>
+            <ul class="reset">
+              <li><a href="http://www.zulily.com/shop-by-size/boys/infant-0-24-months/?">infant (0-24m)</a></li>
+              <li><a href="http://www.zulily.com/shop-by-size/boys/toddler-2-4-years/?">toddler (2T-4T)</a></li>
+              <li><a href="http://www.zulily.com/shop-by-size/boys/kids-4-7-years/?">kids (4-7)</a></li>
+              <li><a href="http://www.zulily.com/shop-by-size/boys/big-kids-8-20-years/?">big kids (8-20)</a></li>
+              <li><a href="http://www.zulily.com/shop-by-size/boys/shoes/?">shoes</a></li>
+              <li><a href="http://www.zulily.com/shop-by-size/boys/others/?">toys &amp; more</a></li>
+            </ul>
+          </div>
+          <div class="clumn">
+            <h3>Women</h3>
+            <ul class="reset">
+              <li><a href="http://www.zulily.com/shop-by-size/women/junior">juniors</a></li>
+              <li><a href="http://www.zulily.com/shop-by-size/women/">women</a></li>
+              <li><a href="http://www.zulily.com/shop-by-size/women/plus">plus-size</a></li>
+              <li><a href="http://www.zulily.com/shop-by-size/women/maternity">maternity &amp; nursing</a></li>
+              <li><a href="http://www.zulily.com/shop-by-size/women/shoe">shoes</a></li>
+              <li><a href="http://www.zulily.com/shop-by-size/women/accessories">accessories</a></li>
+              <li><a href="http://www.zulily.com/shop-by-size/women/homedecor">home &amp; décor</a></li>
+            </ul>
+          </div>
+        </div>
+      </li>
+      <li class="navSearch fr">
+        <div class="schBox">
+          <input type="text" placeholder="ugg" value="" class="schText" >
+          <a href="#none" class="schBtn">搜索</a> </div>
+      </li>
+    </ul>
+  </div>
+  <div class="invite">
+    <div class="invite-text"><a href="#none" class="schBtn">
+    	<span class="icon"></span>
+      <p>邀请朋友,<span class="earn">获取 <strong>￥5</strong></span></p></a>
+    </div>
+    <div class="invite-way">
+      <div class="desc">LIMITED TIME<br>
+        INVITES EARN $20<br>
+        $20 credit is applied when your friend's first order ships.<br>
+        Limited time only.
+        </p>
+        <div class="send">
+          <input type="text">
+          <button>发送</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="car"> <a href="#">
+    <span class="icon"></span>
+    <span>购物车</span>
+    <i>10</i>
+    </a> </div>
+</div>

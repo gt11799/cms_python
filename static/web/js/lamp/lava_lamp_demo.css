@@ -1,0 +1,7 @@
+@charset "utf-8";
+.lamp{/*position:relative; width:421px; height:29px; padding:15px; border:1px solid silver;*/}
+/*.lamp li{float:left;}
+.lamp li a{float:left; font-weight:bold; color:#333333; font-size:14px; top:8px; margin:auto 10px; text-decoration:none; position:relative; z-index:3;}
+.lamp li a:hover{text-decoration:none; color:#333333;}*/
+.lamp li.back{height:30px; background:#eeeeee; border:1px solid #bcbcbc; position:absolute; z-index:2;}
+.lamp li a{z-index: 3;}

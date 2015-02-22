@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>{{ article['meta_title'] }}_小荷特卖</title>
+	<meta name="keywords" content="{{ article['meta_keyword'] }}" />
+	<meta name="description" content="{{ article['meta_description'] }}" />
+	<meta name="baidu-site-verification" content="0652033889a727ed7e9f3e9469b9cf86"/>
+	<link rel="stylesheet" href="/static/news/css/base.css?v={{ handler.version }}" />
+	<link rel="stylesheet" href="/static/news/css/style.css?v={{ handler.version }}" />
+	<script src="/static/news/js/jquery-1.8.3.min.js"></script>
+	<script type="text/javascript" src="/static/news/js/common.js?v={{ handler.version }}"></script>
+	<script type="text/javascript" src="/static/news/js/jquery.SuperSlide.2.1.1.js"></script>
+	<script type="text/javascript" src="/static/news/js/kkpager.min.js"></script>
+	{% include "baidu_analyse.html" %}
+</head>
+<body class="index">
+	{% include "header.html" %}
+	<div class="wrap">
+		<div class="content detail match clearfix">
+			<div class="historyUrl">
+				<p><a href="/zixun/">首页</a>>
+					{% for c in cata_level %}
+					<a href="/zixun/{{ c['url'] }}">{{ c['name'] }}</a>>
+					{% end %}
+					正文</p>
+			</div>
+			<!-- 内容上部分 -->
+			<div class="content_top">
+				<div class="showBigPic clearfix">
+					<div class="bd">
+						<ul>	
+							{% for content in article['content'] %}
+							<li>
+								<span class="trangle"></span>
+								<div class="imgWrap"><img src="{{ content[0] }}" width="512" height="627"></div>
+								<div class="info">
+									<h1>{{ article['title'] }}</h1>
+									<h6>{{ timeFormatConvert(article['create_time']) }} 小荷资讯  </h6>
+									<div class="share">
+										<div class="shareItem" >
+											<div class="bshare-custom" style="margin:5px 0 0 15px;display:inline-block;"><a title="分享到QQ空间" class="bshare-qzone"></a><a title="分享到新浪微博" class="bshare-sinaminiblog"></a><a title="分享到人人网" class="bshare-renren"></a><a title="分享到腾讯微博" class="bshare-qqmb"></a><a title="分享到网易微博" class="bshare-neteasemb"></a><a title="更多平台" class="bshare-more bshare-more-icon more-style-addthis"></a><span class="BSHARE_COUNT bshare-share-count">0</span></div><script type="text/javascript" charset="utf-8" src="http://static.bshare.cn/b/buttonLite.js#style=-1&amp;uuid=&amp;pophcol=1&amp;lang=zh"></script><script type="text/javascript" charset="utf-8" src="http://static.bshare.cn/b/bshareC0.js"></script>
+										</div>
+									</div>
+									<p style="margin:50px 0 10px;height:250px;">{{ content[1] }}</p>
+
+									<div class="tag">
+										<label>标签：</label>
+										{% for tag in article['tag'] %}
+										<a href="/label/{{ tag['url'] }}" target="_blank">{{ tag['name'] }}</a>
+										{% end %}
+									</div>
+								</div>
+							</li>
+							{% end %}
+						</ul>
+					</div>
+					<div class="smallScroll">
+						<a class="sPrev"></a>
+						<div class="smallImg">
+							<div class="tempWrap">
+								<ul style="height:160px;">
+									{% for content in article['content'] %}
+									<li><img src="{{ content[0] }}" width="112" height="140"></li>
+									{% end %}
+								</ul>
+							</div>
+						</div>
+						<a class="sNext"></a>
+					</div>
+					<div class="operate">
+						自动播放
+						<span class="pageState"><span>1</span>/8</span>
+					</div>
+					
+
+				</div>
+			</div>
+			<!-- 热门图集 -->
+			<div class="pictures">
+				<h3>热门图集</h3>
+				<div class="hd"></div>
+				<div class="bd">
+					<ul>
+						{% for a in random_articles %}
+						<li><a href="/zixun/{{a['complete_url']}}/{{a['id']}}" target="_blank"><img src="{{ a['cover_image'] }}" width="270" height="158"></a></li>
+						{% end %}
+					</ul>
+				</div>
+				<a class="prev"></a>
+				<a class="next"></a>
+			</div>
+			<div class="content_bottom">
+				<div>
+					<!-- 最新文章 -->
+					<div class="smallbox clearfix">
+						<div class="hd clearfix">
+							<h3 style="width:94px">最新文章</h3>
+						</div>
+						<div class="bd clearfix">
+							{% for a in latest_articles[:4] %}
+							<div class="list">
+								<div class="img"><a href="/zixun/{{ url }}/{{ a[1] }}" target="_blank"><img src="{{ a[3] }}" width="100" height="122"></a></div>
+								<div class="desc">
+									<a href="/zixun/{{ url }}/{{ a[1] }}" target="_blank"><h2><b>{{ a[0] }}</b></h2>
+										<p>{{ a[2] }}</p>
+									</a>
+								</div>
+							</div>
+							{% end %}
+						</div>
+					</div>
+					<!-- 热门文章 -->
+					<div class="smallbox hotArticle">
+						<div class="hd clearfix">
+							<span class="more"><a href=""><span></span></a></span><h3>热门文章</h3>
+						</div>
+						<div class="bd">
+							<ul>
+								{% for a in hot_articles %}
+								<li><a href="/zixun/{{url}}/{{ a[1] }}" target="_blank">
+									<dl>
+										<dt>{{ a[0] }}</dt>
+									</dl>
+								</a></li>
+								{% end %}
+							</ul>
+						</div>
+					</div>
+					<!--热门标签  -->
+					<div class="smallbox tagList" style="margin-top:0;">
+						<div class="hd clearfix">
+							<h2 class="fl">热门标签</h2>
+						</div>
+						<div class="tags">
+							<ul class="clearfix">
+								{% for tag in hot_tags %}
+								{% if random() < 0.3 %}
+								<li><a href="/label/{{tag[1]}}" class="hot" target="_blank">{{ tag[0] }}</a></li>
+								{% else %}
+								<li><a href="/label/{{tag[1]}}" target="_blank">{{ tag[0]}} </a></li>
+								{% end %}
+								{% end %}
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+<script type="text/javascript">
+jQuery(".pictures").slide({mainCell:".bd ul",vis:4,autoPage:true,effect:"left",autoPlay:true,delayTime:300});
+jQuery(".showBigPic").slide({ titCell:".smallImg li", mainCell:".bd ul", effect:"fold", autoPlay:true,delayTime:200});
+jQuery(".showBigPic .smallScroll").slide({ mainCell:".smallImg ul",delayTime:100,vis:3,effect:"left",autoPage:true,prevCell:".sPrev",nextCell:".sNext" });		
+//调用分页
+pageRender({
+});
+
+</script>
+</html>

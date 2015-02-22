@@ -1,0 +1,9 @@
+<p>hello</p>
+
+<form method="post" action="/qiniu/upload/" enctype="multipart/form-data">
+  <input name="key" type="hidden" value="<resource key>">
+  <input name="x:<custom_field_name>" type="hidden" value="<custom value>">
+  <input name="token" type="hidden" value="{{token}}">
+  <input name="file" type="file" />
+  <input type="submit" class="btn btn_green" value="保存" />
+</form>
