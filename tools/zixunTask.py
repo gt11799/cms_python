@@ -33,23 +33,34 @@ def recoverRedis():
     '''
     删除之后从数据库中恢复
     '''
-    catagories = db.execQueryAssoc("select name,id,url,parent_id from catagory")
+    catagories = db.execQueryAssoc("select name,id,url,parent_id from catagory where delete_status=0")
     for catagory in catagories:
         r.hset("catagory_name_id",catagory['name'],catagory['id'])
         r.sadd("catagory_url_all",catagory['url'])
-
-        if int(catagory['parent_id']):
-            url = getCatagoryInfo(name=catagory['name'])['url'] + '/' + url
-        else:
-            url = catagory['url']
-        r.hset("catagory_id_url",catagory['id'],url)
 
     tags = db.execQueryAssoc("select name,id,click_time,url from tag")
     for tag in tags:
         r.hset("tag_name_id",tag['name'],tag['id'])
         r.sadd("tag_url_all",tag['url'])
         r.set("click_time_tag_%s"%tag['id'], tag['click_time'])
+
+    brands = db.execQueryAssoc("select name,id,url from brand where delete_status=0")
+    for brand in brands:
+        r.hset("brand_name_id",brand['name'],brand['id'])
+        r.sadd("brand_url_all",brand['url'])
     return
+
+def regularTaskForZixun():
+    '''
+    定时任务中系统运行所必须的元素
+    '''
+    updateMySQLClickTime()
+    updateLatestAndHotArticle()
+    updateHotTagAndBrand()
+    updateLatestGood()
+    updateNiceGoods()
+    updateFashionArticle()
+    updateCollocationCatagoryIds()
 
 def removeDiagonal():
     '''
@@ -64,3 +75,4 @@ def removeDiagonal():
 if __name__ == '__main__':
     resetRedis()
     recoverRedis()
+    regularTaskForZixun()
