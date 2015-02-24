@@ -12,7 +12,6 @@
 	<script type="text/javascript" src="/static/news/js/jquery.SuperSlide.2.1.1.js"></script>
 	<script type="text/javascript" src="/static/news/js/kkpager.min.js"></script>
 	<script type="text/javascript" src="/static/news/js/common.js?v={{ handler.version }}"></script>
-	{% include "baidu_analyse.html" %}
 </head>
 <body class="index">
 	{% include "header.html" %}
@@ -146,22 +145,6 @@
 					<div class="bd">
 						<div class="tempwrap" style="overflow:hidden; position:relative; height:456px">
 							<div class="urlWrap">
-
-								<ul style="height:456px;">
-									{% for goods in nice_goods['lady'] %}
-									<li><a href="{{goods[1]}}" target="_blank"><img src="{{goods[2]}}" width="154" height="200"><h2>{{goods[0]}}</h2></a></li>
-									{% end %}
-								</ul>
-								<ul style="height:456px;">
-									{% for goods in nice_goods['children'] %}
-									<li><a href="{{goods[1]}}" target="_blank"><img src="{{goods[2]}}" width="154" height="200"><h2>{{goods[0]}}</h2></a></li>
-									{% end %}
-								</ul>
-								<ul style="height:456px;">
-									{% for goods in nice_goods['toy'] %}
-									<li><a href="{{goods[1]}}" target="_blank"><img src="{{goods[2]}}" width="154" height="200"><h2>{{goods[0]}}</h2></a></li>
-									{% end %}
-								</ul>
 							</div>
 						</div>
 					</div>

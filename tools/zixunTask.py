@@ -11,7 +11,7 @@ import os,sys
 path = os.path.dirname(__file__)
 sys.path.append(os.path.join(path, ".."))
 from utility.utils import *
-from zixun.models import getCatagoryInfo
+from zixun.models import *
 
 db = DBAccess()
 db.dbName = "zixun"
@@ -55,12 +55,12 @@ def regularTaskForZixun():
     定时任务中系统运行所必须的元素
     '''
     updateMySQLClickTime()
+    updateCollocationCatagoryIds()
     updateLatestAndHotArticle()
     updateHotTagAndBrand()
-    updateLatestGood()
-    updateNiceGoods()
+    #updateLatestGood()
+    #updateNiceGoods()
     updateFashionArticle()
-    updateCollocationCatagoryIds()
 
 def removeDiagonal():
     '''

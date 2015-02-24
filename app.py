@@ -43,7 +43,7 @@ def shutdown():
 
 def main(port):
     
-    from settings import setClient,setMessageChannel,getClient
+    from settings import setClient,getClient
     
     if port >= 8880:
         setClient("web")

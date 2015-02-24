@@ -30,7 +30,8 @@ def setClient(client):
     global CLIENT
     CLIENT = client
 
-
+WAP_HOST = None
+WEB_HOST = None
 
 WEB_COOKIE_EXPIRE_DAYS = 1
 

@@ -286,7 +286,7 @@ class DBAccess:
     multiCursor = None
     passwd = DB_PWD
     host = DB_HOST
-    query_host = QUERY_DB_HOST
+    query_host = DB_HOST
 
     def __init__(self, app_type=''):
         reload(sys)
@@ -407,7 +407,7 @@ class DBPool(object):
         """
         if not DBPool.poolSelectDict.has_key(dbName):
             pool = PooledDB(creator=MySQLdb, mincached=1 , maxcached=1 ,
-                              host=QUERY_DB_HOST , port=DB_PORT , user=DB_USER , passwd=DB_PWD ,
+                              host=DB_HOST , port=DB_PORT , user=DB_USER , passwd=DB_PWD ,
                               db=dbName,use_unicode=False,charset='utf8',cursorclass=DictCursor)
             print 'pool=%s' % pool
             DBPool.poolSelectDict[dbName] = pool
