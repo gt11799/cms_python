@@ -3,9 +3,7 @@
 from PIL import Image
 from PIL.ExifTags import TAGS
 import os
-__author__ = 'David'
 
-testFile = "/Users/David/Desktop/argentina_Latino_Parana_546_h.jpg"
 
 class ImagePaser():
     def __init__(self, file):
@@ -46,24 +44,6 @@ class ImagePaser():
         self.width, self.height = img.size
 
 
-def unitTest():
-    testDir = "/Users/David/Desktop/testImg"
-    files = os.listdir(testDir)
-    for file in files:
-        type = file.split(".")[-1]
-        if type in ["jpg", "png", "gif"]:
-            print "*"*20 + file + "*"*20
-            path = os.path.join(testDir, file)
-            p = ImagePaser(path)
-            p.parseSize()
-            p.parseExif()
-            print "*"*20 + "  exif  " + "*"*20
-            print p.exif
-            print "*"*20 + "  width x height  " + "*"*20
-            print p.width, p.height
-
-
-
         
 if __name__ == "__main__":
-    unitTest()
+    pass

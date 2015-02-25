@@ -3,8 +3,6 @@
 '''
 本文件包含了在写 资讯 网站的时候用到的一些工具，包括redis回到初始状态，和redis宕机了之后的恢复。
 另外，每天凌晨需要执行一些定时任务，也放到了该脚本中。
-author: 宫亭
-mail: gongting@xiaoher.com
 '''
 import os,sys
 
