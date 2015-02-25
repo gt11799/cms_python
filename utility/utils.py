@@ -825,31 +825,6 @@ class BasicTemplateHandler(RequestHandler):
         # else:
             # self.expires_days = WEB_COOKIE_EXPIRE_DAYS
         super(BasicTemplateHandler, self).__init__(*request, **kwargs)
-        
-        # print self.request.path
-        if self.request.path == "/" or self.request.uri.startswith("/show/") \
-            or self.request.uri.startswith("/detail/"):
-            r = getRedisObj()
-            if self.request.path == "/":
-                last_visit = self.get_secure_cookie("last_visit")
-                today = str(datetime.date.today())
-                if last_visit != today:
-                    self.set_secure_cookie("last_visit",today,expires_days=10)
-                    source = self.get_argument("from","") or self.client
-                    if source == "xiaoherios":
-                        source = "ios"
-                    elif source == "xiaoherandroid":
-                        source = "android"
-                    else:
-                        source = self.client
-                    key = "%s:%s"%(today,source)
-                    # print key,222222222222222
-                    r.incr(key)
-
-            uid = self.get_current_user()
-            score = int(time.time()) + 10 * 60
-            r.zadd("ten_online", uid, score)
-
 
     def compute_etag(self):
         return None
@@ -922,32 +897,6 @@ class BasicTemplateHandler(RequestHandler):
         # remember to self.write to client
         pass
 
-
-    def countAPIclickTime(self):
-        source = self.get_secure_cookie("source")
-        if source:
-            pass
-        else:
-            source = self.client
-        if self.request.uri.startswith("/show/"):
-            api_path = "/show/"
-            full_path = self.request.path
-        elif self.request.uri.startswith("/detail/"):
-            api_path = "/detail/"
-            full_path = self.request.path
-        elif self.request.uri.startswith("/fuli/"):
-            api_path = "/fuli/"
-            full_path = self.request.path
-        else:
-            api_path = self.request.path
-            full_path = self.request.path
-        date = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        uid = self.get_current_user()
-        if uid:
-            value = {"date":date,"uid":uid,"source":source,"api_path":api_path,"full_path":full_path}
-            r = getRedisObj(15)
-            r.lpush("api_list",value)
-
     def EscapeSQL(self):
         return True
 
@@ -965,34 +914,12 @@ class BasicTemplateHandler(RequestHandler):
             Arguments.update(kws)
             try:
                 self.DBAction(Arguments)
-                if self.record_operate_log:
-                    # logStr = self.get_operate_log(Arguments)
-                    # logStr and DEBUGLOG.debug(logStr)
-                    # print logStr
-
-                    # --------------------------------Modify bu cyf 2015-01-14 write into DB-------------
-                    operator, operUrl, operArgu, operModule = self.get_operate_log(Arguments)
-
-                    if operator:
-                        now_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-                        db = DBAccess()
-                        db.dbName = "log_records"
-
-                        sql = " insert into operation_records (operator,operate_time,operate_module,url,arguments) values('%s','%s','%s','%s','%s')"%(operator,now_time,operModule,operUrl,operArgu)
-                        try:
-                            db.execNonQuery(sql)
-                        except MySQLdb.Error, e:
-                            pass
 
             except MyDefineError as e:
                 self.write({"status": RET_DBERROR, "msg": str(e)})
-                # errorStr = traceback.format_exc()
-                # ERRORLOG.error(errorStr)
 
             except MyDefineErrorWithStatusCode as e:
                 self.write({"status": e[0], "msg": e[1]})
-                # errorStr = traceback.format_exc()
-                # ERRORLOG.error(errorStr)  
 
             except ValueError:
                 errorStr = traceback.format_exc()
@@ -1024,34 +951,12 @@ class BasicTemplateHandler(RequestHandler):
             Arguments.update(kws)
             try:
                 self.DBAction_post(Arguments)
-                if self.record_operate_log:
-                    # logStr = self.get_operate_log(Arguments)
-                    # logStr and DEBUGLOG.debug(logStr)
-                    # print logStr
-
-                    # --------------------------------Modify bu cyf 2015-01-14 write into DB-------------
-                    operator, operUrl, operArgu, operModule = self.get_operate_log(Arguments)
-
-                    if operator:
-                        now_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-                        db = DBAccess()
-                        db.dbName = "log_records"
-
-                        sql = " insert into operation_records (operator,operate_time,operate_module,url,arguments) values('%s','%s','%s','%s','%s')"%(operator,now_time,operModule,operUrl,operArgu)
-                        try:
-                            db.execNonQuery(sql)
-                        except MySQLdb.Error, e:
-                            pass
 
             except MyDefineError as e:
                 self.write({"status": RET_DBERROR, "msg": str(e)})
-                # errorStr = traceback.format_exc()
-                # ERRORLOG.error(errorStr)
 
             except MyDefineErrorWithStatusCode as e:
                 self.write({"status": e[0], "msg": e[1]})
-                # errorStr = traceback.format_exc()
-                # ERRORLOG.error(errorStr)  
 
             except ValueError:
                 errorStr = traceback.format_exc()
@@ -1074,73 +979,6 @@ class BasicTemplateHandler(RequestHandler):
             logStr += "%s=%s&"%(key,value)
         return logStr
 
-    def get_operate_log(self,Arguments):
-        url = self.request.uri 
-        if url.startswith("/admin/orders/change"):
-            from shop_admin.models import insertOrderOperateRecord
-            from orders.models import record_order_flow
-            order_id = Arguments['order_id']
-            if isinstance(order_id,int):
-                order_id = [order_id]
-            status = Arguments["status"]
-            operator = self.get_secure_cookie("cuser")
-            [ insertOrderOperateRecord(order_id=i,order_goods_id=0,set_status=status,operator=operator) for i in order_id]
-            [ record_order_flow(order_no=i,order_goods_id=0,operator=operator,type=status,remark="admin_"+status) for i in order_id]
-
-        elif url.startswith("/admin/order/goods/change"):
-            from shop_admin.models import insertOrderOperateRecord
-            from orders.models import record_order_flow
-            order_goods_id = Arguments['order_goods_id']
-            status = Arguments["status"]
-            operator = self.get_secure_cookie("cuser")
-            [ insertOrderOperateRecord(order_id=0,order_goods_id=i,set_status=status,operator=operator) for i in order_goods_id]
-
-        else:
-            pass
-
-        if url.startswith("/company") \
-            or url.startswith("/admin"):
-            company_id = self.get_secure_cookie("cuser")
-            humanParam = self.get_human_param(Arguments)
-            #logStr = "%s %s %s "%(company_id,self.request.uri,humanParam)
-            #return logStr
-
-            operUrl = ""
-            if self.request.uri[-1] == '/':
-                operUrl = self.request.uri[:len(self.request.uri)-1]
-            else:
-                operUrl = self.request.uri
-            belong_module = ""
-            group =  list(getMongoDBConn().shop.permission.find({"url": operUrl}, {"tag": 1}))
-
-            if len(group) > 0:
-                belong_module = group[0].get("tag","未分类")
-            else:
-                belong_module = "未分类"
-
-            return company_id, self.request.uri, humanParam, belong_module
-
-        elif  self.request.uri.startswith("/orders/add") :
-            uid = self.get_current_user()
-            humanParam = self.get_human_param(Arguments)
-            #logStr = "%s %s %s "%(uid,self.request.uri,humanParam)
-            #return logStr
-
-            operUrl = ""
-            if self.request.uri[-1] == '/':
-                operUrl = self.request.uri[:len(self.request.uri)-1]
-            else:
-                operUrl = self.request.uri
-            belong_module = ""
-            group =  list(getMongoDBConn().shop.permission.find({"url": operUrl}, {"tag": 1}))
-            if len(group) > 0:
-                belong_module = group[0].get("tag","未分类")
-            else:
-                belong_module = "未分类"
-
-            return uid, self.request.uri, humanParam, belong_module
-
-        return "", "", "", ""
 
     def _get(self, **kws):
         return self._post(**kws)
@@ -1188,9 +1026,6 @@ class BasicTemplateHandler(RequestHandler):
     def write_error(self, status_code, **kwargs):
         if self.request.method not in("GET","POST"):
             self.redirect("http://www.gov.cn/")
-            return
-        if status_code == 405:
-            self.redirect("http://www.xiaoher.com")
             return
         elif status_code == 400:
             self.write("参数错误")
@@ -1258,24 +1093,6 @@ class AsyncHandler(BasicTemplateHandler):
             Arguments.update(kws)
             try:
                 yield self.DBAction(Arguments)
-                if self.record_operate_log:
-                    # logStr = self.get_operate_log(Arguments)
-                    # logStr and DEBUGLOG.debug(logStr)
-                    # print logStr
-
-                    # --------------------------------Modify bu cyf 2015-01-14 write into DB-------------
-                    operator, operUrl, operArgu, operModule = self.get_operate_log(Arguments)
-
-                    if operator:
-                        now_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-                        db = DBAccess()
-                        db.dbName = "log_records"
-
-                        sql = " insert into operation_records (operator,operate_time,operate_module,url,arguments) values('%s','%s','%s','%s','%s')"%(operator,now_time,operModule,operUrl,operArgu)
-                        try:
-                            db.execNonQuery(sql)
-                        except MySQLdb.Error, e:
-                            pass
 
             except MyDefineError as e:
                 self.write({"status": RET_DBERROR, "msg": str(e)})
@@ -1296,17 +1113,6 @@ class AsyncHandler(BasicTemplateHandler):
             errorStr = traceback.format_exc()
             ERRORLOG.error(errorStr)
             self.write({"status": RET_HTTP_PARAMETER_ERROR})       
-
-
-def dictFilter(_dict):
-    '''字典过滤'''
-    assert isinstance(_dict, dict) == True
-    d = copy.deepcopy(_dict)
-    for k in d.keys():
-        if not d[k]:
-            d.pop(k)
-    return d
-
 
 def getNowUTCtime(utc=False):
     if utc:
@@ -1332,197 +1138,6 @@ def getCodeMsg(result):
             pass
     return result
 
-
-class MessagesCenter:
-
-    #temporary solution.
-    @staticmethod
-    def initRegister():
-        MessagesCenter.register("ProductReturned","shop_admin.models.handleIncomingStockMessage")
-        MessagesCenter.register("ProductDeclined","shop_admin.models.handleIncomingStockMessage")
-        MessagesCenter.register("PurchaseFinished","shop_admin.models.handleIncomingStockMessage")
-        MessagesCenter.register("PurchaseFailed","shop_admin.models.handleIncomingStockMessage")
-        MessagesCenter.register("OrderFinished","orders.models.handleOrderFinishedMessage")
-
-    @staticmethod
-    def sendMessage(messageName,paras):
-        MessagesCenter.initRegister()
-
-        r = getRedisObj(rdb = 3)
-        funcs = r.smembers("MESSAGE_%s" % messageName)
-
-
-        for item in funcs:
-            print item
-            parts = item.split(".")
-            if len(parts) < 3:
-                ERRORLOG.error("ERROR IN sendMessage:%s" % messageName)
-                return 
-            importStr = "from %s.%s import %s" % (parts[0],parts[1],parts[2],)
-            exec(importStr)
-            func = eval(parts[2])
-            func(paras)
-
-    @staticmethod
-    def register(messageName,funcName):
-        r = getRedisObj(rdb = 3)
-        r.sadd("MESSAGE_%s" % messageName , funcName)
-        pass
-
-    @staticmethod
-    def deregister(messageName,funcName):
-        r = getRedisObj(rdb = 3)
-        r.srem("MESSAGE_%s" % messageName , funcName)
-
-
-def incrForkey(key):
-    conn = getMongoDBConn()
-    db = conn.shop
-    query = {"_id":key}
-    update = {"$inc":{"seq":1}}
-    obj = db.counters.find_and_modify(query,update,True,new=True)
-    return obj["seq"]
-
-
-
-def paginationStartEnd(page_index, page_max):
-    if page_index <= 6:
-        return 1, min(page_max, 10)
-
-    if page_max <= 10:
-        page_start = 1
-        page_end = page_max
-        return page_start, page_end
-
-    page_end = min(page_max, page_index+5)
-
-    page_start = page_end - 9
-    return page_start, page_end
-
-def open_excel(file=''):
-    try:
-     data = xlrd.open_workbook(file)
-     return data
-    except Exception,e:
-     print str(e)
-
-def excel_table_byindex(file='',colnameindex=0,index=0):
-
-    data = xlrd.open_workbook(file_contents=file['body'],encoding_override='windows-1252')
-    table = data.sheet_by_index(index)
-    nrows = table.nrows #行数
-    ncols = table.ncols #列数
-    colnames =  table.row_values(colnameindex) #某一行数据
-    list =[]
-    for rownum in range(1,nrows):
-      row = table.row_values(rownum)
-      list.append(row)
-
-    return list
-
-def excel_table_byindex_xlsx(filename, sheetnames=[], row_index=1, col_index=1):
-    '''读取2007 以上的xlsx 文件
-        @param filename:包含路径的文件名
-        @param sheet_name:要读取的表名数组
-        @param row_index:从第几行开始
-        @param col_index:从第几列开始
-        @return dict : {表名:[[cell,]] 表数据}
-    '''
-    wb = load_workbook(filename = filename )  
-    if not sheetnames:
-        sheetnames = wb.get_sheet_names()  
-    tDict = {}
-    for sheetname in sheetnames:
-        ws = wb.get_sheet_by_name(sheetname)   
-        rList = []
-        rowNum = ws.get_highest_row()
-        colNum = ws.get_highest_column()  
-        for rn in xrange(row_index,rowNum):
-            cList = []
-            for cn in xrange(col_index,colNum):
-                cellValue = ws.cell(row=rn,column=cn).value
-                if cn!=col_index and not cellValue:
-                    break
-                cList.append(cellValue)
-                # print cellValue
-            rList.append(cList)
-        tDict[sheetname] = rList
-    return tDict
-
-def getRandStr(n):
-    '''获取随机字符串'''
-    st = ''
-    randStr = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
-    for i in range(n):
-        st += random.choice(randStr)
-    return st
-
-
-
 if __name__ == '__main__':
-    dbName = 'billing_record_db'
-    table = 'stock'
-    print  ObjDB.out_row(dbName,'address','*')
-    # print ObjDB.out_row(dbName,'stock','*')
-    # row = ObjDB.out_row(dbName,'stock',['id','uid'])
-    # print 'row=%s' % row
-    # where = ObjDB.inWhere('id',[11,12,13])
-    # print ObjDB.out_rows(dbName,'stock',['id','uid'],where)
-    # print ObjDB.out_rows(dbName,'stock',['id','uid'],where,order=['-id'])
-    # print 'rows=%s' % list(rows)
-    # print ObjDB.out_field(dbName,'stock','uid',where)
-    # print ObjDB.out_field(dbName,'stock','id',where)
-    # print ObjDB.out_list(dbName,'stock','uid',where)
-    # print ObjDB.count(dbName,'stock')
-    # import datetime 
-    # stockDict = {'purchase_id': 0L, 
-    # 'remark': '\xe5\x8f\x91\xe5\xb8\x83\xe5\x88\xb0\xe6\x9f\x90\xe6\xb4\xbb\xe5\x8a\xa8\xe4\xbd\xa0\xe5\xa6\xb9\xe5\x95\x8a',
-    #  'order_goods_id': 176L, 'uid': 7L, 
-    #  'order_no': '0', 
-    #  'destination': '\xe5\x8f\x91\xe5\xb8\x83\xe5\x88\xb0\xe6\x9f\x90\xe6\xb4\xbb\xe5\x8a\xa8', 
-    #  'update_time':'2014-05-30 18:22:51', 
-    #  'source': '\xe9\x87\x87\xe8\xb4\xad\xe5\xae\x8c\xe6\x88\x90', 
-    #  'create_time': '2014-05-30 14:39:25', 'depot': 'C702'}
-
-    # stockDict2 = {'purchase_id': 0L, 
-    # 'remark': '\xe5\x8f\x91\xe5\xb8\x83\xe5\x88\xb0\xe6\x9f\x90\xe6\xb4\xbb\xe5\x8a\xa8\xe4\xbd\xa0\xe5\xa6\xb9\xe5\x95\x8a',
-    #  'order_goods_id': 176L, 'uid': 7L, 
-    #  'order_no': '0', 
-    #  'destination': '\xe5\x8f\x91\xe5\xb8\x83\xe5\x88\xb0\xe6\x9f\x90\xe6\xb4\xbb\xe5\x8a\xa8', 
-    #  'update_time':'2014-05-30 18:22:51', 
-    #  'source': '\xe9\x87\x87\xe8\xb4\xad\xe5\xae\x8c\xe6\x88\x90', 
-    #  'create_time': '2014-05-30 14:39:25', 'depot': 'C702'}
-    # print ObjDB.insert(dbName,'stock',stockDict)
-    # print ObjDB.update(dbName,'stock',{'uid':'uid+1'},'id=86',['uid'])
-    # print ObjDB.update(dbName,'stock',{'uid':5},'id=86')
-    # print ObjDB.insert_update(dbName, table, stockDict, arr_check={'id':90})
-    # import copy
-    # print ObjDB.insertmany(dbName,table,[stockDict,stockDict2])
-    # print ObjDB.insertmanynew(dbName,table,[stockDict,stockDict2])
-    # info = [('uid','id',{99:1,98:2,97:3})]
-    # where = ObjDB.inWhere('id',[99,98,97])
-    # print ObjDB.updatemany(dbName,table,info,where)
-    # where = 'id > 85'
-    # print ObjDB.delete(dbName,table,where)
-    # f = {'body':'/home/weigenming/Downloads/顺丰派送范围1.xls'}
-    # f = {'body':'/home/weigenming/Downloads/xiao4.xlsx'}
-    f = '/home/weigenming/Downloads/快递.xlsx'
-    # print excel_table_byindex(f)
-    # tDict = excel_table_byindex_xlsx(f,['顺风陆运'],2,2)
-    # print tDict.values()[0][0]
-    # print tDict.values()[0][1]
-    # print tDict.values()[0][2]
-    # xiao = u'\u5b89\u5e86\u5e02'
-    # print xiao
-    gen = u'\u868c\u57e0\u5e02'
-    print gen
-    print getRandStr(5)
-    # print 'tDict=%s' % tDict
-
-    
-
-
-
-
-    
+    pass    
 

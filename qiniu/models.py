@@ -65,7 +65,6 @@ def countTime(func):
 @countTime
 def uploadImage(filename, content):
     '''直接传递文件内容的形式上传'''
-    # raise Exception("it not work")
     level, temp = tempfile.mkstemp()
     with open(temp, "wb") as f:
         f.write(content)
@@ -73,9 +72,6 @@ def uploadImage(filename, content):
         p = ImagePaser(temp)
         p.parseExif()
         p.parseSize()
-        # p.showInfo()
-        # for k,v in p.exif.items():
-        #     print k,"   ",v
         if p.exif != {}:
             exif = json.dumps(p.exif)
         else:
@@ -89,15 +85,7 @@ def uploadImage(filename, content):
             "activity_id": "-1",
             "filesize" : len(content)
         }
-        # for k,v in imgInfo.items():
-        #     print k,":",v
-        #
-        # print "-"*100
-        mongoConn = UTILITY.utils.getMongoDBConn()
-        db = mongoConn.shop
-        # for k,v in imgInfo.items():
-        #     print k, " : ", v
-        db.image_upload_detail.insert(imgInfo)
+
         t = b.put(temp, names={temp: filename})
         os.remove(temp)
         return "%s%s" % (HOST, t["key"])
@@ -196,37 +184,6 @@ def cropImage(w,h,x,y,url,newFilename):
     t = json.loads(t)
     return "%s%s" % (HOST, t["key"])
 
-from tornado import gen
-
-@gen.coroutine
-def asyncCronImage(w,h,x,y,url,newFilename,thumb_w = 1000,thumb_h = 1200):
-    from utility.utils import MyDefineError
-    '''
-    http://you1hui.qiniudn.com/home_fuli.jpg?imageMogr/v2/crop/!600x300a0a0"
-    '''
-    if "imageView" in url:
-        raise MyDefineError("目前必须原图裁剪")
-    if thumb_h:
-        arg = "imageMogr/v2/crop/!%sx%sa%sa%s/thumbnail/!%sx%s"%(w,h,x,y,thumb_w,thumb_h)
-    else:
-        arg = "imageMogr/v2/crop/!%sx%sa%sa%s/thumbnail/!%s"%(w,h,x,y,thumb_w)
-
-    mongoConn = UTILITY.utils.getMongoDBConn(async=True)
-    db = mongoConn.shop
-    imgInfo = {
-            "exif": {},
-            "width": thumb_w,
-            "height": thumb_h,
-            "image_id": newFilename,
-            "goods_id": "-1",
-            "activity_id": "-1",
-            "filesize" : -1
-    }
-    yield db.image_upload_detail.insert(imgInfo)
-    url =  "%s?%s"%(url,arg)
-    t = yield b.asyncsaveas(url,newFilename)
-    t = json.loads(t)
-    raise gen.Return("%s%s"% (HOST, t["key"]))
 
 def getImgInfo(url=''):
     from utility.utils import getRedisObj
