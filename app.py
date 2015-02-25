@@ -45,26 +45,16 @@ def main(port):
     
     from settings import setClient,getClient
     
-    if port >= 8880:
-        setClient("web")
-    elif port <=6000:
-        setClient("3g")
-    else:
-        setClient("wap")
+    setClient("web")
 
     dirs = os.listdir(".")
     urls = []
     for d in dirs:
         if os.path.exists("%s/urls.py" % d):
             try:
-                if port <= 6000 and os.path.exists("%s/jisu_urls.py" %d ):
-                    exec("from %s.jisu_urls import urls as temp_urls" % d)
-                    urls.extend(temp_urls)
-                    logging.info("import %s jisu urls ok..........." % d)
-                else:
-                    exec("from %s.urls import urls as temp_urls" % d)
-                    urls.extend(temp_urls)
-                    logging.info("import %s urls ok..........." % d)
+                exec("from %s.urls import urls as temp_urls" % d)
+                urls.extend(temp_urls)
+                logging.info("import %s urls ok..........." % d)
             except:
                 logging.error(traceback.format_exc())
                 logging.error("import %s urls fail!!!!!!!!!!" % d)
@@ -76,32 +66,13 @@ def main(port):
             self.render("error/404.html")
 
     urls.extend([(r".*",NotFoundHandler)])# append 404
-
-    for t in urls:
-        url = t[0].rstrip("/?")
-        if url.startswith("/admin/"):
-            doc = t[1].__doc__ and t[1].__doc__.strip() or ""
-            # print url,doc
-            # add "tag" column by cyf 2015-01-16
-            tag = ""
-            if doc.find(':') >= 0:
-                tag = doc.split(':')[0]
-            elif doc.find('：') >= 0:
-                tag = doc.split('：')[0]
-            elif (len(doc)>0 and len(doc)<=21):
-                tag = doc
-            else:
-                tag = "未分类"
     
-    print "Client:",getClient()
     from settings import settings
     application = tornado.web.Application(urls, **settings)
     global server
     server = tornado.httpserver.HTTPServer(application,xheaders=True)
     server.listen(port,address="0.0.0.0")
 
-    # signal.signal(signal.SIGTERM, sig_handler)
-    # signal.signal(signal.SIGINT, sig_handler)
     tornado.ioloop.IOLoop.instance().start()
  
     logging.info("Exit...")
