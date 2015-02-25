@@ -42,7 +42,7 @@
 					{% include "tab_head.html" %}
 				</div>
 
-				<div class="lr"><a class="btn btn_green J_add_parent" href="/zixun/admin/add_catagory/?" target="_blank">添加</a></div>
+				<div class="lr"><a class="btn btn_green J_add_parent" href="/admin/add_catagory/?" target="_blank">添加</a></div>
 				<table  width="100%" class="table_style">
 					<thead>
 						<tr>
@@ -59,7 +59,7 @@
 					<tbody>
 						{% for firstlevel in catagory_all.keys() %}
 						<tr class="parent">
-							<td  style="text-align:left; padding-left:20px;" id="J_name"><a href="/zixun/{{catagories[firstlevel]['url']}}" target="_blank">{{ firstlevel }}</a></td>
+							<td  style="text-align:left; padding-left:20px;" id="J_name"><a href="/{{catagories[firstlevel]['url']}}" target="_blank">{{ firstlevel }}</a></td>
 							<td>{{ catagories[firstlevel]['url'] }}</td>
 							<td id="J_title">{{ catagories[firstlevel]['meta_title'] }}</td>
 							<td id="J_key">{{ catagories[firstlevel]['meta_keyword'] }}</td>
@@ -72,11 +72,11 @@
 								{{b}},
 								{% end %}
 							</td>
-							<td style="text-align:left; padding-left:20px;"><a href="/zixun/admin/edit_catagory/?name={{firstlevel}}&keyname=1" class="btn btn_green" data-id="{{ catagories[firstlevel]['id']}}"  target="_blank">编辑</a><span class="btn btn_red J_delete" data-id="{{ catagories[firstlevel]['id']}}">删除</span><a href="/zixun/admin/add_catagory/?parent_name={{firstlevel}}" target='_blank'><span class="btn btn_green J_add">添加</span></a></td>
+							<td style="text-align:left; padding-left:20px;"><a href="/admin/edit_catagory/?name={{firstlevel}}&keyname=1" class="btn btn_green" data-id="{{ catagories[firstlevel]['id']}}"  target="_blank">编辑</a><span class="btn btn_red J_delete" data-id="{{ catagories[firstlevel]['id']}}">删除</span><a href="/admin/add_catagory/?parent_name={{firstlevel}}" target='_blank'><span class="btn btn_green J_add">添加</span></a></td>
 						</tr>
 						{% for secondlevel in catagory_all[firstlevel] %}
 						<tr class="child">
-							<td  style="text-align:left; padding-left:20px;" id="J_cname" data-val="{{secondlevel}}">-- <a href="/zixun/{{ catagories[firstlevel]['url'] }}/{{ catagories[secondlevel]['url'] }}" target="_blank">{{ secondlevel}} </a></td>
+							<td  style="text-align:left; padding-left:20px;" id="J_cname" data-val="{{secondlevel}}">-- <a href="/{{ catagories[firstlevel]['url'] }}/{{ catagories[secondlevel]['url'] }}" target="_blank">{{ secondlevel}} </a></td>
 							<td>{{ catagories[secondlevel]['url'] }} </td>
 							<td id="J_ctitle">{{ catagories[secondlevel]['meta_title'] }} </td>
 							<td id="J_ckey">{{ catagories[secondlevel]['meta_keyword'] }} </td>
@@ -89,7 +89,7 @@
 								{{b}}
 								{% end %}
 							 </td>
-							<td  style="text-align:left;  padding-left:20px;"><a href="/zixun/admin/edit_catagory/?name={{secondlevel}}&keyname=0" class="btn btn_green" data-cid="{{ catagories[secondlevel]['id']}}"  data-name="{{ firstlevel }}" target="_blank">编辑</a><span class="btn btn_red J_delete_child" data-cid="{{ catagories[secondlevel]['id']}}">删除</span></td>
+							<td  style="text-align:left;  padding-left:20px;"><a href="/admin/edit_catagory/?name={{secondlevel}}&keyname=0" class="btn btn_green" data-cid="{{ catagories[secondlevel]['id']}}"  data-name="{{ firstlevel }}" target="_blank">编辑</a><span class="btn btn_red J_delete_child" data-cid="{{ catagories[secondlevel]['id']}}">删除</span></td>
 						</tr>
 						{% end %}
 					
@@ -159,7 +159,7 @@
     function select_change(){
        var v = $("#J_tag_area option:selected").val();
        if(v != ''){
-           $.post("/zixun/admin/tags/",{
+           $.post("/admin/tags/",{
                     name : v  
                 },function(data){
                     if(data.status==0){  

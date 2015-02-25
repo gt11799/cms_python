@@ -40,7 +40,7 @@
 	<div class="wrap">
         <div class="main_wrap w970">
             <div class="position clearfix">
-                <div class="left"><a href='/zixun/admin/catagory_list/' class="btn"><span class="icon-arrow-left"></span>返回</a></div>
+                <div class="left"><a href='/admin/catagory_list/' class="btn"><span class="icon-arrow-left"></span>返回</a></div>
                 <div class="t yh">编辑栏目</div>
             </div>
             <div class="layout" style="padding-top:10px">
@@ -165,7 +165,7 @@
 	       var v = $("#J_tag_area option:selected").val();
 	       var t = {{json_encode(hot_tag)}}
 	       if(v != ''){
-	           $.post("/zixun/admin/tags/",{
+	           $.post("/admin/tags/",{
 	                    name : v  
 	                },function(data){
 	                    if(data.status==0){  
@@ -248,7 +248,7 @@
 			    }
 	
 				app.loading.open("正在提交...");
-				$.post("/zixun/admin/edit_catagory/?_xsrf="+getCookie("_xsrf"),{
+				$.post("/admin/edit_catagory/?_xsrf="+getCookie("_xsrf"),{
 						id : $('#J_id').val(),
 						name : $('#J_name').val(),
 						hot_tag : tag.join(','),
@@ -264,7 +264,7 @@
 							app.loading.close();
 							showMsg("提交成功",1);
 							setTimeout(function(){
-								window.location.href="/zixun/admin/catagory_list/";
+								window.location.href="/admin/catagory_list/";
 							},2000)
 						}else{
 							app.loading.close();

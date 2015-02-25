@@ -45,7 +45,7 @@
     <div class="wrap">
         <div class="main_wrap w970">
             <div class="position clearfix">
-                <div class="left"><a href='/zixun/admin/article_list/' class="btn"><span class="icon-arrow-left"></span>返回</a></div>
+                <div class="left"><a href='/admin/article_list/' class="btn"><span class="icon-arrow-left"></span>返回</a></div>
                 <div class="t yh">编辑文章</div>
             </div>
             <div class="layout" style="padding-top:10px">
@@ -199,7 +199,7 @@
        var v = $("#J_tag_area option:selected").val();
        var t = {{json_encode(tags)}}
        if(v != ''){
-           $.post("/zixun/admin/tags/",{
+           $.post("/admin/tags/",{
                     name : v  
                 },function(data){
                     if(data.status==0){  
@@ -266,7 +266,7 @@
 
             app.loading.open("正在提交...");
 
-            $.post("/zixun/admin/edit_article/",{
+            $.post("/admin/edit_article/",{
                 id : getQueryString('id'),
                 title : $("#J_title").val(),
                 tag : tag.join(','),
@@ -286,7 +286,7 @@
                     app.loading.close();
                     showMsg("修改成功！",1);
                     setTimeout(showTips(),3000);
-                    //window.location.href="/zixun/admin/article_list/";
+                    //window.location.href="/admin/article_list/";
                 }else{
                     app.loading.close();
                     showMsg(data.msg || '亲，后台报错了！',2);
@@ -299,7 +299,7 @@
     
     //填出提示框
     function showTips(){
-       var tpl ='<div class="tips"><div class="tips_title"><a href="javascript:;" class="J_close">X</div><div class="tips_cont"><a href="#" class="btn btn_green J_continue">继续修改</a><a href="#" class="btn btn_green J_back">返回列表</a><a href="/zixun/'+_url+'"  class="btn btn_green" target="_blank">浏览页面</a></div></div>';
+       var tpl ='<div class="tips"><div class="tips_title"><a href="javascript:;" class="J_close">X</div><div class="tips_cont"><a href="#" class="btn btn_green J_continue">继续修改</a><a href="#" class="btn btn_green J_back">返回列表</a><a href="/'+_url+'"  class="btn btn_green" target="_blank">浏览页面</a></div></div>';
        var d2 = dialog({
                     title:false,
                     content:tpl,
@@ -320,7 +320,7 @@
        //返回列表
        $('.J_back').on('click',function(){
              d2.close().remove();
-             window.location.href= '/zixun/admin/article_list/';
+             window.location.href= '/admin/article_list/';
        })
     }
    

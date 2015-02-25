@@ -207,7 +207,7 @@ function getSearchUrl(){
 		meta_description = $('#J_meta_description').val();
 
 		var search_url = urlJoin({
-			url : '/zixun/admin/tag_list/' ,
+			url : '/admin/tag_list/' ,
 			key : ['name','parent_tag','start_time','end_time','meta_title','meta_keyword','meta_description'],
 			val : [name,parent_tag,start_time,end_time,meta_title,meta_keyword,meta_description],
 		});
@@ -258,7 +258,7 @@ function getSearchUrl(){
  	popAjax({
  		title : '编辑标签',
  		content : cont[0],
- 		url :　'/zixun/admin/edit_tag/?id=' + id,
+ 		url :　'/admin/edit_tag/?id=' + id,
  		reload : true,
  		getData　: function(){
  			return {
@@ -282,7 +282,7 @@ function getSearchUrl(){
  	popAjax({
  		title : '新增标签',
  		content : cont[0],
- 		url :　'/zixun/admin/add_tag/',
+ 		url :　'/admin/add_tag/',
  		reload : true,
  		getData　: function(){
  			return {

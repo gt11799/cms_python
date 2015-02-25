@@ -25,7 +25,7 @@
 					{% include "tab_head.html" %}
 				</div>
 
-				<div class="lr" style="padding-bottom:10px;"><a href="/zixun/admin/add_dapei/" class="btn btn_green" target="_blank">+ 添加搭配文章</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="/zixun/admin/add_article/" class="btn btn_green" target="_blank">+ 添加文章</a></div>
+				<div class="lr" style="padding-bottom:10px;"><a href="/admin/add_dapei/" class="btn btn_green" target="_blank">+ 添加搭配文章</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="/admin/add_article/" class="btn btn_green" target="_blank">+ 添加文章</a></div>
 				<div class="search_wrap">
 					<select id="J_list" style="width:120px;">
 							<option value="">选择分类</option>
@@ -89,7 +89,7 @@
 						<tr>
 							<td>{{r['id']}}</td>
 							<td>{{r['catagory_name']}}</td>
-							<td><a href="/zixun/{{r['complete_url']}}/{{r['id']}}" target="_blank">{{r['title']}}</a></td>
+							<td><a href="/{{r['complete_url']}}/{{r['id']}}" target="_blank">{{r['title']}}</a></td>
 							<td>{{r['brand_name']}}</td>
 							<td><div class="description" title="{{r['description']}}">{{r['description']}}</div></td>
 							<td><img src={{r['cover_image']}} style="width:50px;height:50px;"></td>
@@ -103,9 +103,9 @@
 							<td>{{r['click_time']}}</td>
 							<td>
 								{% if str(r['catagory_id']) in collocation_ids %}
-								<a href="/zixun/admin/edit_dapei/?id={{r['id']}}" class="btn btn_green" target="_blank">编辑</a>
+								<a href="/admin/edit_dapei/?id={{r['id']}}" class="btn btn_green" target="_blank">编辑</a>
 								{% else %}
-								<a href="/zixun/admin/edit_article/?id={{r['id']}}" class="btn btn_green" target="_blank">编辑</a>
+								<a href="/admin/edit_article/?id={{r['id']}}" class="btn btn_green" target="_blank">编辑</a>
 								{% end %}
 								<a href="#" data-id="{{r['id']}}" class="btn btn_red J_delete">删除</a>
 							</td>
@@ -151,7 +151,7 @@
 		    if_display = $('#J_display').val();
 
 		    var search_url = urlJoin({
-				url : '/zixun/admin/article_list/' ,
+				url : '/admin/article_list/' ,
 				key : ['catagory_name','start_time','end_time','title','description','author','meta_title','meta_keyword','meta_description','if_display'],
 				val : [catagory_name,start_time,end_time,title,description,author,meta_title,meta_keyword,meta_description,if_display],
 			});

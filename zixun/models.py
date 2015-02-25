@@ -82,26 +82,6 @@ def changeArticle(article_id,tag,title,catagory,cover_image,description,content,
     complete_url = getCatagoryCompleteUrl(catagory_id)
     return complete_url + '/' + str(article_id)
 
-def changeArticleWithTag(status,article_id,tag_name):
-    '''
-    实时修改文章与标签的对应关系
-    '''
-    db = DBAccess()
-    db.dbName = "zixun"
-    r = getRedisObj()
-
-    tag_id = r.hget("tag_name_id",tag_name)
-    if not tag_id:
-        tag_id = addTag(tag_name)
-    if status == "remove":
-        sql = "delete from article_tag where article_id=%s and tag_id=%s "%(article_id,tag_id)
-    elif status == "add":
-        sql = "insert into article_tag (article_id,tag_id) values (%s,%s)"%(article_id,tag_id)
-    else:
-        raise MyDefineError("状态不对")
-    db.execNonQuery(sql)
-    return 
-
 def addTag(parent_name,name,meta_title,meta_keyword,meta_description,author):
     '''
     增加标签,MySQL与Redis都要添加

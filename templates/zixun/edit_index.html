@@ -214,7 +214,7 @@
 	    }
 
 	    app.loading.open("正在提交...");
-		$.post("/zixun/admin/edit_index/?_xsrf="+getCookie("_xsrf"),{
+		$.post("/admin/edit_index/?_xsrf="+getCookie("_xsrf"),{
 			hot_tag:tag.join(','),
 			hot_brand:brand.join(','),
 			cover_image : cover_all.join(','),

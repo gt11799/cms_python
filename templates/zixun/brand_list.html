@@ -121,7 +121,7 @@
 								<td class="J_bmeta_des"><div class="meta_description" titile="{{r['meta_description']}}">{{r['meta_description']}}</div></td>
 								<td>{{r['click_time']}}</td>
 								<td>
-									<a href="/zixun/admin/edit_brand/?id={{r['id']}}" data-id="{{r['id']}}" class="btn btn_green J_edit" target="_blank"><span>编辑</span></a>
+									<a href="/admin/edit_brand/?id={{r['id']}}" data-id="{{r['id']}}" class="btn btn_green J_edit" target="_blank"><span>编辑</span></a>
 									<a href="#" data-id="{{r['id']}}" class="btn btn_red J_delete"><span>删除</span></a>
 								</td>
 							</tr>
@@ -216,7 +216,7 @@ function getSearchUrl(){
 		author = $('#J_meta_author').val();
 
 		var search_url = urlJoin({
-			url : '/zixun/admin/brand_list/' ,
+			url : '/admin/brand_list/' ,
 			key : ['name','description','company_name','brand_classify','company_address','meta_title','meta_keyword','meta_description','author'],
 			val : [name,description,company_name,brand_classify,company_address,meta_title,meta_keyword,meta_description,author],
 		});
@@ -245,7 +245,7 @@ $("#J_add_brand").on('click',function(){
 	popAjax({
  		title : '新增品牌',
  		content : cont[0],
- 		url :　'/zixun/admin/add_brand/',
+ 		url :　'/admin/add_brand/',
  		reload : true,
  		type : "post",
  		getData　: function(){

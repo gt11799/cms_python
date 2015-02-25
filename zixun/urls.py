@@ -4,38 +4,36 @@
 from views import *
 
 urls = [
-            (r"/zixun/admin/?",AdminHandler),
-            (r"/zixun/admin/catagory_list/?", CatagoryListHandler),
-            (r"/zixun/admin/add_catagory/?",AddCatagoryHandler),
-            (r"/zixun/admin/edit_catagory/?",EditCatagoryHandler),
+            (r"/admin/?",AdminHandler),
+            (r"/admin/catagory_list/?", CatagoryListHandler),
+            (r"/admin/add_catagory/?",AddCatagoryHandler),
+            (r"/admin/edit_catagory/?",EditCatagoryHandler),
 
-            (r"/zixun/admin/edit_article/?", EditArticleHandler),
-            (r"/zixun/admin/add_article/?", AddArticleHandler),
-            (r"/zixun/admin/article_list/?",ArticleListHandler),
+            (r"/admin/edit_article/?", EditArticleHandler),
+            (r"/admin/add_article/?", AddArticleHandler),
+            (r"/admin/article_list/?",ArticleListHandler),
 
-            (r"/zixun/admin/edit_tag/?", EditTagHandler),
-            (r"/zixun/admin/add_tag/?", AddTagHandler),
-            (r"/zixun/admin/tag_list/?",TagListHandler),
-            (r"/zixun/admin/tags/?",GetTagJsonHandler),
+            (r"/admin/edit_tag/?", EditTagHandler),
+            (r"/admin/add_tag/?", AddTagHandler),
+            (r"/admin/tag_list/?",TagListHandler),
+            (r"/admin/tags/?",GetTagJsonHandler),
 
-            (r"/zixun/admin/add_dapei/?",AddCollocationArticleHandler),
-            (r"/zixun/admin/edit_dapei/?",EditCollocationArticleHandler),
+            (r"/admin/add_dapei/?",AddCollocationArticleHandler),
+            (r"/admin/edit_dapei/?",EditCollocationArticleHandler),
 
-            (r"/zixun/admin/edit_brand/?", EditBrandHandler),
-            (r"/zixun/admin/add_brand/?", AddBrandHandler),
-            (r"/zixun/admin/brand_list/?",BrandListHandler),
+            (r"/admin/edit_brand/?", EditBrandHandler),
+            (r"/admin/add_brand/?", AddBrandHandler),
+            (r"/admin/brand_list/?",BrandListHandler),
 
-            (r"/zixun/admin/edit_index/?",EditIndexHandler),
+            (r"/admin/edit_index/?",EditIndexHandler),
 
-            (r"/zixun/admin/delete/?",DeleteHandler),
+            (r"/admin/delete/?",DeleteHandler),
 
-            (r"/zixun/upload_image/?",UploadImageHandler),
+            (r"/upload_image/?",UploadImageHandler),
 
-            (r"/zixun/?",IndexHandler),
-            (r"/zixun/fzdp(/[a-zA-Z]+[0-9]*){0,1}(/[0-9]+){0,1}/?",CollocationCatagoryHandler),
+            (r"/fzdp(/[a-zA-Z]+[0-9]*){0,1}(/[0-9]+){0,1}/?",CollocationCatagoryHandler),
             (r"/pinpai/([a-zA-Z0-9]+)/?",BrandHandler),
             (r"/label/([a-zA-Z0-9]+)/?",TagHandler),
-            (r"/zixun/([a-zA-Z0-9]+)(/[a-zA-Z]+[0-9]*){0,1}(/[0-9]+){0,1}/?",CatagoryHandler),
             (r"/?",IndexHandler),
             (r"/([a-zA-Z0-9]+)(/[a-zA-Z]+[0-9]*){0,1}(/[0-9]+){0,1}/?",CatagoryHandler),
 

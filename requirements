@@ -1,19 +1,9 @@
-17monip
-elaphe
-sockjs-tornado
-BeautifulSoup
 redis
-motor
-requests
 pyExcelerator
-tornado-celery
 tornado-redis
 tornado
 MySQLdb
-pycurl(要先sudo apt-get install libcurl4-gnutls-dev)
-M2Crypto(sudo apt-get install python-dev / sudo apt-get install python-m2crypto)
 supervisor
-wheezy.captcha
 (
 apt-get install python-dev
 apt-get install libjpeg-dev
@@ -28,5 +18,3 @@ pip install pil Pillow
 )
 pip install xpinyin
 
-sudo pip install DBUtils
-sudo pip install openpyxl

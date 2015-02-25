@@ -28,7 +28,7 @@
     <div class="wrap">
         <div class="main_wrap w970">
             <div class="position clearfix">
-                <div class="left"><a href='/zixun/admin/brand_list/' class="btn"><span class="icon-arrow-left"></span>返回</a></div>
+                <div class="left"><a href='/admin/brand_list/' class="btn"><span class="icon-arrow-left"></span>返回</a></div>
                 <div class="t yh">编辑品牌</div>
             </div>
             <div class="layout" style="padding-top:10px">
@@ -135,7 +135,7 @@
 	    	}
 
 			app.loading.open("正在提交...");
-			$.post("/zixun/admin/edit_brand/?_xsrf="+getCookie("_xsrf"),{
+			$.post("/admin/edit_brand/?_xsrf="+getCookie("_xsrf"),{
 					id:$("#J_id").val(),
 					name:$("#J_name").val(),
 					description:$("#J_description").val(),
@@ -153,7 +153,7 @@
 						app.loading.close();
 						showMsg("提交成功",1);
 						setTimeout(function(){
-							window.location.href="/zixun/admin/brand_list/";
+							window.location.href="/admin/brand_list/";
 						},2000)
 					}else{
 						app.loading.close();

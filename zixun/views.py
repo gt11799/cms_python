@@ -419,7 +419,7 @@ class AdminHandler(BasicTemplateHandler):
     运营:主目录重定向
     '''
     def get(self):
-        return self.redirect("/zixun/admin/catagory_list/")
+        return self.redirect("/admin/catagory_list/")
 
 class AddBrandHandler(BasicTemplateHandler):
     '''
