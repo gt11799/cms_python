@@ -1,6 +1,7 @@
 ###在资讯项目中有两个错误：
 1. category被我写成了catagory，在数据库、网页、脚本中都是
 2. redis的介入过早，因此MySQL和Redis有很高的耦合性，因此修改和删除尽可能使用models中的函数
+3. 不知道有json如此神器，存入redis中的内容都是用&分隔开的
 
 ###Redis中存储的数据：
 1. catagory_url_all:{url1,url2}, 用来存放目录生成的所有url
@@ -16,3 +17,19 @@
 11. click_time_article_%id: 1234, 文章的点击次数
 12. click_time_tag_%id: 1234, 标签的点击次数
 13. click_time_brand_%id: 1234, 品牌的点击次数
+
+
+运行前：
+
+* 依照zixun.sql的结构新建数据库
+* 在根目录下新建一个settings.py
+        #!/usr/bin/env python
+        # -*- coding: utf-8 -*-
+
+        # coding: utf-8
+
+        import os
+        from tornado.options import define,options
+
+        from unchange_settings import *
+* 在setting或者unchange_settings中修改七牛和数据库redis的信息

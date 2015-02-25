@@ -12,31 +12,26 @@ create table article(
 	meta_title varchar(128),
 	meta_keyword varchar(128),
 	meta_description text,
-	if_recommend int default 0,
 	if_display int default 1,
 	update_time datetime,
-	click_time int default 0
+	click_time int default 0，
+	brand_id int default 0,
+	delete_status int default 0
 )default character set utf8 collate utf8_general_ci;
 
-alter table article drop column if_recommend;
-alter table article add column brand_id int default 0;
-alter table article add column delete_status int default 0;
 
 create table tag(
 	id int not null primary key auto_increment,
 	name varchar(128) not null,
 	url varchar(64),
-	if_recommend int default 0,
 	meta_title varchar(128),
 	meta_keyword varchar(128),
 	meta_description text,
 	click_time int default 0,
 	update_time datetime,
-	if_display int default 1
+	if_display int default 1,
+	parent_id int not null default 0
 )default character set utf8 collate utf8_general_ci;
-
-alter table tag drop column if_recommend;
-alter table tag add column parent_id int not null default 0;
 
 create table article_tag(
 	id int not null primary key auto_increment,
@@ -53,12 +48,11 @@ create table catagory(
 	url varchar(64),
 	meta_title varchar(128),
 	meta_keyword varchar(128),
-	meta_description text
+	meta_description text,
+	update_time timestamp,
+	cover_image text,
+	delete_status int default0
 )default character set utf8 collate utf8_general_ci;
-
-alter table catagory add column delete_status int default 0;
-alter table catagory add column update_time timestamp;
-alter table catagory add column cover_image text;
 
 create table brand(
 	id int not null primary key auto_increment,
@@ -99,16 +93,13 @@ create table index_page(
 	meta_title varchar(128),
 	meta_keyword varchar(128),
 	meta_description varchar(128),
-	cover_image varchar(256),
-	shopping_goods varchar(256),
+	cover_image text,
+	shopping_goods text,
 	update_time timestamp
 )default character set utf8 collate utf8_general_ci;
 
 insert into index_page (id,meta_title) values (1,"资讯首页");
 insert into catagory (id,name,parent_id,delete_status) values (1000,"首页",1000,1);
-
-alter table index_page change column cover_image cover_image text;
-alter table index_page change column shopping_goods shopping_goods text;
 
 create table record_flow(
 	id int not null primary key auto_increment,
