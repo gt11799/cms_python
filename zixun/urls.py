@@ -36,7 +36,8 @@ urls = [
             (r"/pinpai/([a-zA-Z0-9]+)/?",BrandHandler),
             (r"/label/([a-zA-Z0-9]+)/?",TagHandler),
             (r"/zixun/([a-zA-Z0-9]+)(/[a-zA-Z]+[0-9]*){0,1}(/[0-9]+){0,1}/?",CatagoryHandler),
-
+            (r"/?",IndexHandler),
+            (r"/([a-zA-Z0-9]+)(/[a-zA-Z]+[0-9]*){0,1}(/[0-9]+){0,1}/?",CatagoryHandler),
 
         ]
 

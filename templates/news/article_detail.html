@@ -20,9 +20,9 @@
 		<div class="content clearfix">
 			<div class="content_left detail">
 				<div class="historyUrl">
-					<p><a href="/zixun/">首页</a>>
+					<p><a href="/">首页</a>>
 						{% for c in cata_level %}
-						<a href="/zixun/{{c['url']}}">{{c['name']}}</a>>
+						<a href="/{{c['url']}}">{{c['name']}}</a>>
 						{% end %}
 						正文</p>
 				</div>
@@ -59,7 +59,7 @@
 								<div class="urlWrap">
 									<ul style="height:212px;">
 										{% for a in fashion_article[:] %}
-										<li><a href="/zixun/{{a[1]}}" target="_blank"><img src="{{a[0]}}" width="173" height="212"></a></li>
+										<li><a href="/{{a[1]}}" target="_blank"><img src="{{a[0]}}" width="173" height="212"></a></li>
 										{% end %}
 									</ul>
 								</div>
@@ -74,9 +74,9 @@
 						<ul class="clearfix">
 							{% for a in random_articles[:5] %}
 							<li class="clearfix">
-								<div class="img fl"><a href="/zixun/{{ a['complete_url'] }}/{{ a['id'] }}" target="_blank"><img src="{{ a['cover_image'] }}" width="208" height="122"></a></div>
+								<div class="img fl"><a href="/{{ a['complete_url'] }}/{{ a['id'] }}" target="_blank"><img src="{{ a['cover_image'] }}" width="208" height="122"></a></div>
 								<div class="desc fl">
-									<a href="/zixun/{{ a['complete_url'] }}/{{ a['id'] }}" target="_blank">
+									<a href="/{{ a['complete_url'] }}/{{ a['id'] }}" target="_blank">
 										<h2>{{ a['title'] }}</h2>
 										<h5><span>{{ timeFormatConvert(a['create_time']) }}</span><span class="list_tags">标签：
 											{% for tag in a['tag'] %}
@@ -84,7 +84,7 @@
 											{% end %} </span></h5>
 										<p>{{ a['description'] }}</p>
 									</a>
-									<div class="desc_bottom fr"><a href="/zixun/{{ a['complete_url'] }}/{{ a['id'] }}">查看全部</a>&nbsp;&nbsp;&nbsp;&nbsp;</div>
+									<div class="desc_bottom fr"><a href="/{{ a['complete_url'] }}/{{ a['id'] }}">查看全部</a>&nbsp;&nbsp;&nbsp;&nbsp;</div>
 								</div>
 							</li>
 							{% end %}
@@ -104,7 +104,7 @@
 					<div class="bd">
 						<ul>
 							{% for a in fashion_article[:3] %}
-							<li><a href="/zixun/{{a[1]}}" target="_blank"><img src="{{a[0]}}" width="330" height="406"></a></li>
+							<li><a href="/{{a[1]}}" target="_blank"><img src="{{a[0]}}" width="330" height="406"></a></li>
 							{% end %}
 						</ul>
 					</div>
@@ -157,7 +157,7 @@
 					<div class="bd">
 						<ul>
 							{% for a in hot_articles %}
-							<li><a href="/zixun/{{url}}/{{a[1]}}" target="_blank">
+							<li><a href="/{{url}}/{{a[1]}}" target="_blank">
 								<dl>
 									<dt>{{a[0]}}</dt>
 								</dl>

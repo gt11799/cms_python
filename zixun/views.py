@@ -26,11 +26,10 @@ class IndexHandler(BasicTemplateHandler):
         if search:
             page = self.get_argument("page",0)
             recordNum,pageCount,articles = getArticlesWithSearch(search,page)
-            nice_goods = getNiceGoods()
             collocation_ids = getCollocationIds()
             return self.render("news/search_article_list.html",index_info=index_info,hot_tag=hot_tag,hot_brand=hot_brand,partner=partner,cutOffSentence=cutOffSentence,fashion_article=fashion_article,
                     latest_articles=latest_articles,hot_articles=hot_articles,random=random,navigate=navigate,articles=articles,recordNum=recordNum,pageCount=pageCount,
-                    timeFormatConvert=timeFormatConvert,nice_goods=nice_goods,collocation_ids=collocation_ids)
+                    timeFormatConvert=timeFormatConvert,collocation_ids=collocation_ids)
         articles = getIndexArticle()
         return self.render("news/index.html",index_info=index_info,cover_image=cover_image,shopping_goods=shopping_goods,hot_tag=hot_tag,hot_brand=hot_brand,
                     latest_articles=latest_articles,hot_articles=hot_articles,random=random,navigate=navigate,articles=articles,cutOffSentence=cutOffSentence)

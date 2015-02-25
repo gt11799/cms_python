@@ -1478,73 +1478,6 @@ def updateHotTagAndBrand():
         for item in items:
             r.rpush("hot_brand_%s"%cata['id'],item['name'] + '&' + item['url'] + '&' + item['cover_image'])
 
-def updateLatestGood():
-    '''
-    更新最新商品列表
-    '''
-    r = getRedisObj()
-    db = getMongoDBConn().shop
-
-    DEBUGLOG.debug(u"开始导出热门标签和热门品牌")
-    r.delete("latest_goods_for_zixun")
-    goods_ids = r.lrange("happy_shopping_goods_ids",0,20)
-    for goods_id in goods_ids:
-        goodsObj = db.activity_goods.find_one({"_id":int(goods_id)})
-        if goodsObj:
-            q_box_image = goodsObj['image'][0]
-            url = '/detail/%s/%s'%(goodsObj['activity_id'],goodsObj['_id'])
-            goodsObj['name'] = cutOffSentence(goodsObj['name'],10)
-            r.rpush('latest_goods_for_zixun',goodsObj['name'] + '&' + url + '&' + q_box_image)
-    return
-
-def updateNiceGoods():
-    '''
-    更新优品驾到
-    为了节省资源，先从中选出玩具，女衣与儿童服装根据category去取
-    '''
-    r = getRedisObj()
-    db = getMongoDBConn().shop
-
-    DEBUGLOG.debug("开始更新优品驾到")
-    r.delete("awesome_goods_lady")
-    r.delete("awesome_goods_children")
-    r.delete("awesome_goods_toy")
-    activity_ids = r.lrange("happy_shopping_activity_ids",0,300)
-    lady_ids,children_ids,toy_ids = [],[],[]
-    toy_leimu = db.leimu.find({"name":{"$regex":"玩具"}},{"_id":1})
-    toy_leimu = [ int(float(_['_id'])) for _ in toy_leimu]
-    print "toy_leimu",toy_leimu
-    print "happy_shopping",activity_ids
-
-    for activity_id in activity_ids:
-        activityObj = db.activity.find_one({"_id":int(float(activity_id))})
-        if not activityObj:
-            continue
-        #print activityObj.get('category'),activityObj.get("leimu_id")
-        if len(toy_ids) < 20 and activityObj['leimu_id'] in toy_leimu:
-            toy_ids.extend(random.sample(activityObj["goods_id"],5))
-        elif len(lady_ids) < 20 and activityObj['category'] == "ladys":
-            lady_ids.extend(random.sample(activityObj["goods_id"],5))
-        elif len(children_ids) < 20 and activityObj['category'] == "children":
-            children_ids.extend(random.sample(activityObj["goods_id"],5))
-        if len(toy_ids) >= 20 and len(lady_ids) >= 20 and len(children_ids) >= 20:
-            break
-
-    r.delete("awesome_goods_lady")
-    for goods_id in lady_ids:
-        goodsObj = getGoodsInfo(goods_id)
-        r.rpush("awesome_goods_lady",goodsObj['name'] + '&' + goodsObj['url'] + '&' + goodsObj['image'])
-
-    r.delete("awesome_goods_children")
-    for goods_id in children_ids:
-        goodsObj = getGoodsInfo(goods_id)
-        r.rpush("awesome_goods_children",goodsObj['name'] + '&' + goodsObj['url'] + '&' + goodsObj['image'])
-
-    r.delete("awesome_goods_toy")
-    for goods_id in toy_ids:
-        goodsObj = getGoodsInfo(goods_id)
-        r.rpush("awesome_goods_toy",goodsObj['name'] + '&' + goodsObj['url'] + '&' + goodsObj['image'])
-    return
 
 def updateFashionArticle():
     '''
@@ -1584,36 +1517,6 @@ def updateCollocationCatagoryIds():
         r.lpush("collocation_catagory_ids",item['id'])
     print r.lrange("collocation_catagory_ids",0,100),"collocation_catagory_ids"
     return
-
-def getLatestGood():
-    '''
-    获得最新商品
-    '''
-    r = getRedisObj()
-
-    goods_info = r.lrange("latest_goods_for_zixun",0,20)
-    goods_info = random.sample(goods_info,4)
-    result = []
-    for goodsObj in goods_info:
-        result.append(goodsObj.split('&'))
-    return result
-
-def getNiceGoods():
-    '''
-    获得优品驾到
-    '''
-    r = getRedisObj()
-
-    result = {"lady":[],"children":[],"toy":[]}
-    for item in result.keys():
-        try:
-            goodsObjs = random.sample(r.lrange("awesome_goods_%s"%item,0,20),6)
-        except(ValueError):
-            goodsObjs = r.lrange("awesome_goods_%s"%item,0,20)
-        for goodsObj in goodsObjs:
-            goodsObj = goodsObj.split('&')
-            result[item].append(goodsObj)
-    return result
 
 def getDisplayStatus(status):
     '''

@@ -49,9 +49,9 @@
 						<ul class="clearfix">
 							{% for article in articles %}
 							<li class="clearfix">
-								<div class="img fl"><a href="/zixun/{{article['complete_url']}}/{{article['id']}}" target="_blank"><img src="{{article['cover_image']}}" width="208" height="122"></a></div>
+								<div class="img fl"><a href="/{{article['complete_url']}}/{{article['id']}}" target="_blank"><img src="{{article['cover_image']}}" width="208" height="122"></a></div>
 								<div class="desc fl">
-									<a href="/zixun/{{article['complete_url']}}/{{article['id']}}" target="_blank">
+									<a href="/{{article['complete_url']}}/{{article['id']}}" target="_blank">
 										<h2>{{article['title']}}</h2>
 										<h5><span>{{timeFormatConvert(article['create_time'])}}</span><span class="list_tags">标签：
 											{% for tag in article['tag'] %}
@@ -60,7 +60,7 @@
 										</span></h5>
 										<p>{{cutOffSentence(article['description'],105)}}</p>
 									</a>
-									<div class="desc_bottom fr"><a href="/zixun/{{article['complete_url']}}/{{article['id']}}" >查看全部</a>&nbsp;&nbsp;&nbsp;&nbsp;
+									<div class="desc_bottom fr"><a href="/{{article['complete_url']}}/{{article['id']}}" >查看全部</a>&nbsp;&nbsp;&nbsp;&nbsp;
 								</div>
 							</li>
 							{% end %}

@@ -58,8 +58,6 @@ def regularTaskForZixun():
     updateCollocationCatagoryIds()
     updateLatestAndHotArticle()
     updateHotTagAndBrand()
-    #updateLatestGood()
-    #updateNiceGoods()
     updateFashionArticle()
 
 def removeDiagonal():
