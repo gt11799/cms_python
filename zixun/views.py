@@ -155,11 +155,10 @@ class TagHandler(BasicTemplateHandler):
         hot_brands = getHotBrands(catagory_id=1000)
         latest_articles = getLatestArticle(catagory_id=1000)
         hot_articles = getHotArticle(catagory_id=1000)
-        nice_goods = getNiceGoods()
         collocation_ids = getCollocationIds()
         return self.render("news/tag_list.html",articles=articles,recordNum=recordNum,pageCount=pageCount,tag_info=tag_info,hot_tags=hot_tags,
                 hot_brands=hot_brands,latest_articles=latest_articles,hot_articles=hot_articles,url=tag_url,timeFormatConvert=timeFormatConvert,
-                cutOffSentence=cutOffSentence,random=random,navigate=navigate,fashion_article=fashion_article,nice_goods=nice_goods,collocation_ids=collocation_ids)
+                cutOffSentence=cutOffSentence,random=random,navigate=navigate,fashion_article=fashion_article,collocation_ids=collocation_ids)
 
 class TagListHandler(BasicTemplateHandler):
     '''
@@ -520,11 +519,9 @@ class BrandHandler(BasicTemplateHandler):
         hot_brands = getHotBrands(catagory_id=1000)
         latest_articles = getLatestArticle(catagory_id=1000)
         hot_articles = getHotArticle(catagory_id=1000)
-        latest_goods = getLatestGood()
-        print [brand_info['description'],1]
         return self.render("news/brand_detail.html",recordNum=recordNum,pageCount=pageCount,articles=articles,brand_info=brand_info,
                 hot_brands=hot_brands,latest_articles=latest_articles,hot_articles=hot_articles,timeFormatConvert=timeFormatConvert,hot_tags=hot_tags,
-                cutOffSentence=cutOffSentence,random=random,latest_goods=latest_goods,navigate=navigate)
+                cutOffSentence=cutOffSentence,random=random,navigate=navigate)
 
 class GetTagJsonHandler(BasicTemplateHandler):
     '''

@@ -23,6 +23,7 @@
 
 * 依照zixun.sql的结构新建数据库
 * 在根目录下新建一个settings.py
+  
         #!/usr/bin/env python
         # -*- coding: utf-8 -*-
 
@@ -32,4 +33,4 @@
         from tornado.options import define,options
 
         from unchange_settings import *
-* 在setting或者unchange_settings中修改七牛和数据库redis的信息
+* 在setting或者unchange_settings中修改七牛和数据库、redis的信息
