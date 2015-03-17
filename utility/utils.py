@@ -19,7 +19,6 @@ try:
 except:
     pass
 import redis
-import pymongo
 import traceback
 import logging
 import sys
@@ -29,20 +28,15 @@ import types
 import datetime
 import time
 from msg_code import MSG_CODE
-from mail import send_mail
 from qiniu.models import getDefineSizeImage
 import os
 import inspect
 import tornado.gen
-import motor
 
 # import MySQLdb
 from MySQLdb.cursors import DictCursor
-from DBUtils.PooledDB import PooledDB
 
 
-import xlrd
-from  openpyxl.reader.excel  import  load_workbook  
 
 import random
 

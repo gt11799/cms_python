@@ -72,22 +72,7 @@
 					<div class="lists recommend"> 
 						<h3 style="width:94px;">推荐文章</h3>
 						<ul class="clearfix">
-							{% for a in random_articles[:5] %}
-							<li class="clearfix">
-								<div class="img fl"><a href="/{{ a['complete_url'] }}/{{ a['id'] }}" target="_blank"><img src="{{ a['cover_image'] }}" width="208" height="122"></a></div>
-								<div class="desc fl">
-									<a href="/{{ a['complete_url'] }}/{{ a['id'] }}" target="_blank">
-										<h2>{{ a['title'] }}</h2>
-										<h5><span>{{ timeFormatConvert(a['create_time']) }}</span><span class="list_tags">标签：
-											{% for tag in a['tag'] %}
-											{{ tag['name'] }}
-											{% end %} </span></h5>
-										<p>{{ a['description'] }}</p>
-									</a>
-									<div class="desc_bottom fr"><a href="/{{ a['complete_url'] }}/{{ a['id'] }}">查看全部</a>&nbsp;&nbsp;&nbsp;&nbsp;</div>
-								</div>
-							</li>
-							{% end %}
+							
 						</ul>
 						
 					</div>

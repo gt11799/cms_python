@@ -212,8 +212,7 @@ class CatagoryHandler(BasicTemplateHandler):
             hot_brands = getHotBrands(url)
             latest_articles = getLatestArticle(url)
             hot_articles = getHotArticle(url)
-            random_articles = getRandomArticle()
-            return self.render("news/article_detail.html",article=article,pageCount=pageCount,hot_tags=hot_tags,url=complete_url, hot_brands=hot_brands,random_articles=random_articles,
+            return self.render("news/article_detail.html",article=article,pageCount=pageCount,hot_tags=hot_tags,url=complete_url, hot_brands=hot_brands,
                     hot_articles=hot_articles,timeFormatConvert=timeFormatConvert,random=random,navigate=navigate,fashion_article=fashion_article,cutOffSentence=cutOffSentence,cata_level=cata_level)
 
         if second_level:
@@ -740,8 +739,7 @@ class CollocationCatagoryHandler(BasicTemplateHandler):
             hot_brands = getHotBrands(url)
             latest_articles = getLatestArticle(url)
             hot_articles = getHotArticle(url)
-            random_articles = getRandomArticle()
-            return self.render("news/match_detail.html",article=article,hot_tags=hot_tags,url=complete_url, hot_brands=hot_brands,latest_articles=latest_articles,random_articles=random_articles,cata_level=cata_level,
+            return self.render("news/match_detail.html",article=article,hot_tags=hot_tags,url=complete_url, hot_brands=hot_brands,latest_articles=latest_articles,cata_level=cata_level,
                     hot_articles=hot_articles,timeFormatConvert=timeFormatConvert,random=random,navigate=navigate,fashion_article=fashion_article,cutOffSentence=cutOffSentence)
 
         if second_level:
