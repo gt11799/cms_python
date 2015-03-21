@@ -135,50 +135,6 @@ def countTime(func):
         return result
     return temp
 
-
-# @countTime
-def getRedisObj(rdb=0):
-
-    # r = redis.Redis(password=REDIS_PASSWD,
-                    # db=rdb, unix_socket_path='/tmp/redis.sock')
-    key = "REDIS_POOL_%s"%rdb
-    pool = globals().get(key)
-    if not pool:
-        pool = redis.ConnectionPool(
-            host=REDIS_HOST, password=REDIS_PASSWD, port=6379, db=rdb)
-        globals()[key] = pool
-
-    # print id(pool)
-    r = redis.Redis(connection_pool=pool)
-    return r
-
-
-
-def static_url_patch():
- 
-    from tornado.template  import Template
-    old_generate = Template.generate
-    def hack_generate(self,**kwargs):
-        t = old_generate(self,**kwargs)
-        import re
-        c = re.compile("/static/")
-        # print "hack generate"
-        t = re.sub(r'(?<=[\'|"])/static/',r'http://cdn.xiaoher.com/static/',t)
-        return t
- 
-    tornado.template.Template.generate = hack_generate
-
-try:
-    from settings import STATIC_CDN_ON
-    if STATIC_CDN_ON:
-        static_url_patch()
-except:
-    pass
-
-
-
-
-
 def getUid(token):
     return -1
 

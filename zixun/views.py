@@ -26,7 +26,7 @@ class IndexHandler(BasicTemplateHandler):
         if search:
             page = self.get_argument("page",0)
             recordNum,pageCount,articles = getArticlesWithSearch(search,page)
-            collocation_ids = getCollocationIds()
+            collocation_ids = getCollocationAllIds()
             return self.render("news/search_article_list.html",index_info=index_info,hot_tag=hot_tag,hot_brand=hot_brand,cutOffSentence=cutOffSentence,fashion_article=fashion_article,
                     latest_articles=latest_articles,hot_articles=hot_articles,random=random,navigate=navigate,articles=articles,recordNum=recordNum,pageCount=pageCount,
                     timeFormatConvert=timeFormatConvert,collocation_ids=collocation_ids)
@@ -139,7 +139,7 @@ class ArticleListHandler(BasicTemplateHandler):
                             meta_title=meta_title,meta_keyword=meta_keyword,meta_description=meta_description,if_display=if_display,page=page,sort=sort)
 
         catagory_all = getAllCatagory()
-        collocation_ids = getCollocationIds()
+        collocation_ids = getCollocationAllIds()
         return self.render("zixun/article_list.html",result=result,recordNum=recordNum,pageCount=pageCount,catagory_all=catagory_all,getDisplayStatus=getDisplayStatus,collocation_ids=collocation_ids)
 
 
@@ -155,7 +155,7 @@ class TagHandler(BasicTemplateHandler):
         hot_brands = getHotBrands(catagory_id=1000)
         latest_articles = getLatestArticle(catagory_id=1000)
         hot_articles = getHotArticle(catagory_id=1000)
-        collocation_ids = getCollocationIds()
+        collocation_ids = getCollocationAllIds()
         return self.render("news/tag_list.html",articles=articles,recordNum=recordNum,pageCount=pageCount,tag_info=tag_info,hot_tags=hot_tags,
                 hot_brands=hot_brands,latest_articles=latest_articles,hot_articles=hot_articles,url=tag_url,timeFormatConvert=timeFormatConvert,
                 cutOffSentence=cutOffSentence,random=random,navigate=navigate,fashion_article=fashion_article,collocation_ids=collocation_ids)

@@ -740,7 +740,6 @@ def catagoryBelongTo(child_url, parent_url):
     '''
     db = DBAccess()
     db.dbName = "zixun"
-    r = getRedisObj()
 
     urls_all = getAllObjectUrlsOrNames('catagory','url')
     if child_url not in urls_all or parent_url not in urls_all:
@@ -1387,35 +1386,6 @@ def getArticlesWithSearch(search,page=-1):
     pageCount = recordNum / pageNum + (1 if recordNum % pageNum else 0)
     return recordNum,pageCount,result
 
-def getCollocationIds():
-    '''
-    获得所有搭配的id
-    '''
-    r = getRedisObj()
-    return r.lrange("collocation_catagory_ids",0,100)
-
-def getRandomArticle():
-    '''
-    获得随机的文章
-    '''
-    db = DBAccess()
-    db.dbName = "zixun"
-    r = getRedisObj()
-
-    collocation_ids = r.lrange("collocation_catagory_ids",0,100)
-    collocation_ids = [ int(_) for _ in collocation_ids ]
-    recordNum = db.execQuery("select max(id) from article where delete_status=0 and if_display=1")[0][0]
-    result = []
-    while len(result) < 10:
-        article_ids = random.sample(range(recordNum),40)
-        result = db.execQueryAssoc("select id,title,cover_image,description,catagory_id,create_time from article where delete_status=0 and if_display=1 and catagory_id>0 and id in %s and catagory_id not in %s "%(tuple(article_ids),tuple(collocation_ids)))
-    for r in result:
-        if int(r['catagory_id']) == 0:
-            continue
-        r['complete_url'] = getCatagoryCompleteUrl(r['catagory_id'])
-        sql = "select name,url from tag where id in (select tag_id from article_tag where article_id = %s)" %(r['id'])
-        r['tag'] = db.execQueryAssoc(sql)
-    return result
 
 def getCollocationArticlesByCatagory(url,page=-1):
     '''
