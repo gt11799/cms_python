@@ -50,10 +50,10 @@ def changeArticle(article_id,tag,title,catagory,cover_image,description,content,
 
     if not (title and tag and catagory and cover_image and description and content and meta_title and meta_keyword and meta_description ):
         raise MyDefineError('必须全部填写')
-    catagory_id = r.hget("catagory_name_id",catagory)
+    catagory_id = getObjectIdWithName('catagory',catagory)
     if not catagory_id:
         raise MyDefineError('没有这个目录')
-    brand_id = r.hget("brand_name_id",brand)
+    brand_id = getObjectIdWithName('brand',brand)
     if not brand_id:
         brand_id = 0
 
@@ -72,7 +72,7 @@ def changeArticle(article_id,tag,title,catagory,cover_image,description,content,
     tag_names = tag.split(",")
     tag_names = set(tag_names)
     for tag_name in tag_names:
-        tag_id = r.hget("tag_name_id",tag_name)
+        tag_id = getObjectIdWithName('tag',tag_name)
         if tag_id:
             addTagAndArticle(article_id=article_id, tag_id=tag_id)
 
@@ -89,26 +89,25 @@ def addTag(parent_name,name,meta_title,meta_keyword,meta_description,author):
     p = Pinyin()
 
     if parent_name:
-        parent_id = r.hget("tag_name_id",parent_name)
+        parent_id = getObjectIdWithName('tag',parent_name)
         if not parent_id:
             raise MyDefineError("一级标签不存在")
     else:
         parent_id = 0
 
-    if name in r.hkeys("tag_name_id"):
+    names_all = getAllObjectUrlsOrNames("tag",'name')
+    if name in names_all:
         raise MyDefineError("标签已存在")
 
     url = str(p.get_initials(name.decode('utf-8'),'')).lower()
-    while url in r.smembers("tag_url_all"):
+    urls_all = getAllObjectUrlsOrNames('tag','url')
+    while url in urls_all:
         url += str(random.randint(0,30))
 
     update_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     sql = "insert into tag (name,url,update_time,parent_id,meta_title,meta_keyword,meta_description) values ('%s','%s','%s',%s,'%s','%s','%s')"\
             %(name,url,update_time,parent_id,meta_title,meta_keyword,meta_description)
     tag_id = db.execNonQuery(sql)
-    r.hset("tag_name_id",name,tag_id)
-    r.sadd("tag_url_all",url)
-    r.set("click_time_tag_%s"%tag_id, 0)
     recordFlow(author,"add","tag",sql)
     return tag_id
 
@@ -121,13 +120,13 @@ def addTagsAndArticle(article_id,tag_names):
     db.dbName = "zixun"
     r = getRedisObj()
 
-    tag_names_exists = r.hkeys("tag_name_id")
+    tag_names_exists = getAllObjectUrlsOrNames("tag","name")
     tag_ids = []
     for tag_name in tag_names:
         if tag_name not in tag_names_exists:
             tag_ids.append(addTag(tag_name))
         else:
-            tag_ids.append(r.hget("tag_name_id",tag_name))
+            tag_ids.append(getObjectIdWithName('tag',tag_name))
     for tag_id in tag_ids:
         addTagAndArticle(article_id,tag_id)
 
@@ -153,7 +152,7 @@ def getArticleByID(article_id,catagory='',tag_url='',brand_url='',page=-1):
     sql = "select * from article where id = %s "%article_id
 
     if catagory:
-        catagory_id = r.hget("catagory_name_id",catagory)
+        catagory_id = getObjectIdWithName('catagory',catagory)
         sql += " and catagory_id=%s" %catagory_id
     if tag_url:
         sql += " and id in (select article_id from article_tag where tag_id in (select id from tag where url = '%s'))"%tag_url
@@ -241,7 +240,7 @@ def getArticles(catagory_name='',start_time='',end_time='',title='',description=
 
     query = " where delete_status=0 "
     if catagory_name:
-        catagory_id = r.hget("catagory_name_id",catagory_name)
+        catagory_id = getObjectIdWithName('catagory',catagory_name)
         query += " and catagory_id = %s" %catagory_id
     if start_time:
         query += " and create_time > '%s' " %start_time
@@ -399,8 +398,6 @@ def deleteTag(tag_id,author):
     db.execNonQuery(sql)
     recordFlow(author,"delete","tag",sql)
 
-    r.hdel("tag_name_id",tag_info['name'])
-    r.srem("tag_url_all",tag_info['url'])
     r.delete("click_time_tag_%s"%tag_id)
     db.execNonQuery("delete from hot_tag where tag_id = %s"%tag_id)
     return
@@ -437,7 +434,7 @@ def getTags(name='',meta_title='',meta_keyword='',meta_description='',start_time
     if end_time:
         query += " and update_time < '%s' "%end_time
     if parent_tag:
-        parent_id = r.hget("tag_name_id",parent_tag)
+        parent_id = getObjectIdWithName('tag',parent_tag)
         if parent_id:
             query += " and parent_id = %s "%parent_id
     if sort == 'click':
@@ -468,11 +465,12 @@ def changeTag(tag_id,name,parent_name,meta_title,meta_keyword,meta_description,a
     sql = "select name,url from tag where id=%s" %tag_id
     tag_info = db.execQueryAssoc(sql)[0]
     if name != tag_info['name']:
-        if name in r.hkeys("tag_name_id"):
+        names_all = getAllObjectUrlsOrNames("tag","name")
+        if name in names_all:
             raise MyDefineError("标签已存在")
 
     if parent_name:
-        parent_id = r.hget("tag_name_id",parent_name)
+        parent_id = getObjectIdWithName('tag',parent_name)
         if not parent_id:
             raise MyDefineError("一级标签不存在")
     else:
@@ -485,9 +483,6 @@ def changeTag(tag_id,name,parent_name,meta_title,meta_keyword,meta_description,a
     db.execNonQuery(sql)
     recordFlow(author,"modify","tag",sql)
 
-    if name != tag_info['name']:
-        r.hdel("tag_name_id",tag_info['name'])
-        r.hset("tag_name_id",name,tag_id)
     return
 
 def getAllTags():
@@ -561,7 +556,7 @@ def getCollocationCatagory():
     r = getRedisObj()
 
     result = []
-    parent_id = r.hget("catagory_name_id","服装搭配")
+    parent_id = getObjectIdWithName('catagory',"服装搭配")
     result.append("服装搭配")
     sql = "select name from catagory where parent_id = %s and delete_status=0" %parent_id
     second_level = db.execQueryAssoc(sql)
@@ -609,23 +604,23 @@ def addCatagory(name,parent_name,meta_title,meta_keyword,meta_description,hot_ta
 
     if not name:
         raise MyDefineError("名称不能为空")
-    if name in r.hkeys("catagory_name_id"):
+    names_all = getAllObjectUrlsOrNames('catagory','name')
+    if name in names_all:
         raise MyDefineError("栏目已存在")
     if parent_name:
-        parent_id = r.hget("catagory_name_id",parent_name)
+        parent_id = getObjectIdWithName('catagory',parent_name)
         if not parent_id:
             raise MyDefineError("父栏目不存在")
     else:
         parent_id = 0
     url = str(p.get_initials(name.decode('utf-8'),'')).lower()
-    while url in r.smembers("catagory_url_all"):
+    urls_all = getAllObjectUrlsOrNames('catagory','url')
+    while url in urls_all:
         url += str(random.randint(0,30))
 
     sql = "insert into catagory (name, parent_id,url, meta_title,meta_keyword,meta_description,cover_image) values ('%s','%s','%s','%s','%s','%s','%s')" \
             %(name,parent_id,url,meta_title,meta_keyword,meta_description,cover_image)
     catagory_id = db.execNonQuery(sql)
-    r.hset("catagory_name_id",name,catagory_id)
-    r.sadd("catagory_url_all",url)
     if hot_tag:
         updateHotTag(catagory_id,hot_tag)
     if hot_brand:
@@ -666,11 +661,12 @@ def changeCatagory(catagory_id,name,parent_name,meta_title,meta_keyword,meta_des
     if name != old_info['name']:
         #if old_info['parent_id'] == 0:
             #raise MyDefineError("一级目录不允许改变")
-        if name in r.hkeys("catagory_name_id"):
+        names_all = getAllObjectUrlsOrNames('catagory','name')
+        if name in names_all:
             raise MyDefineError("栏目已存在")
 
     if parent_name:
-        parent_id = r.hget("catagory_name_id",parent_name)
+        parent_id = getObjectIdWithName('catagory',parent_name)
         if not parent_id:
             raise MyDefineError("父目录不存在")
     else:
@@ -684,10 +680,6 @@ def changeCatagory(catagory_id,name,parent_name,meta_title,meta_keyword,meta_des
     print sql
     recordFlow(author,"modify","catagory",sql)
     db.execUpdate(sql)
-
-    if name != old_info['name']:
-        r.hdel("catagory_name_id",old_info['name'])
-        r.hset("catagory_name_id",name,catagory_id)
     return
 
 def getCatagoryInfo(url='',name=''):
@@ -808,7 +800,8 @@ def catagoryBelongTo(child_url, parent_url):
     db.dbName = "zixun"
     r = getRedisObj()
 
-    if child_url not in r.smembers("catagory_url_all") or parent_url not in r.smembers("catagory_url_all"):
+    urls_all = getAllObjectUrlsOrNames('catagory','url')
+    if child_url not in urls_all or parent_url not in urls_all:
         return False
     child_id = db.execQueryAssoc("select parent_id from catagory where url = '%s' and delete_status=0" %child_url)[0]['parent_id']
     parent_id = db.execQueryAssoc("select id from catagory where url = '%s' and delete_status=0 "%parent_url)[0]['id']
@@ -835,12 +828,13 @@ def getObjectIdWithName(tableName, name):
     except(IndexError):
         return 0
 
-def getAllCatagoryUrls(tableName):
+def getAllObjectUrlsOrNames(tableName, item):
     db = DBAccess()
     db.dbName = 'zixun'
-    urls = db.execQuery("select url from %s"%tableName)
-    urls = [ _[0] for _ in urls]
-    return urls
+    items = db.execQuery("select object from %s"%(item,tableName))
+    items = [ _[0] for _ in items]
+    return items
+
 
 def incrClickTime(tableName,Object_id):
     db = DBAccess()
@@ -920,12 +914,6 @@ def deleteCatagory(catagory_id,author):
     recordFlow(author,"delete","catagory",sql)
     db.execUpdate("update article set catagory_id=0 where catagory_id = %s"%catagory_id)
 
-    r.srem("catagory_url_all",catagory_info['url'])
-    r.hdel("catagory_name_id",catagory_info['name'])
-    r.delete("latest_article_%s"%catagory_id)
-    r.delete("hot_article_%s"%catagory_id)
-    r.delete("hot_tag_%s"%catagory_id)
-    r.delete("hot_brand_%s"%catagory_id)
     db.execNonQuery("delete from hot_tag where catagory_id=%s"%catagory_id)
     db.execNonQuery("delete from hot_brand where catagory_id=%s"%catagory_id)
     return
@@ -939,13 +927,13 @@ def addBrand(name,description,company_name,company_website,brand_classify,compan
     r = getRedisObj()
     p = Pinyin()
 
-    #if not (name and description and cover_image and description  and meta_title and meta_keyword and meta_description):
-    #    raise MyDefineError('不能为空')
-    if name in r.hkeys("brand_name_id"):
+    names_all = getAllObjectUrlsOrNames("brand",'name')
+    if name in names_all:
         raise MyDefineError("品牌已存在")
 
     url = str(p.get_initials(name.decode('utf-8'),'')).lower()
-    while url in r.smembers("brand_url_all"):
+    urls_all = getAllObjectUrlsOrNames("brand",'url')
+    while url in urls_all:
         url += str(random.randint(0,30))
 
     create_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -954,9 +942,6 @@ def addBrand(name,description,company_name,company_website,brand_classify,compan
     brand_id = db.execNonQuery(sql)
     recordFlow(author,"add","brand",sql)
 
-    r.sadd('brand_url_all',url)
-    r.hset("brand_name_id",name,brand_id)
-    r.set("click_time_brand_%s"%brand_id, 0)
     return brand_id
 
 def getBrands(name='',start_time='',end_time='',description='',brand_classify='',company_name='',company_address='',author='',meta_title='',meta_keyword='',meta_description='',page=-1,sort=''):
@@ -1029,9 +1014,6 @@ def deleteBrand(brand_id,author):
     db.execUpdate(sql)
     recordFlow(author,"delete","brand",sql)
 
-    r.hdel("brand_name_id",brand_info['name'])
-    r.srem("brand_url_all",brand_info['url'])
-    r.delete("click_time_brand_%s"%brand_id)
     db.execQueryAssoc("delete from hot_brand where brand_id=%s"%brand_id)
     return
 
@@ -1047,7 +1029,8 @@ def changeBrand(brand_id,name,description,company_name,company_website,brand_cla
     #    raise MyDefineError('必须填写所有字段')
     brand_info = getBrandByID(brand_id)
     if name != brand_info['name']:
-        if name in r.hkeys("brand_name_id"):
+        names_all = getAllObjectUrlsOrNames("brand",'name')
+        if name in names_all:
             raise MyDefineError("品牌已存在")
 
     update_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -1056,9 +1039,6 @@ def changeBrand(brand_id,name,description,company_name,company_website,brand_cla
     db.execUpdate(sql)
     recordFlow(author,"modify","brand",sql)
 
-    if name != brand_info['name']:
-        r.hdel("brand_name_id",brand_info['name'])
-        r.hset("brand_name_id",name,brand_id)
     return 
 
 def getBrandByID(brand_id):
@@ -1142,7 +1122,7 @@ def addCollocationArticle(title,tag,catagory,content,meta_title,meta_keyword,met
         raise MyDefineError('必须全部填写')
 
     collocation_ids = r.lrange("collocation_catagory_ids",0,100)
-    catagory_id = r.hget("catagory_name_id",catagory)
+    catagory_id = getObjectIdWithName('catagory',catagory)
     if catagory_id not in collocation_ids:
         raise MyDefineError("栏目不属于搭配")
     if not catagory_id:
@@ -1154,7 +1134,7 @@ def addCollocationArticle(title,tag,catagory,content,meta_title,meta_keyword,met
     tag_names = tag.split(",")
     tag_names = set(tag_names)
     for tag_name in tag_names:
-        tag_id = r.hget("tag_name_id",tag_name)
+        tag_id = getObjectIdWithName('tag',tag_name)
         if tag_id:
             addTagAndArticle(article_id=article_id, tag_id=tag_id)
 
@@ -1175,7 +1155,7 @@ def changeCollocationArticle(article_id,tag,title,catagory,cover_image,content,m
         raise MyDefineError('必须全部填写')
 
     collocation_ids = r.lrange("collocation_catagory_ids",0,100)
-    catagory_id = r.hget("catagory_name_id",catagory)
+    catagory_id = getObjectIdWithName('catagory',catagory)
     if catagory_id not in collocation_ids:
         raise MyDefineError("栏目不属于搭配")
     if not catagory_id:
@@ -1196,7 +1176,7 @@ def changeCollocationArticle(article_id,tag,title,catagory,cover_image,content,m
     tag_names = tag.split(",")
     tag_names = set(tag_names)
     for tag_name in tag_names:
-        tag_id = r.hget("tag_name_id",tag_name)
+        tag_id = getObjectIdWithName('tag',tag_name)
         if tag_id:
             addTagAndArticle(article_id=article_id, tag_id=tag_id)
 
@@ -1240,7 +1220,7 @@ def updateHotTag(catagory_id,hot_tag):
     r.delete("hot_tag_%s"%catagory_id)
     db.execNonQuery("delete from hot_tag where catagory_id=%s"%catagory_id)
     for tag_name in hot_tag:
-        tag_id = r.hget("tag_name_id",tag_name)
+        tag_id = getObjectIdWithName('tag',tag_name)
         if tag_id:
             tag_info = getTagByID(tag_id)
             r.lpush("hot_tag_%s"%catagory_id,tag_info['name'] + '&' + tag_info['url'])
@@ -1259,7 +1239,7 @@ def updateHotBrand(catagory_id,hot_brand):
     r.delete("hot_brand_%s"%catagory_id)
     db.execNonQuery("delete from hot_brand where catagory_id=%s"%catagory_id)
     for brand_name in hot_brand:
-        brand_id = r.hget("brand_name_id",brand_name)
+        brand_id = getObjectIdWithName("brand",brand_name)
         if brand_id:
             brand_info = getBrandByID(brand_id)
             r.lpush("hot_brand_%s"%catagory_id,brand_info['name'] + '&' + brand_info['url'] + '&' + brand_info['cover_image'])
@@ -1316,7 +1296,7 @@ def getIndexArticleNotUse():
 
     result = [0] * 7
     for idx in range(len(NAVIGATE)):
-        catagory_id = r.hget("catagory_name_id",NAVIGATE[idx])
+        catagory_id = getObjectIdWithName('catagory',NAVIGATE[idx])
         articles = db.execQuery("select title,id,description,cover_image,catagory_id from article where catagory_id=%s order by create_time desc limit 8"%catagory_id)
         for article in articles:
             article = list(article)
@@ -1338,7 +1318,7 @@ def getIndexArticle():
 
     result = [0] * 7
     for idx in range(len(NAVIGATE)):
-        catagory_id = r.hget("catagory_name_id",NAVIGATE[idx])
+        catagory_id = getObjectIdWithName('catagory',NAVIGATE[idx])
         if idx <= 3:
             articles  =getLatestArticle(catagory_id=catagory_id)
         else:
@@ -1479,7 +1459,7 @@ def updateFashionArticle():
     db.dbName = "zixun"
     r = getRedisObj()
 
-    parent_id = r.hget("catagory_name_id","服装搭配")
+    parent_id = getObjectIdWithName('catagory',"服装搭配")
     catagory_ids = db.execQueryAssoc("select id from catagory where parent_id=%s"%parent_id)
     catagory_ids = [ int(_['id']) for _ in catagory_ids] + [int(parent_id),]
     if len(catagory_ids) > 1:
@@ -1501,7 +1481,7 @@ def updateCollocationCatagoryIds():
     db = DBAccess()
     db.dbName = "zixun"
     r = getRedisObj()
-    parent_id = r.hget("catagory_name_id","服装搭配")
+    parent_id = getObjectIdWithName('catagory',"服装搭配")
     collocation_ids = db.execQueryAssoc("select id from catagory where delete_status=0 and parent_id=%s"%parent_id)
     r.delete("collocation_catagory_ids")
     r.lpush("collocation_catagory_ids",parent_id)
@@ -1560,7 +1540,7 @@ def getNavigateHead():
     cata_info = db.execQueryAssoc("select id,parent_id,name,url from catagory where delete_status=0")
     result = []
     for item in NAVIGATE:
-        parent_id = r.hget("catagory_name_id",item)
+        parent_id = getObjectIdWithName('catagory',item)
         if parent_id:
             result.append([ _ for _ in cata_info if int(_['parent_id']) == int(parent_id)])
         else:
