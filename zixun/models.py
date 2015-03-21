@@ -15,7 +15,6 @@ def addArticle(title,tag,catagory,cover_image,description,content,author,meta_ti
     '''
     db = DBAccess()
     db.dbName = "zixun"
-    r = getRedisObj()
 
     if not (title and tag and catagory and cover_image and description and content and meta_title and meta_keyword and meta_description ):
         raise MyDefineError('必须全部填写')
@@ -46,7 +45,6 @@ def changeArticle(article_id,tag,title,catagory,cover_image,description,content,
     '''
     db = DBAccess()
     db.dbName = "zixun"
-    r = getRedisObj()
 
     if not (title and tag and catagory and cover_image and description and content and meta_title and meta_keyword and meta_description ):
         raise MyDefineError('必须全部填写')
@@ -60,12 +58,10 @@ def changeArticle(article_id,tag,title,catagory,cover_image,description,content,
     update_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     sql = "update article set title='%s',catagory_id='%s',cover_image='%s',description='%s',content='%s',meta_title='%s',meta_keyword='%s',meta_description='%s',update_time='%s',if_display=%s,brand_id=%s where id=%s"\
                 %(title,catagory_id,cover_image,description,content,meta_title,meta_keyword,meta_description,update_time,if_display,brand_id,article_id)
-    DEBUGLOG.debug(sql)
     db.execUpdate(sql)
     recordFlow(author,"modify","article",sql)
 
     sql = "delete from article_tag where article_id=%s"%article_id
-    DEBUGLOG.debug(sql)
     db.execNonQuery(sql)
     recordFlow(author,"delete","article_tag",sql)
 
@@ -81,7 +77,7 @@ def changeArticle(article_id,tag,title,catagory,cover_image,description,content,
 
 def addTag(parent_name,name,meta_title,meta_keyword,meta_description,author):
     '''
-    增加标签,MySQL与Redis都要添加
+    增加标签
     '''
     db = DBAccess()
     db.dbName = "zixun"
@@ -140,33 +136,6 @@ def addTagAndArticle(article_id,tag_id):
     sql = "insert into article_tag (article_id,tag_id) values (%s,%s)" %(article_id,tag_id)
     return db.execNonQuery(sql)
 
-def getArticleByID(article_id,catagory='',tag_url='',brand_url='',page=-1):
-    '''
-    根据文章id取出文章
-    '''
-    db = DBAccess()
-    db.dbName = "zixun"
-    r = getRedisObj()
-
-    page = 1 if page < 1 else page
-    sql = "select * from article where id = %s "%article_id
-
-    if catagory:
-        catagory_id = getObjectIdWithName('catagory',catagory)
-        sql += " and catagory_id=%s" %catagory_id
-    if tag_url:
-        sql += " and id in (select article_id from article_tag where tag_id in (select id from tag where url = '%s'))"%tag_url
-    if brand_url:
-        sql += " and brand_id in (select id from brand where url = '%s')"%brand_url
-    try:
-        article = db.execQueryAssoc(sql)[0]
-    except(IndexError):
-        return []
-    article['tag'] = getTagInfoByArticle(article_id)
-    pageCount,article['content'] = articleContentHandle(article['content'],page)
-    r.incr("click_time_article_%s"%article_id)
-    article['catagory_name'] = getCatagoryNameWithID(article['catagory_id'])
-    return pageCount,article
 
 def getArticleByIDForBacker(article_id):
     '''
@@ -174,7 +143,6 @@ def getArticleByIDForBacker(article_id):
     '''
     db = DBAccess()
     db.dbName = "zixun"
-    r = getRedisObj()
 
     sql = "select * from article where delete_status=0 and id = %s"%article_id
 
@@ -197,7 +165,6 @@ def getArticleByTag(tag_url,page=-1):
 
     db = DBAccess()
     db.dbName = "zixun"
-    r = getRedisObj()
 
     pageNum = 10
     page = 1 if page < 1 else page
@@ -212,7 +179,6 @@ def getArticleByTag(tag_url,page=-1):
     else:
         query = " where delete_status=0 and if_display=1 and id in (select article_id from article_tag where tag_id = %s) and catagory_id !=0 "%tag_ids[0]
     sql = "select id,title,cover_image,description,create_time,catagory_id,meta_description from article %s order by update_time desc %s "%(query,page_p)
-    print sql
     articles = db.execQueryAssoc(sql)
     for article in articles:
         sql = "select name,url from tag where id in (select tag_id from article_tag where article_id = %s)" %(article['id'])
@@ -229,7 +195,6 @@ def getArticles(catagory_name='',start_time='',end_time='',title='',description=
     '''
     db = DBAccess()
     db.dbName = "zixun"
-    r = getRedisObj()
 
     page = 1 if page < 1 else page
     pageNum = 30
@@ -271,7 +236,6 @@ def getArticles(catagory_name='',start_time='',end_time='',title='',description=
     else:
         order = " order by create_time desc "
     sql = "%s %s %s %s" %(sql,query,order,page_p)
-    print sql
     result = db.execQueryAssoc(sql)
 
     for r in result:
@@ -289,7 +253,6 @@ def getArticles(catagory_name='',start_time='',end_time='',title='',description=
 
     sql = "select count(id) from article %s" %query
     recordNum = db.execQueryAssoc(sql)[0]['count(id)']
-    print recordNum
     PageCount = recordNum / pageNum + (1 if recordNum % pageNum else 0)
     return recordNum,PageCount,result
 
@@ -299,18 +262,15 @@ def deleteArticle(article_id,author):
     '''
     db = DBAccess()
     db.dbName = "zixun"
-    r = getRedisObj()
 
     article_info = db.execQueryAssoc("select catagory_id,title from article where id = %s"%article_id)[0]
     sql = "delete from article_tag where article_id = %s"%article_id
     DEBUGLOG.debug(sql)
     db.execNonQuery(sql)
     update_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    sql = "update article set delete_status=1,update_time='%s' where id = %s"%(update_time,article_id)
-    DEBUGLOG.debug(sql)
+    sql = "delete from article where id = %s"%(update_time,article_id)
     db.execNonQuery(sql)
 
-    r.delete("click_time_article_%s"%article_id)
     recordFlow(author,"delete","article",sql)
     return
 
@@ -370,11 +330,10 @@ def getTagInfo(url):
     '''
     db = DBAccess()
     db.dbName = "zixun"
-    r = getRedisObj()
 
     sql = "select * from tag where url = '%s' "%url
     tag_info = db.execQueryAssoc(sql)[0]
-    r.incr("click_time_tag_%s"%tag_info["id"])
+    incrClickTime('tag',tag_info['id'])
     return tag_info
 
 def deleteTag(tag_id,author):
@@ -383,22 +342,18 @@ def deleteTag(tag_id,author):
     '''
     db = DBAccess()
     db.dbName = "zixun"
-    r = getRedisObj()
 
     son_tag = db.execQueryAssoc("select id from tag where parent_id=%s"%tag_id)
     if son_tag:
         raise MyDefineError("有子标签不能删除")
     tag_info = db.execQueryAssoc('select url,name from tag where id = %s'%tag_id)[0]
     sql = "delete from article_tag where tag_id = %s" %tag_id
-    DEBUGLOG.debug(sql)
     db.execNonQuery(sql)
     recordFlow(author,"delete","article_tag",sql)
     sql = "delete from tag where id = %s" %tag_id
-    DEBUGLOG.debug(sql)
     db.execNonQuery(sql)
     recordFlow(author,"delete","tag",sql)
 
-    r.delete("click_time_tag_%s"%tag_id)
     db.execNonQuery("delete from hot_tag where tag_id = %s"%tag_id)
     return
 
@@ -408,7 +363,6 @@ def getTags(name='',meta_title='',meta_keyword='',meta_description='',start_time
     '''
     db = DBAccess()
     db.dbName = "zixun"
-    r = getRedisObj()
 
     page = 1 if page < 0 else page
     pageNum = 30
@@ -459,8 +413,6 @@ def changeTag(tag_id,name,parent_name,meta_title,meta_keyword,meta_description,a
     '''
     db = DBAccess()
     db.dbName = "zixun"
-    r = getRedisObj()
-
 
     sql = "select name,url from tag where id=%s" %tag_id
     tag_info = db.execQueryAssoc(sql)[0]
@@ -479,7 +431,6 @@ def changeTag(tag_id,name,parent_name,meta_title,meta_keyword,meta_description,a
     update_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     sql = "update tag set name='%s',meta_title='%s',meta_keyword='%s',meta_description='%s',update_time='%s',parent_id=%s where id=%s"\
         %(name,meta_title,meta_keyword,meta_description,update_time,parent_id,tag_id)
-    DEBUGLOG.debug(sql)
     db.execNonQuery(sql)
     recordFlow(author,"modify","tag",sql)
 
@@ -553,16 +504,13 @@ def getCollocationCatagory():
     '''
     db = DBAccess()
     db.dbName = "zixun"
-    r = getRedisObj()
 
     result = []
     parent_id = getObjectIdWithName('catagory',"服装搭配")
     result.append("服装搭配")
     sql = "select name from catagory where parent_id = %s and delete_status=0" %parent_id
     second_level = db.execQueryAssoc(sql)
-    print second_level
     result.append([_['name'] for _ in second_level])
-    print result
     return result
 
 def getCatagories():
@@ -599,7 +547,6 @@ def addCatagory(name,parent_name,meta_title,meta_keyword,meta_description,hot_ta
     '''
     db = DBAccess()
     db.dbName = "zixun"
-    r = getRedisObj()
     p = Pinyin()
 
     if not name:
@@ -635,7 +582,6 @@ def getCatagoryCompleteUrl(catagory_id):
     '''
     db = DBAccess()
     db.dbName = "zixun"
-    r = getRedisObj()
 
     sql = "select url,parent_id from catagory where id = %s and delete_status=0" %catagory_id
     catagory_info = db.execQueryAssoc(sql)[0]
@@ -653,14 +599,13 @@ def changeCatagory(catagory_id,name,parent_name,meta_title,meta_keyword,meta_des
     '''
     db = DBAccess()
     db.dbName = "zixun"
-    r = getRedisObj()
 
     sql = "select name,parent_id from catagory where id=%s" %catagory_id
     old_info = db.execQueryAssoc(sql)[0]
 
     if name != old_info['name']:
-        #if old_info['parent_id'] == 0:
-            #raise MyDefineError("一级目录不允许改变")
+        if old_info['parent_id'] == 0:
+            raise MyDefineError("一级目录不允许改变")
         names_all = getAllObjectUrlsOrNames('catagory','name')
         if name in names_all:
             raise MyDefineError("栏目已存在")
@@ -677,7 +622,6 @@ def changeCatagory(catagory_id,name,parent_name,meta_title,meta_keyword,meta_des
         updateHotBrand(catagory_id,hot_brand)
     sql = "update catagory set name='%s',parent_id='%s',meta_title='%s',meta_keyword='%s',meta_description='%s',cover_image='%s' where id = %s" \
             %(name,parent_id,meta_title,meta_keyword,meta_description,cover_image,catagory_id)
-    print sql
     recordFlow(author,"modify","catagory",sql)
     db.execUpdate(sql)
     return
@@ -725,7 +669,6 @@ def getArticlesByCatagory(url='',name='',page=-1):
     '''
     db = DBAccess()
     db.dbName = "zixun"
-    r = getRedisObj()
 
     pageNum = 10
     page = 1 if page < 1 else page
@@ -753,7 +696,6 @@ def getArticleWithCatagory(url='',article_id='',page=-1):
     '''
     db = DBAccess()
     db.dbName = "zixun"
-    r = getRedisObj()
 
     page = 1 if page < 1 else page
     sql = "select id from catagory where url = '%s' and delete_status=0"%url
@@ -765,7 +707,7 @@ def getArticleWithCatagory(url='',article_id='',page=-1):
         return 0,{}
     article['content'], pageCount = articleContentHandle(article['content'],page)
     article['tag'] = getTagInfoByArticle(article_id)
-    r.incr("click_time_article_%s"%article_id)
+    incrClickTime('article',article['id'])
     return pageCount,article
 
 
@@ -812,6 +754,7 @@ def getCatagoryNameWithID(catagory_id):
 
     db = DBAccess()
     db.dbName = "zixun"
+
     if catagory_id == 0:
         return
     sql = "select name from catagory where id = %s" %catagory_id
@@ -823,6 +766,7 @@ def getCatagoryNameWithID(catagory_id):
 def getObjectIdWithName(tableName, name):
     db = DBAccess()
     db.dbName = 'zixun'
+
     try:
         return db.execQueryAssoc("select id from %s where name = '%s'"%(tableName,name))[0]["id"]
     except(IndexError):
@@ -831,6 +775,7 @@ def getObjectIdWithName(tableName, name):
 def getAllObjectUrlsOrNames(tableName, item):
     db = DBAccess()
     db.dbName = 'zixun'
+
     items = db.execQuery("select object from %s"%(item,tableName))
     items = [ _[0] for _ in items]
     return items
@@ -839,21 +784,43 @@ def getAllObjectUrlsOrNames(tableName, item):
 def incrClickTime(tableName,Object_id):
     db = DBAccess()
     db.dbName = 'zixun'
-    db.execUpdate("update %s click_time = click_time + 1 where id = %s"(tableName, Object_id))
+
+    db.execUpdate("update %s set click_time = click_time + 1 where id = %s"%(tableName, Object_id))
     return
     
+def getCollocationAllIds():
+    db = DBAccess()
+    db.dbName = 'zixun'
+
+    parent_id = db.execQuery("select id from catagory where name='服装搭配'")[0][0]
+    all_ids = db.execQuery("select id from catagory where parent_id=%s"%parent_id)
+    all_ids = [ int(_[0]) for _ in all_ids]
+    all_ids.append(int(parent_id))
+    return all_ids
+
 def getLatestArticle(url='',catagory_id=0):
     '''
     6篇最新文章
     '''
-    r = getRedisObj()
+    db = DBAccess()
+    db.dbName = 'zixun'
+
     if url:
-        catagory_id = getCatagoryInfo(url=url)['id']
-    article_info = r.lrange("latest_article_%s"%catagory_id,0,5)
-    result = []
-    for article in article_info:
-        result.append(article.split('&'))
-    return result
+        catagory_id = db.execQuery("select id from catagory where url= '%s' "%url)[0][0]
+
+    if catagory_id == 1000:
+        query = ""
+    elif catagory_id:
+        query = " where catagory_id = %s"%catagory_id
+
+    articles = db.execQueryAssoc("select id,title,catagory_id,description,cover_image,meta_description from article %s order by id desc limit 6"\
+                %query)
+    for article in articles:
+        article['complete_url'] = getCatagoryCompleteUrl(article['catagory_id']) + '/' + str(article['id'])
+        article['title'] = cutOffSentence(article['title'],15)
+        article['description'] = cutOffSentence(article['description'],30)
+        article['meta_description'] = cutOffSentence(article['meta_description'],30)
+    return articles
 
 def getHotArticle(url='',catagory_id=0):
     '''
@@ -1189,7 +1156,6 @@ def getCollocationArticleForBacker(article_id):
     '''
     db = DBAccess()
     db.dbName = "zixun"
-    r = getRedisObj()
 
     sql = "select * from article where  delete_status=0 and id = %s"%article_id
 
@@ -1214,35 +1180,29 @@ def updateHotTag(catagory_id,hot_tag):
     '''
     db = DBAccess()
     db.dbName = "zixun"
-    r = getRedisObj()
 
     hot_tag = hot_tag.split(',')
-    r.delete("hot_tag_%s"%catagory_id)
     db.execNonQuery("delete from hot_tag where catagory_id=%s"%catagory_id)
     for tag_name in hot_tag:
         tag_id = getObjectIdWithName('tag',tag_name)
         if tag_id:
             tag_info = getTagByID(tag_id)
-            r.lpush("hot_tag_%s"%catagory_id,tag_info['name'] + '&' + tag_info['url'])
             db.execNonQuery("insert into hot_tag (catagory_id, tag_id) values ('%s','%s')"%(catagory_id,tag_id))
     return
 
 def updateHotBrand(catagory_id,hot_brand):
     '''
-    更新hot tag，存储方式为hot_brand_id:[brand_name&url,]
+    更新hot tag
     '''
     db = DBAccess()
     db.dbName = "zixun"
-    r = getRedisObj()
 
     hot_brand = hot_brand.split(',')
-    r.delete("hot_brand_%s"%catagory_id)
     db.execNonQuery("delete from hot_brand where catagory_id=%s"%catagory_id)
     for brand_name in hot_brand:
         brand_id = getObjectIdWithName("brand",brand_name)
         if brand_id:
             brand_info = getBrandByID(brand_id)
-            r.lpush("hot_brand_%s"%catagory_id,brand_info['name'] + '&' + brand_info['url'] + '&' + brand_info['cover_image'])
             db.execNonQuery("insert into hot_brand (catagory_id, brand_id) values ('%s','%s')"%(catagory_id,brand_id))
     return
 
@@ -1319,12 +1279,7 @@ def getIndexArticle():
     result = [0] * 7
     for idx in range(len(NAVIGATE)):
         catagory_id = getObjectIdWithName('catagory',NAVIGATE[idx])
-        if idx <= 3:
-            articles  =getLatestArticle(catagory_id=catagory_id)
-        else:
-            articles = db.execQuery("select title,id,description,cover_image,catagory_id from article where catagory_id=%s and delete_status=0 and if_display=1 order by create_time desc limit 8"%catagory_id)
-            for article in articles:
-                article = list(article)
+        articles  =getLatestArticle(catagory_id=catagory_id)
         result[idx] = articles
     return result
 

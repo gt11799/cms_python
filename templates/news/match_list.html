@@ -1,4 +1,4 @@
-/DOCTYPE html>
+</DOCTYPE html>
 <html>
 <head>
 	<meta charset="utf-8">
@@ -39,7 +39,7 @@
 					<a class="spite prev"></a>
 					<a class="spite next"></a>
 				</div>
-				/-- 文章列表 -->
+				</-- 文章列表 -->
 				<div class="lists matchList"> 
 					<ul class="clearfix">
 						{% for article in articles %}
@@ -63,9 +63,9 @@
 					<div id="kkpager"></div>
 				</div>
 			</div>
-			/-- 右侧栏 -->
+			</-- 右侧栏 -->
 			<div class="content_right">
-				/-- 热门标签 -->
+				</-- 热门标签 -->
 				<div class="smallbox tagList" style="margin-top:0;">
 					<div class="hd clearfix">
 						<h2 class="fl">热门标签</h2>
@@ -82,7 +82,7 @@
 						</ul>
 					</div>
 				</div>
-				/-- 最新文章 -->
+				<!-- 最新文章 -->
 				<div class="smallbox newArticle clearfix">
 					<div class="hd clearfix">
 						<span class="more"><a href=""><span></span></a></span><h3 style="width:94px">最新文章</h3>
@@ -90,17 +90,17 @@
 					<div class="bd clearfix">
 						{% for article in latest_articles[:4] %}
 						<div class="list">
-							<div class="img"><a href="/{{url}}/{{article[1]}}" target="_blank"><img src="{{article[3]}}" width="80" height="98"></a></div>
+							<div class="img"><a href="/{{url}}/{{article['id']}}" target="_blank"><img src="{{article['cover_image']}}" width="80" height="98"></a></div>
 							<div class="desc">
-								<a href="/{{url}}/{{article[1]}}" target="_blank"><h2><b>{{ article[0] }}</b></h2>
-									<p>{{ article[2] }}</p>
+								<a href="/{{url}}/{{article['id']}}" target="_blank"><h2><b>{{ article['title'] }}</b></h2>
+									<p>{{ article['meta_description'] }}</p>
 								</a>
 							</div>
 						</div>
 						{% end %}
 					</div>
 				</div>
-				/-- 时尚新鲜货 -->
+				</-- 时尚新鲜货 -->
 				<div class="smallbox fresh">
 					<div class="hd">
 						<h3 style="width:115px">时尚新鲜货</h3>
@@ -115,7 +115,7 @@
 					<a class="spite prev"></a>
 					<a class="spite next"></a>
 				</div>
-				/-- 热门文章 -->
+				</-- 热门文章 -->
 				<div class="smallbox hotArticle">
 					<div class="hd clearfix">
 						<span class="more"><a href=""><span></span></a></span><h3>热门文章</h3>
@@ -132,7 +132,7 @@
 						</ul>
 					</div>
 				</div>
-				/-- 优品驾到 -->
+				</-- 优品驾到 -->
 				<div class="nice_goods">
 					<h3 style="width:94px;">优品驾到</h3>
 					<div class="hd">

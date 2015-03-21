@@ -212,7 +212,7 @@ class CatagoryHandler(BasicTemplateHandler):
             hot_brands = getHotBrands(url)
             latest_articles = getLatestArticle(url)
             hot_articles = getHotArticle(url)
-            return self.render("news/article_detail.html",article=article,pageCount=pageCount,hot_tags=hot_tags,url=complete_url, hot_brands=hot_brands,
+            return self.render("news/article_detail.html",article=article,pageCount=pageCount,hot_tags=hot_tags,url=complete_url, hot_brands=hot_brands,latest_articles=latest_articles,
                     hot_articles=hot_articles,timeFormatConvert=timeFormatConvert,random=random,navigate=navigate,fashion_article=fashion_article,cutOffSentence=cutOffSentence,cata_level=cata_level)
 
         if second_level:
