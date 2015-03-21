@@ -1,23 +1,24 @@
-	create database zixun default character set utf8 collate utf8_general_ci;
-	use zixun;
-create table article(
-id int not null primary key auto_increment,
-catagory_id int not null,
-title varchar(128),
-description text not null,
-content longtext not null,
-cover_image text,
-author varchar(64),
-create_time datetime,
-meta_title varchar(128),
-meta_keyword varchar(128),
-meta_description text,
-if_display int default 1,
-update_time datetime,
-click_time int default 0，
-brand_id int default 0,
-delete_status int default 0
-)default character set utf8 collate utf8_general_ci;
+create database zixun default character set utf8 collate utf8_general_ci;
+use zixun;
+
+	create table article(
+		id int not null primary key auto_increment,
+		catagory_id int not null,
+		title varchar(128),
+		description text not null,
+		content longtext not null,
+		cover_image text,
+		author varchar(64),
+		create_time datetime,
+		meta_title varchar(128),
+		meta_keyword varchar(128),
+		meta_description text,
+		if_display int default 1,
+		update_time datetime,
+		click_time int default 0，
+		brand_id int default 0,
+		delete_status int default 0
+	)default character set utf8 collate utf8_general_ci;
 
 
 	create table tag(

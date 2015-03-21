@@ -20,12 +20,10 @@ def addArticle(title,tag,catagory,cover_image,description,content,author,meta_ti
     if not (title and tag and catagory and cover_image and description and content and meta_title and meta_keyword and meta_description ):
         raise MyDefineError('必须全部填写')
 
-    catagory_id = r.hget("catagory_name_id",catagory)
+    catagory_id = getObjectIdWithName('catagory',catagory)
     if not catagory_id:
         raise MyDefineError('没有这个栏目')
-    brand_id = r.hget("brand_name_id",brand)
-    if not brand_id:
-        brand_id = 0
+    brand_id = getObjectIdWithName('brand',brand)
     create_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     sql = "insert into article (title,catagory_id,cover_image,description,content,author,create_time,meta_title,meta_keyword,meta_description,update_time,if_display,brand_id) values ('%s',%s,'%s','%s','%s','%s','%s','%s','%s','%s','%s',%s,%s)"\
     		%(title,catagory_id,cover_image,description,content,author,create_time,meta_title,meta_keyword,meta_description,create_time,if_display,brand_id)
@@ -34,11 +32,10 @@ def addArticle(title,tag,catagory,cover_image,description,content,author,meta_ti
     tag_names = tag.split(",")
     tag_names = set(tag_names)
     for tag_name in tag_names:
-        tag_id = r.hget("tag_name_id",tag_name)
+        tag_id = getObjectIdWithName('tag',tag_name)
         if tag_id:
             addTagAndArticle(article_id=article_id, tag_id=tag_id)
 
-    r.set("click_time_article_%s"%article_id, 0)
     complete_url = getCatagoryCompleteUrl(catagory_id)
     recordFlow(author,"add","article",sql)
     return complete_url + '/' + str(article_id),article_id
@@ -825,17 +822,32 @@ def getCatagoryNameWithID(catagory_id):
     if catagory_id == 0:
         return
     sql = "select name from catagory where id = %s" %catagory_id
-    return db.execQueryAssoc(sql)[0]['name']
-    
-def getCatagoryUrlWithID(catagory_id):
+    try:
+        return db.execQueryAssoc(sql)[0]['name']
+    except(IndexError,ValueError):
+        return ''
 
+def getObjectIdWithName(tableName, name):
     db = DBAccess()
-    db.dbName = "zixun"
-    if catagory_id == 0:
-        return
-    sql = "select url from catagory where id = %s" %catagory_id
-    return db.execQueryAssoc(sql)[0]['url']
+    db.dbName = 'zixun'
+    try:
+        return db.execQueryAssoc("select id from %s where name = '%s'"%(tableName,name))[0]["id"]
+    except(IndexError):
+        return 0
 
+def getAllCatagoryUrls(tableName):
+    db = DBAccess()
+    db.dbName = 'zixun'
+    urls = db.execQuery("select url from %s"%tableName)
+    urls = [ _[0] for _ in urls]
+    return urls
+
+def incrClickTime(tableName,Object_id):
+    db = DBAccess()
+    db.dbName = 'zixun'
+    db.execUpdate("update %s click_time = click_time + 1 where id = %s"(tableName, Object_id))
+    return
+    
 def getLatestArticle(url='',catagory_id=0):
     '''
     6篇最新文章
