@@ -4,7 +4,7 @@ function deleteItems(id,type){
 	popAjax({
 		title : '提示',
 		content: '是否确定删除？',
-		url : '/zixun/admin/delete/',
+		url : '/admin/delete/',
 		reload : true,
 		getData　: function(){
 			return {
@@ -25,7 +25,7 @@ function ifRecommed(id,status,type){
 	popAjax({
 		title : '提示',
 		content: con,
-		url : '/zixun/admin/recommend/',
+		url : '/admin/recommend/',
 		reload : true,
 		getData　: function(){
 			return {

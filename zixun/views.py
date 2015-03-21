@@ -294,13 +294,13 @@ class EditCatagoryHandler(BasicTemplateHandler):
         result = getCatagoryInfo(name=name)
         catagory_all = getAllCatagory()
         hot_tag = getHotTags(catagory_id=result['id'])
-        hot_tag = [ _[0] for _ in hot_tag]
+        hot_tag = [ _['name'] for _ in hot_tag]
         if hot_tag:
             parent_tag = getFirstLevelTag(hot_tag[0])
         else:
             parent_tag = ''
         hot_brand = getHotBrands(catagory_id=result['id'])
-        hot_brand = [ _[0] for _ in hot_brand]
+        hot_brand = [ _['name'] for _ in hot_brand]
         tag_all = getAllTags()
         brand_all = getAllBrand()
         return self.render("zixun/edit_catagory.html",result=result,catagory_all=catagory_all,hot_brand=hot_brand,hot_tag=hot_tag,parent_tag=parent_tag,tag_all=tag_all,brand_all=brand_all)
@@ -552,9 +552,9 @@ class EditIndexHandler(BasicTemplateHandler):
     def get(self):
         index_info,cover_image,shopping_goods = getIndexInfo()
         hot_tag = getHotTags(catagory_id=1000)
-        hot_tag = [ _[0] for _ in hot_tag]
+        hot_tag = [ _['name'] for _ in hot_tag]
         hot_brand = getHotBrands(catagory_id=1000)
-        hot_brand = [ _[0] for _ in hot_brand]
+        hot_brand = [ _['name'] for _ in hot_brand]
         tag_all = getAllTags()
         brand_all = getAllBrand()
         self.render("zixun/edit_index.html",tag_all=tag_all,brand_all=brand_all,index_info=index_info,cover_image=cover_image,shopping_goods=shopping_goods,hot_tag=hot_tag,

@@ -268,7 +268,7 @@ def deleteArticle(article_id,author):
     DEBUGLOG.debug(sql)
     db.execNonQuery(sql)
     update_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    sql = "delete from article where id = %s"%(update_time,article_id)
+    sql = "delete from article where id = %s"%article_id
     db.execNonQuery(sql)
 
     recordFlow(author,"delete","article",sql)
@@ -525,9 +525,9 @@ def getCatagories():
     catagories = {}
     for item in result:
         hot_tag = getHotTags(catagory_id=item['id'])
-        item['hot_tag'] = [ _[0] for _ in hot_tag]
+        item['hot_tag'] = [ _['name'] for _ in hot_tag]
         hot_brand = getHotBrands(catagory_id=item['id'])
-        item['hot_brand'] = [ _[0] for _ in hot_brand]
+        item['hot_brand'] = [ _['name'] for _ in hot_brand]
         catagories[item['name']] = item
     return catagories
 
@@ -985,7 +985,6 @@ def deleteBrand(brand_id,author):
     '''
     db = DBAccess()
     db.dbName = "zixun"
-    r = getRedisObj()
 
     brand_info = getBrandByID(brand_id)
     sql = "update article set brand_id = 0 where brand_id = %s"%brand_id
@@ -993,7 +992,7 @@ def deleteBrand(brand_id,author):
     db.execUpdate(sql)
 
     update_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    sql = "delete from brand where id=%s"%(update_time,brand_id)
+    sql = "delete from brand where id=%s"%brand_id
     db.execUpdate(sql)
     recordFlow(author,"delete","brand",sql)
 
