@@ -78,7 +78,7 @@
 						<div class="hotBrand">
 							<ul class="clearfix">
 								{% for brand in hot_brands %}
-								<li><a href="/pinpai/{{brand[1]}} " target="_blank"><img src="{{brand[2]}}" width="88" height="88"></a></li>
+								<li><a href="/pinpai/{{brand['url']}} " target="_blank"><img src="{{brand['cover_image']}}" width="88" height="88"></a></li>
 								{% end %}
 							</ul>
 						</div>
@@ -92,9 +92,9 @@
 							<ul class="clearfix">
 								{% for tag in hot_tags %}
 								{% if random() < 0.3 %}
-								<li><a href="/label/{{tag[1]}}" class="hot" target="_blank">{{tag[0]}}</a></li>
+								<li><a href="/label/{{tag['url']}}" class="hot" target="_blank">{{tag['name']}}</a></li>
 								{% else %}
-								<li><a href="/label/{{tag[1]}}" target="_blank">{{tag[0]}}</a></li>
+								<li><a href="/label/{{tag['url']}}" target="_blank">{{tag['name']}}</a></li>
 								{% end %}
 								{% end %}
 							</ul>

@@ -114,9 +114,9 @@
 						<div class="bd">
 							<ul>
 								{% for a in hot_articles %}
-								<li><a href="/{{url}}/{{ a[1] }}" target="_blank">
+								<li><a href="/{{url}}/{{ a['id'] }}" target="_blank">
 									<dl>
-										<dt>{{ a[0] }}</dt>
+										<dt>{{ a['title'] }}</dt>
 									</dl>
 								</a></li>
 								{% end %}
@@ -132,9 +132,9 @@
 							<ul class="clearfix">
 								{% for tag in hot_tags %}
 								{% if random() < 0.3 %}
-								<li><a href="/label/{{tag[1]}}" class="hot" target="_blank">{{ tag[0] }}</a></li>
+								<li><a href="/label/{{tag['url']}}" class="hot" target="_blank">{{ tag['name'] }}</a></li>
 								{% else %}
-								<li><a href="/label/{{tag[1]}}" target="_blank">{{ tag[0]}} </a></li>
+								<li><a href="/label/{{tag['url']}}" target="_blank">{{ tag['name']}} </a></li>
 								{% end %}
 								{% end %}
 							</ul>
