@@ -863,7 +863,7 @@ def getHotTags(url='',catagory_id=-1):
         result.append(tag_info)
     return result
 
-def getHotBrands(url='',catagory_id=0):
+def getHotBrands(url='',catagory_id=-1):
     '''
     最热品牌
     '''
