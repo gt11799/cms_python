@@ -1301,22 +1301,6 @@ def updateFashionArticle():
         r.rpush("fashion_article_for_zixun",article['cover_image'] + '&' + complete_url + '/' + str(article['id']))
     return
 
-def updateCollocationCatagoryIds():
-    '''
-    更新搭配栏目的栏目id
-    '''
-    db = DBAccess()
-    db.dbName = "zixun"
-    r = getRedisObj()
-    parent_id = getObjectIdWithName('catagory',"服装搭配")
-    collocation_ids = db.execQueryAssoc("select id from catagory where delete_status=0 and parent_id=%s"%parent_id)
-    r.delete("collocation_catagory_ids")
-    r.lpush("collocation_catagory_ids",parent_id)
-    for item in collocation_ids:
-        r.lpush("collocation_catagory_ids",item['id'])
-    print r.lrange("collocation_catagory_ids",0,100),"collocation_catagory_ids"
-    return
-
 def getDisplayStatus(status):
     '''
     返回状态显示的中文
@@ -1343,26 +1327,12 @@ def timeFormatConvert(_time):
     except:
         return _time
 
-def getGoodsInfo(goods_id):
-    '''
-    根据一个商品ID，返回符合redis缓存的格式
-    '''
-    db = getMongoDBConn().shop
-
-    goodsObj = db.activity_goods.find_one({"_id":int(goods_id)},{"activity_id":1,"image":1,"name":1})
-    if goodsObj:
-        goodsObj['image'] = goodsObj['image'][0]
-        goodsObj['url'] = '/detail/%s/%s'%(goodsObj['activity_id'],goodsObj['_id'])
-        goodsObj['name'] = cutOffSentence(goodsObj['name'],10)
-    return goodsObj
-
 def getNavigateHead():
     '''
     获得导航栏
     '''
     db = DBAccess()
     db.dbName = "zixun"
-    r = getRedisObj()
 
     cata_info = db.execQueryAssoc("select id,parent_id,name,url from catagory where delete_status=0")
     result = []
@@ -1380,16 +1350,15 @@ def getFashionArticle():
     '''
     返回10篇时尚新鲜货
     '''
-    r = getRedisObj()
+    db = DBAccess()
+    db.dbName = 'zixun'
 
-    try:
-        articles = random.sample(r.lrange("fashion_article_for_zixun",0,40),10)
-    except(ValueError):
-        articles = r.lrange("fashion_article_for_zixun",0,20)
-    result = []
+    collocation_ids = getCollocationAllIds()
+    articles = db.execQueryAssoc("select catagory_id,id,cover_image from article where catagory_id in %s order by id desc limit 10"%(tuple(collocation_ids),))
     for article in articles:
-        result.append(article.split('&'))
-    return result
+        article['complete_url'] = getCatagoryCompleteUrl(article['catagory_id']) + '/' + str(article['id'])
+    return articles
+
 fashion_article = getFashionArticle()
 
 def getArticlesWithSearch(search,page=-1):

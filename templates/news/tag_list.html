@@ -109,7 +109,7 @@
 					<div class="bd">
 						<ul>
 							{% for a in fashion_article[:3] %}
-							<li><a href="/{{a[1]}}" target="_blank"><img src="{{a[0]}}" width="330" height="406"></a></li>
+							<li><a href="/{{a['complete_url']}}" target="_blank"><img src="{{a['cover_image']}}" width="330" height="406"></a></li>
 							{% end %}
 						</ul>
 					</div>
