@@ -20,7 +20,7 @@ def deleteStatus():
     db.dbName = 'zixun'
 
     for table in ['article','brand','catagory']:
-        print db.execUpdateQuery("delete from %s where delete_status = 1"%table)
+        print db.execUpdate("delete from %s where delete_status = 1"%table)
 
 
 if __name__ == '__main__':
