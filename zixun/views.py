@@ -759,3 +759,9 @@ class CollocationCatagoryHandler(BasicTemplateHandler):
         hot_articles = getHotArticle(url)
         return self.render("news/match_list.html",recordNum=recordNum,pageCount=pageCount,articles=articles,cata_info=cata_info,latest_articles=latest_articles,hot_tags=hot_tags,url=complete_url,hot_brands=hot_brands,
                 hot_articles=hot_articles,random=random,cutOffSentence=cutOffSentence,timeFormatConvert=timeFormatConvert,navigate=navigate,fashion_article=fashion_article)
+
+
+class ZixunHandler(BasicTemplateHandler):
+
+    def get(self, url):
+        self.redirect("/"+url)

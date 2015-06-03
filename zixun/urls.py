@@ -29,6 +29,8 @@ urls = [
 
             (r"/admin/delete/?",DeleteHandler),
 
+            (r"/zixun/(.*)/?", ZixunHandler),
+
             (r"/upload_image/?",UploadImageHandler),
 
             (r"/fzdp(/[a-zA-Z]+[0-9]*){0,1}(/[0-9]+){0,1}/?",CollocationCatagoryHandler),

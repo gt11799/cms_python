@@ -32,7 +32,7 @@
 
         // 服务器统一请求接口路径
         //, serverUrl: "/static/admin/js/ueditor/php/controller.php"
-        , serverUrl: "/zixun/upload_image/"
+        , serverUrl: "/upload_image/"
 
         //工具栏上的所有的功能按钮和下拉框，可以在new编辑器的实例时选择自己需要的从新定义
         , toolbars: [[
