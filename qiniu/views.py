@@ -87,5 +87,20 @@ class GenUploadToken(BasicTemplateHandler):
         token = cow.generate_upload_token(bucket)
         self.write({"status":RET_OK,"token":token})
 
+class DeleteHandler(BasicTemplateHandler):
+    '''
+    图片删除接口
+    '''
+    def getArgument(self):
+        url = self.get_argument("url")
+        return {"url":url}
 
+    def DBAction(self,Arguments):
+        url = Arguments["url"]
+        # deleteFileObj(url)
+        self.write({"status":RET_OK})
+
+
+    def post(self):
+        return self._post()
 
