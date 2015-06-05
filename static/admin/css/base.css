@@ -1,7 +1,3 @@
-/*
-version:V1.0
-author:刘明汉 360468937@qq.com
-*/
 
 /*css reset*/
 body,h1,h2,h3,h4,h5,h6,hr,p,blockquote,dl,dt,dd,ul,ol,li,pre,form,fieldset,legend,button,input,textarea,th,td {margin:0;padding:0}
@@ -238,7 +234,7 @@ a:hover{text-decoration:underline; color:c00}
 .table_style tbody tr.isChecked,.table_style tbody tr.isChecked:hover{ background: #e0fecf;}
 .table_style td .icon_edit{ display: none; position: absolute; margin-top: -15px; cursor: pointer; right: 0;}
 .table_style td:hover .icon_edit{ display: block; }
-.table_style .btn{ height: 30px;line-height: 30px; margin: 0; padding: 0 12px;}
+.table_style .btn{ height: 30px;line-height: 30px; margin: 0; padding: 0 12px;margin-bottom: 6px;}
 
 /* 下拉列表 */
 .xhui_droplist{ border: 1px solid #ccc; font-size: 12px; background: #fff; display: none; overflow:auto;}
